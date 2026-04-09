@@ -57,27 +57,19 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .upload-area{border:2px dashed #ddd;border-radius:8px;padding:20px;text-align:center;cursor:pointer;margin-top:8px;transition:border-color 0.2s}
 .upload-area:hover{border-color:#1B4F72;background:#f8fbff}
 .upload-area p{color:#999;font-size:13px;margin-top:8px}
-.rol-badge{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px}
-.rol-auditor{background:#D6EAF8;color:#1B4F72}
-.rol-establecimiento{background:#D5F5E3;color:#1E8449}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState, useEffect, useRef} = React;
+const {useState,useEffect,useRef}=React;
 
-const SUPA_URL = 'https://fcltfzvuxtlgdxdxddjd.supabase.co';
-const SUPA_KEY = 'sb_publishable_DyKago_O2C7d8G22Vb7WGg_-kt-F6yR';
-const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+const SUPA_URL='https://fcltfzvuxtlgdxdxddjd.supabase.co';
+const SUPA_KEY='sb_publishable_DyKago_O2C7d8G22Vb7WGg_-kt-F6yR';
+const supabase=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 
-const MODULOS = [
-  "Instalaciones","Equipos y utensilios","Personal","Materias primas",
-  "Proceso productivo","Almacenamiento","Transporte","Control de plagas",
-  "Agua y hielo","Residuos","Documentación","Trazabilidad"
-];
-
-const CRITERIOS_BASE = [
+const MODULOS=["Instalaciones","Equipos y utensilios","Personal","Materias primas","Proceso productivo","Almacenamiento","Transporte","Control de plagas","Agua y hielo","Residuos","Documentación","Trazabilidad"];
+const CRITERIOS_BASE=[
   {mod:0,texto:"Pisos, paredes y techos en buen estado y limpios"},
   {mod:0,texto:"Iluminación adecuada en todas las áreas"},
   {mod:0,texto:"Ventilación suficiente sin contaminación cruzada"},
@@ -107,10 +99,8 @@ function Login({onLogin}){
   const [modo,setModo]=useState('auditor');
   const [email,setEmail]=useState('');
   const [pass,setPass]=useState('');
-  const [estab,setEstab]=useState('');
   const [cargando,setCargando]=useState(false);
   const [error,setError]=useState('');
-  const [msg,setMsg]=useState('');
 
   const loginAuditor=async()=>{
     if(!email||!pass){setError('Completá email y contraseña');return;}
@@ -118,20 +108,13 @@ function Login({onLogin}){
     const {data,error:e}=await supabase.auth.signInWithPassword({email,password:pass});
     setCargando(false);
     if(e){setError('Email o contraseña incorrectos');return;}
-    onLogin({tipo:'auditor',user:data.user});
-  };
-
-  const loginEstablecimiento=async()=>{
-    if(!estab){setError('Ingresá el nombre del establecimiento');return;}
-    setCargando(true);setError('');
-    // Busca auditorías de ese establecimiento
-    const {data,error:e}=await supabase.from('auditorias')
-      .select('*').ilike('establecimiento',estab).order('created_at',{ascending:false});
-    setCargando(false);
-    if(e||!data||data.length===0){
-      setError('No se encontró ese establecimiento. Verificá el nombre exacto.');return;
+    // Verificar si es auditor (no está en tabla clientes)
+    const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',data.user.id).single();
+    if(cliente){
+      onLogin({tipo:'cliente',user:data.user,cliente});
+    } else {
+      onLogin({tipo:'auditor',user:data.user});
     }
-    onLogin({tipo:'establecimiento',establecimiento:estab,auditorias:data});
   };
 
   return(
@@ -139,39 +122,22 @@ function Login({onLogin}){
       <div className="login-box">
         <h2>INOCUA°tec</h2>
         <p>Sistema de Auditorías BPM</p>
-        <div className="tab-group">
-          <button className={modo==='auditor'?'active':''} onClick={()=>{setModo('auditor');setError('');}}>🔑 Auditor</button>
-          <button className={modo==='establecimiento'?'active':''} onClick={()=>{setModo('establecimiento');setError('');}}>🏪 Establecimiento</button>
-        </div>
         {error&&<div className="alert error">{error}</div>}
-        {msg&&<div className="alert success">{msg}</div>}
-        {modo==='auditor'?(
-          <>
-            <label>Email</label>
-            <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
-            <label>Contraseña</label>
-            <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••"/>
-            <button className="btn btn-primary" style={{width:'100%'}} onClick={loginAuditor} disabled={cargando}>
-              {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar como auditor'}
-            </button>
-          </>
-        ):(
-          <>
-            <div className="alert info">Ingresá el nombre exacto de tu establecimiento tal como figura en las auditorías.</div>
-            <label>Nombre del establecimiento</label>
-            <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panadería San Martín"/>
-            <button className="btn btn-success" style={{width:'100%'}} onClick={loginEstablecimiento} disabled={cargando}>
-              {cargando&&<span className="spinner"></span>}{cargando?'Buscando...':'Ver mis auditorías'}
-            </button>
-          </>
-        )}
+        <label>Email</label>
+        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
+        <label>Contraseña</label>
+        <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••"
+          onKeyDown={e=>e.key==='Enter'&&loginAuditor()}/>
+        <button className="btn btn-primary" style={{width:'100%',marginTop:4}} onClick={loginAuditor} disabled={cargando}>
+          {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar'}
+        </button>
       </div>
     </div>
   );
 }
 
-// ── SUBIDA DE FOTOS ────────────────────────────────────────
-function SubirFotos({auditoriaId,establecimiento}){
+// ── SUBIR FOTOS ────────────────────────────────────────────
+function SubirFotos({auditoriaId}){
   const [fotos,setFotos]=useState([]);
   const [subiendo,setSubiendo]=useState(false);
   const [msg,setMsg]=useState('');
@@ -199,7 +165,7 @@ function SubirFotos({auditoriaId,establecimiento}){
       await supabase.storage.from('evidencias').upload(`${auditoriaId}/${nombre}`,file);
     }
     setSubiendo(false);
-    setMsg(`✅ ${files.length} archivo(s) subido(s) correctamente`);
+    setMsg(`✅ ${files.length} archivo(s) subido(s)`);
     cargarFotos();
     inputRef.current.value='';
   };
@@ -211,10 +177,10 @@ function SubirFotos({auditoriaId,establecimiento}){
         <p>Hacé clic para subir fotos o documentos<br/><small>JPG, PNG, PDF — hasta 50MB</small></p>
         <input ref={inputRef} type="file" multiple accept="image/*,.pdf" style={{display:'none'}} onChange={subirArchivo}/>
       </div>
-      {subiendo&&<div className="alert info" style={{marginTop:8}}><span className="spinner" style={{borderColor:'#1B4F72',borderTopColor:'transparent'}}></span> Subiendo archivos...</div>}
+      {subiendo&&<div className="alert info" style={{marginTop:8}}>⏳ Subiendo archivos...</div>}
       {msg&&<div className="alert success" style={{marginTop:8}}>{msg}</div>}
       {fotos.length>0&&(
-        <div className="foto-grid" style={{marginTop:12}}>
+        <div className="foto-grid">
           {fotos.map((f,i)=>
             f.url.endsWith('.pdf')?
             <a key={i} href={f.url} target="_blank" style={{display:'flex',alignItems:'center',justifyContent:'center',height:80,background:'#f8f9fa',borderRadius:4,border:'2px solid #eee',textDecoration:'none',color:'#C0392B',fontSize:12,fontWeight:'bold'}}>📄 PDF</a>:
@@ -227,45 +193,51 @@ function SubirFotos({auditoriaId,establecimiento}){
   );
 }
 
-// ── VISTA ESTABLECIMIENTO ──────────────────────────────────
-function VistaEstablecimiento({session,onLogout}){
-  const {establecimiento,auditorias}=session;
+// ── VISTA CLIENTE ──────────────────────────────────────────
+function VistaCliente({session,onLogout}){
+  const {cliente}=session;
+  const [auditorias,setAuditorias]=useState([]);
   const [seleccionada,setSeleccionada]=useState(null);
+  const [cargando,setCargando]=useState(true);
+
+  useEffect(()=>{
+    (async()=>{
+      const {data}=await supabase.from('auditorias').select('*')
+        .ilike('establecimiento',cliente.establecimiento).order('created_at',{ascending:false});
+      if(data)setAuditorias(data);
+      setCargando(false);
+    })();
+  },[]);
 
   return(
     <div>
       <div className="header">
-        <div>
-          <h1>🏪 {establecimiento}</h1>
-          <span>Portal de evidencias — INOCUA°tec</span>
-        </div>
+        <div><h1>🏪 {cliente.establecimiento}</h1><span>Portal de evidencias — INOCUA°tec</span></div>
         <button className="btn btn-danger" style={{marginLeft:'auto'}} onClick={onLogout}>Salir</button>
       </div>
       <div className="container">
         {!seleccionada?(
           <div className="card">
             <h2>Mis auditorías</h2>
-            <p style={{fontSize:13,color:'#666',marginBottom:16}}>Seleccioná una auditoría para cargar fotos o documentos de evidencia.</p>
-            <table>
-              <thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Acción</th></tr></thead>
-              <tbody>
-                {auditorias.map((a,i)=>(
-                  <tr key={i}>
-                    <td>{a.fecha}</td>
-                    <td>{a.puntaje}%</td>
-                    <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
-                    <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>📎 Cargar evidencia</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {cargando&&<p style={{color:'#999',fontSize:14}}>⏳ Cargando...</p>}
+            {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>}
+            {!cargando&&auditorias.length>0&&(
+              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Acción</th></tr></thead>
+              <tbody>{auditorias.map((a,i)=>(
+                <tr key={i}>
+                  <td>{a.fecha}</td><td>{a.puntaje}%</td>
+                  <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
+                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>📎 Subir evidencia</button></td>
+                </tr>
+              ))}</tbody></table>
+            )}
           </div>
         ):(
           <div className="card">
             <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>← Volver</button>
-            <h2>Evidencias — Auditoría {seleccionada.fecha}</h2>
-            <p style={{fontSize:13,color:'#666',marginBottom:16}}>Podés subir fotos de instalaciones, equipos, actas, análisis de agua, certificados de plagas, etc.</p>
-            <SubirFotos auditoriaId={seleccionada.id} establecimiento={establecimiento}/>
+            <h2>Evidencias — {seleccionada.fecha}</h2>
+            <p style={{fontSize:13,color:'#666',marginBottom:16}}>Subí fotos, actas, análisis de agua, certificados de plagas, lo que necesites.</p>
+            <SubirFotos auditoriaId={seleccionada.id}/>
           </div>
         )}
       </div>
@@ -273,7 +245,84 @@ function VistaEstablecimiento({session,onLogout}){
   );
 }
 
-// ── DASHBOARD AUDITOR ──────────────────────────────────────
+// ── GESTIÓN DE CLIENTES ────────────────────────────────────
+function GestionClientes(){
+  const [clientes,setClientes]=useState([]);
+  const [email,setEmail]=useState('');
+  const [pass,setPass]=useState('');
+  const [estab,setEstab]=useState('');
+  const [cargando,setCargando]=useState(false);
+  const [msg,setMsg]=useState('');
+  const [error,setError]=useState('');
+
+  useEffect(()=>{cargarClientes();},[]);
+
+  const cargarClientes=async()=>{
+    const {data}=await supabase.from('clientes').select('*').order('created_at',{ascending:false});
+    if(data)setClientes(data);
+  };
+
+  const crearCliente=async()=>{
+    if(!email||!pass||!estab){setError('Completá todos los campos');return;}
+    setCargando(true);setError('');setMsg('');
+    // Crear usuario en Supabase Auth
+    const {data,error:e}=await supabase.auth.admin.createUser({
+      email,password:pass,email_confirm:true
+    });
+    if(e){setError('Error: '+e.message);setCargando(false);return;}
+    // Guardar en tabla clientes
+    await supabase.from('clientes').insert([{
+      user_id:data.user.id,establecimiento:estab,email
+    }]);
+    setMsg(`✅ Cliente "${estab}" creado. Email: ${email}`);
+    setEmail('');setPass('');setEstab('');
+    cargarClientes();
+    setCargando(false);
+  };
+
+  const eliminarCliente=async(c)=>{
+    if(!confirm(`¿Eliminar cliente "${c.establecimiento}"? Se eliminará su acceso.`))return;
+    await supabase.auth.admin.deleteUser(c.user_id);
+    await supabase.from('clientes').delete().eq('id',c.id);
+    cargarClientes();
+  };
+
+  return(
+    <div>
+      <div className="card">
+        <h2>Nuevo cliente</h2>
+        {error&&<div className="alert error">{error}</div>}
+        {msg&&<div className="alert success">{msg}</div>}
+        <label>Nombre del establecimiento</label>
+        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panadería San Martín"/>
+        <label>Email del cliente</label>
+        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="cliente@email.com"/>
+        <label>Contraseña inicial</label>
+        <input type="text" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contraseña que le vas a dar al cliente"/>
+        <button className="btn btn-success" onClick={crearCliente} disabled={cargando}>
+          {cargando&&<span className="spinner"></span>}{cargando?'Creando...':'➕ Crear cliente'}
+        </button>
+      </div>
+      <div className="card">
+        <h2>Clientes activos</h2>
+        {clientes.length===0&&<p style={{color:'#999',fontSize:14}}>No hay clientes registrados aún.</p>}
+        {clientes.length>0&&(
+          <table><thead><tr><th>Establecimiento</th><th>Email</th><th>Creado</th><th>Acción</th></tr></thead>
+          <tbody>{clientes.map((c,i)=>(
+            <tr key={i}>
+              <td>{c.establecimiento}</td>
+              <td>{c.email}</td>
+              <td>{new Date(c.created_at).toLocaleDateString('es-AR')}</td>
+              <td><button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>eliminarCliente(c)}>🗑 Eliminar</button></td>
+            </tr>
+          ))}</tbody></table>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────
 function Dashboard({auditorias,cargando,onVerEvidencias}){
   const total=auditorias.length;
   const aprobadas=auditorias.filter(a=>a.resultado==="Aprobado").length;
@@ -289,15 +338,13 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
       </div>
       <div className="card">
         <h2>Últimas auditorías</h2>
-        {cargando&&<p style={{color:'#999',fontSize:14}}>⏳ Cargando desde Supabase...</p>}
+        {cargando&&<p style={{color:'#999',fontSize:14}}>⏳ Cargando...</p>}
         {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>}
         {!cargando&&auditorias.length>0&&
           <table><thead><tr><th>Establecimiento</th><th>Responsable</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Evidencias</th></tr></thead>
           <tbody>{auditorias.map((a,i)=>(
             <tr key={i}>
-              <td>{a.establecimiento}</td>
-              <td>{a.responsable||'—'}</td>
-              <td>{a.fecha}</td>
+              <td>{a.establecimiento}</td><td>{a.responsable||'—'}</td><td>{a.fecha}</td>
               <td>{a.puntaje}%</td>
               <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
               <td>{a.modulos?.ncs||0}</td>
@@ -319,7 +366,7 @@ function NuevaAuditoria({onGuardar}){
   const [guardando,setGuardando]=useState(false);
   const [guardado,setGuardado]=useState(false);
   const [error,setError]=useState('');
-  const [auditoriaGuardada,setAuditoriaGuardada]=useState(null);
+  const [auditGuardada,setAuditGuardada]=useState(null);
 
   const setR=(i,v)=>setRespuestas(p=>({...p,[i]:v}));
   const setO=(i,v)=>setObs(p=>({...p,[i]:v}));
@@ -337,12 +384,11 @@ function NuevaAuditoria({onGuardar}){
     setGuardando(true);setError('');
     const {puntaje,ncs}=calcular();
     const resultado=puntaje>=80?'Aprobado':'No aprobado';
-    const modulosData={
-      respuestas,observaciones:obs,ncs,
+    const modulosData={respuestas,observaciones:obs,ncs,
       detalle:MODULOS.map((nombre,mi)=>{
-        const criteriosMod=CRITERIOS_BASE.filter(c=>c.mod===mi);
-        const conformes=criteriosMod.filter((_,ci)=>respuestas[`${mi}-${ci}`]==='C').length;
-        const total=criteriosMod.filter((_,ci)=>respuestas[`${mi}-${ci}`]).length;
+        const cm=CRITERIOS_BASE.filter(c=>c.mod===mi);
+        const conformes=cm.filter((_,ci)=>respuestas[`${mi}-${ci}`]==='C').length;
+        const total=cm.filter((_,ci)=>respuestas[`${mi}-${ci}`]).length;
         return{nombre,puntaje:total>0?Math.round((conformes/total)*100):null};
       })
     };
@@ -350,21 +396,19 @@ function NuevaAuditoria({onGuardar}){
       establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData
     }]).select();
     setGuardando(false);
-    if(err){setError('Error al guardar: '+err.message);return;}
-    setAuditoriaGuardada(data[0]);
+    if(err){setError('Error: '+err.message);return;}
+    setAuditGuardada(data[0]);
     onGuardar(data[0]);
     setGuardado(true);
   };
 
   if(guardado)return(
-    <div>
-      <div className="card">
-        <div className="alert success">✅ Auditoría guardada correctamente en Supabase.</div>
-        <p style={{fontSize:13,color:'#666',marginBottom:16}}>Podés subir fotos o documentos de evidencia ahora mismo:</p>
-        {auditoriaGuardada&&<SubirFotos auditoriaId={auditoriaGuardada.id} establecimiento={estab}/>}
-        <div style={{marginTop:16}}>
-          <button className="btn btn-primary" onClick={()=>{setEstab('');setResp('');setRespuestas({});setObs({});setGuardado(false);setError('');setAuditoriaGuardada(null);}}>Nueva auditoría</button>
-        </div>
+    <div className="card">
+      <div className="alert success">✅ Auditoría guardada correctamente.</div>
+      <p style={{fontSize:13,color:'#666',marginBottom:16}}>Podés subir evidencias ahora mismo:</p>
+      {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
+      <div style={{marginTop:16}}>
+        <button className="btn btn-primary" onClick={()=>{setEstab('');setResp('');setRespuestas({});setObs({});setGuardado(false);setAuditGuardada(null);}}>Nueva auditoría</button>
       </div>
     </div>
   );
@@ -429,17 +473,6 @@ function NuevaAuditoria({onGuardar}){
   );
 }
 
-// ── PANEL EVIDENCIAS AUDITOR ───────────────────────────────
-function PanelEvidencias({auditoria,onVolver}){
-  return(
-    <div className="card">
-      <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={onVolver}>← Volver</button>
-      <h2>Evidencias — {auditoria.establecimiento} ({auditoria.fecha})</h2>
-      <SubirFotos auditoriaId={auditoria.id} establecimiento={auditoria.establecimiento}/>
-    </div>
-  );
-}
-
 // ── APP PRINCIPAL ──────────────────────────────────────────
 function App(){
   const [session,setSession]=useState(null);
@@ -449,65 +482,61 @@ function App(){
   const [auditoriaEvidencia,setAuditoriaEvidencia]=useState(null);
 
   useEffect(()=>{
-    // Verificar si hay sesión activa de auditor
-    supabase.auth.getSession().then(({data})=>{
+    supabase.auth.getSession().then(async({data})=>{
       if(data.session){
-        setSession({tipo:'auditor',user:data.session.user});
-        cargarAuditorias();
-      } else {
-        setCargando(false);
-      }
-    });
-    supabase.auth.onAuthStateChange((_,s)=>{
-      if(s){setSession({tipo:'auditor',user:s.user});cargarAuditorias();}
+        const u=data.session.user;
+        const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',u.id).single();
+        if(cliente) setSession({tipo:'cliente',user:u,cliente});
+        else{setSession({tipo:'auditor',user:u});cargarAuditorias();}
+      } else setCargando(false);
     });
   },[]);
 
   const cargarAuditorias=async()=>{
     setCargando(true);
-    const {data,error}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
-    if(!error&&data)setAuditorias(data);
+    const {data}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
+    if(data)setAuditorias(data);
     setCargando(false);
   };
 
   const logout=async()=>{
     await supabase.auth.signOut();
-    setSession(null);setAuditorias([]);setTab('dashboard');
+    setSession(null);setAuditorias([]);setTab('dashboard');setCargando(false);
   };
 
-  if(!session) return <Login onLogin={(s)=>{
+  if(!session)return <Login onLogin={async(s)=>{
     setSession(s);
-    if(s.tipo==='auditor') cargarAuditorias();
+    if(s.tipo==='auditor')cargarAuditorias();
     else setCargando(false);
   }}/>;
 
-  if(session.tipo==='establecimiento')
-    return <VistaEstablecimiento session={session} onLogout={()=>setSession(null)}/>;
+  if(session.tipo==='cliente')return <VistaCliente session={session} onLogout={logout}/>;
 
-  // Vista auditor
   return(
     <div>
       <div className="header">
-        <div>
-          <h1>INOCUA°tec Servicios</h1>
-          <span>Sistema de Auditorías BPM — Panel Auditor</span>
-        </div>
+        <div><h1>INOCUA°tec Servicios</h1><span>Sistema de Auditorías BPM — Panel Auditor</span></div>
         <div style={{marginLeft:'auto',display:'flex',alignItems:'center',gap:12}}>
-          <span style={{fontSize:11,opacity:0.7}}>{cargando?'⏳ Sincronizando...':'✅ '+auditorias.length+' auditorías'}</span>
+          <span style={{fontSize:11,opacity:0.7}}>{cargando?'⏳':'✅ '+auditorias.length+' auditorías'}</span>
           <button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={logout}>Salir</button>
         </div>
       </div>
       <div className="nav">
         <button className={tab==='dashboard'?'active':''} onClick={()=>{setTab('dashboard');setAuditoriaEvidencia(null);}}>📊 Dashboard</button>
         <button className={tab==='nueva'?'active':''} onClick={()=>{setTab('nueva');setAuditoriaEvidencia(null);}}>➕ Nueva auditoría</button>
+        <button className={tab==='clientes'?'active':''} onClick={()=>{setTab('clientes');setAuditoriaEvidencia(null);}}>👥 Clientes</button>
       </div>
       <div className="container">
-        {tab==='dashboard'&&!auditoriaEvidencia&&
-          <Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>{setAuditoriaEvidencia(a);}}/>}
-        {tab==='dashboard'&&auditoriaEvidencia&&
-          <PanelEvidencias auditoria={auditoriaEvidencia} onVolver={()=>setAuditoriaEvidencia(null)}/>}
-        {tab==='nueva'&&
-          <NuevaAuditoria onGuardar={a=>{setAuditorias(p=>[a,...p]);}}/>}
+        {tab==='dashboard'&&!auditoriaEvidencia&&<Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)}/>}
+        {tab==='dashboard'&&auditoriaEvidencia&&(
+          <div className="card">
+            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>← Volver</button>
+            <h2>Evidencias — {auditoriaEvidencia.establecimiento} ({auditoriaEvidencia.fecha})</h2>
+            <SubirFotos auditoriaId={auditoriaEvidencia.id}/>
+          </div>
+        )}
+        {tab==='nueva'&&<NuevaAuditoria onGuardar={a=>{setAuditorias(p=>[a,...p]);}}/>}
+        {tab==='clientes'&&<GestionClientes/>}
       </div>
     </div>
   );
