@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +7,7 @@
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#f0f4f8;color:#333}
@@ -41,12 +40,19 @@ input,select,textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius
 label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .alert{padding:12px;border-radius:4px;margin-bottom:12px;font-size:14px}
 .alert.info{background:#D6EAF8;color:#1B4F72;border-left:4px solid #1B4F72}
+.alert.error{background:#FADBD8;color:#C0392B;border-left:4px solid #C0392B}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState} = React;
+const {useState, useEffect} = React;
+
+const SUPA_URL = 'https://fcltfzvuxtlgdxdxddjd.supabase.co';
+const SUPA_KEY = 'sb_publishable_DyKago_O2C7d8G22Vb7WGg_-kt-F6yR';
+const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 const MODULOS = [
   "Instalaciones","Equipos y utensilios","Personal","Materias primas",
@@ -79,31 +85,36 @@ const CRITERIOS_BASE = [
   {mod:11,texto:"Sistema de trazabilidad implementado y operativo"},
 ];
 
-function Dashboard({auditorias}){
+function Dashboard({auditorias, cargando}){
   const total = auditorias.length;
   const aprobadas = auditorias.filter(a=>a.resultado==="Aprobado").length;
-  const conNC = auditorias.filter(a=>a.ncs>0).length;
+  const conNC = auditorias.filter(a=>(a.modulos?.ncs||0)>0).length;
+  const promedio = total>0 ? Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total) : 0;
   return(
     <div>
       <div className="grid2" style={{marginBottom:16}}>
         <div className="stat"><div className="num">{total}</div><div className="label">Auditorías realizadas</div></div>
         <div className="stat"><div className="num">{aprobadas}</div><div className="label">Establecimientos aprobados</div></div>
         <div className="stat"><div className="num">{conNC}</div><div className="label">Con no conformidades</div></div>
-        <div className="stat"><div className="num">{total>0?Math.round(auditorias.reduce((s,a)=>s+a.puntaje,0)/total):0}%</div><div className="label">Puntaje promedio</div></div>
+        <div className="stat"><div className="num">{promedio}%</div><div className="label">Puntaje promedio</div></div>
       </div>
       <div className="card">
         <h2>Últimas auditorías</h2>
-        {auditorias.length===0?<p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>:
-        <table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th></tr></thead>
-        <tbody>{auditorias.slice().reverse().map((a,i)=>(
-          <tr key={i}>
-            <td>{a.establecimiento}</td>
-            <td>{a.fecha}</td>
-            <td>{a.puntaje}%</td>
-            <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
-            <td>{a.ncs}</td>
-          </tr>
-        ))}</tbody></table>}
+        {cargando && <p style={{color:'#999',fontSize:14}}>⏳ Cargando desde Supabase...</p>}
+        {!cargando && auditorias.length===0 &&
+          <p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>}
+        {!cargando && auditorias.length>0 &&
+          <table><thead><tr><th>Establecimiento</th><th>Responsable</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th></tr></thead>
+          <tbody>{auditorias.slice().reverse().map((a,i)=>(
+            <tr key={i}>
+              <td>{a.establecimiento}</td>
+              <td>{a.responsable||'—'}</td>
+              <td>{a.fecha}</td>
+              <td>{a.puntaje}%</td>
+              <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
+              <td>{a.modulos?.ncs||0}</td>
+            </tr>
+          ))}</tbody></table>}
       </div>
     </div>
   );
@@ -115,7 +126,9 @@ function NuevaAuditoria({onGuardar}){
   const [fecha,setFecha]=useState(new Date().toISOString().split('T')[0]);
   const [respuestas,setRespuestas]=useState({});
   const [obs,setObs]=useState({});
+  const [guardando,setGuardando]=useState(false);
   const [guardado,setGuardado]=useState(false);
+  const [error,setError]=useState('');
 
   const setR=(i,v)=>setRespuestas(p=>({...p,[i]:v}));
   const setO=(i,v)=>setObs(p=>({...p,[i]:v}));
@@ -128,25 +141,43 @@ function NuevaAuditoria({onGuardar}){
     return{puntaje:Math.round((ok/respondidos)*100),ncs};
   };
 
-  const guardar=()=>{
+  const guardar=async()=>{
     if(!estab){alert('Ingresá el nombre del establecimiento');return;}
+    setGuardando(true);
+    setError('');
     const {puntaje,ncs}=calcular();
-    onGuardar({establecimiento:estab,responsable:resp,fecha,puntaje,ncs,
-      resultado:puntaje>=80?'Aprobado':'No aprobado',respuestas,observaciones:obs});
+    const resultado=puntaje>=80?'Aprobado':'No aprobado';
+    const modulosData={
+      respuestas,observaciones:obs,ncs,
+      detalle:MODULOS.map((nombre,mi)=>{
+        const criteriosMod=CRITERIOS_BASE.filter(c=>c.mod===mi);
+        const conformes=criteriosMod.filter((_,ci)=>respuestas[`${mi}-${ci}`]==='C').length;
+        const total=criteriosMod.filter((_,ci)=>respuestas[`${mi}-${ci}`]).length;
+        return{nombre,puntaje:total>0?Math.round((conformes/total)*100):null};
+      })
+    };
+    const {error:err}=await supabase.from('auditorias').insert([{
+      establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData
+    }]);
+    setGuardando(false);
+    if(err){setError('Error al guardar: '+err.message);return;}
+    onGuardar({establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData});
     setGuardado(true);
   };
 
   if(guardado)return(
     <div className="card">
-      <div className="alert info">✅ Auditoría guardada correctamente.</div>
-      <button className="btn btn-primary" onClick={()=>{setEstab('');setResp('');setRespuestas({});setObs({});setGuardado(false);}}>Nueva auditoría</button>
+      <div className="alert info">✅ Auditoría guardada correctamente en Supabase.</div>
+      <button className="btn btn-primary" onClick={()=>{
+        setEstab('');setResp('');setRespuestas({});setObs({});setGuardado(false);setError('');
+      }}>Nueva auditoría</button>
     </div>
   );
 
   const {puntaje,ncs}=calcular();
-
   return(
     <div>
+      {error&&<div className="alert error">{error}</div>}
       <div className="card">
         <h2>Datos del establecimiento</h2>
         <label>Nombre del establecimiento *</label>
@@ -193,7 +224,10 @@ function NuevaAuditoria({onGuardar}){
           </span>
         </div>
         <div style={{marginTop:16}}>
-          <button className="btn btn-success" onClick={guardar}>💾 Guardar auditoría</button>
+          <button className="btn btn-success" onClick={guardar} disabled={guardando}>
+            {guardando&&<span className="spinner"></span>}
+            {guardando?'Guardando...':'💾 Guardar auditoría'}
+          </button>
         </div>
       </div>
     </div>
@@ -203,7 +237,15 @@ function NuevaAuditoria({onGuardar}){
 function App(){
   const [tab,setTab]=useState('dashboard');
   const [auditorias,setAuditorias]=useState([]);
-  const agregar=(a)=>setAuditorias(p=>[...p,a]);
+  const [cargando,setCargando]=useState(true);
+
+  useEffect(()=>{
+    (async()=>{
+      const {data,error}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
+      if(!error&&data)setAuditorias(data);
+      setCargando(false);
+    })();
+  },[]);
 
   return(
     <div>
@@ -212,14 +254,17 @@ function App(){
           <h1>INOCUA°tec Servicios</h1>
           <span>Sistema de Auditorías BPM — Panel Auditor</span>
         </div>
+        <div style={{marginLeft:'auto',fontSize:11,opacity:0.7}}>
+          {cargando?'⏳ Sincronizando...':'✅ '+auditorias.length+' auditorías cargadas'}
+        </div>
       </div>
       <div className="nav">
         <button className={tab==='dashboard'?'active':''} onClick={()=>setTab('dashboard')}>📊 Dashboard</button>
         <button className={tab==='nueva'?'active':''} onClick={()=>setTab('nueva')}>➕ Nueva auditoría</button>
       </div>
       <div className="container">
-        {tab==='dashboard'&&<Dashboard auditorias={auditorias}/>}
-        {tab==='nueva'&&<NuevaAuditoria onGuardar={a=>{agregar(a);setTab('dashboard');}}/>}
+        {tab==='dashboard'&&<Dashboard auditorias={auditorias} cargando={cargando}/>}
+        {tab==='nueva'&&<NuevaAuditoria onGuardar={a=>{setAuditorias(p=>[a,...p]);setTab('dashboard');}}/>}
       </div>
     </div>
   );
