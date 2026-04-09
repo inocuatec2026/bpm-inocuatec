@@ -79,70 +79,70 @@ const supabase=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 const MODULOS=[
   {id:0,nombre:"Higiene del personal",items:[
     "Uso de indumentaria adecuada (cofia, delantal, calzado)",
-    "Técnica de lavado de manos correcta",
-    "Dispensadores de jabón y toallas descartables operativos",
-    "Cartelería de lavado de manos visible",
+    "Tecnica de lavado de manos correcta",
+    "Dispensadores de jabon y toallas descartables operativos",
+    "Carteleria de lavado de manos visible",
     "Carnet sanitario / libreta sanitaria vigente",
   ]},
   {id:1,nombre:"Instalaciones",items:[
-    "Pisos sin grietas, limpios y de fácil limpieza",
+    "Pisos sin grietas, limpios y de facil limpieza",
     "Paredes y techos en buen estado, sin humedad ni descascaramiento",
-    "Iluminación suficiente y protegida",
-    "Ventilación adecuada (natural o mecánica)",
+    "Iluminacion suficiente y protegida",
+    "Ventilacion adecuada (natural o mecanica)",
     "Mesadas aptas para uso alimentario y en buen estado",
-    "Agua fría y caliente disponible en zona de trabajo",
+    "Agua fria y caliente disponible en zona de trabajo",
     "Tela mosquitera en aberturas (ventanas, rejillas)",
-    "Antebaño con cartelería y elementos de higiene",
+    "Antebano con carteleria y elementos de higiene",
     "Vestuario diferenciado (si aplica)",
   ]},
-  {id:2,nombre:"Limpieza y desinfección",items:[
-    "Plan de limpieza y desinfección definido y disponible",
-    "Uso correcto de productos (concentración, tiempo de contacto)",
-    "Elementos de limpieza diferenciados por área / superficie",
+  {id:2,nombre:"Limpieza y desinfeccion",items:[
+    "Plan de limpieza y desinfeccion definido y disponible",
+    "Uso correcto de productos (concentracion, tiempo de contacto)",
+    "Elementos de limpieza diferenciados por area / superficie",
     "Frecuencia de limpieza adecuada y registrada",
     "Productos almacenados separados de alimentos",
   ]},
   {id:3,nombre:"Control de temperaturas",items:[
-    "Heladeras a ≤ 5°C (verificado con termómetro)",
-    "Freezer / cámara de congelados a ≤ -18°C",
+    "Heladeras a <= 5 grados C (verificado con termometro)",
+    "Freezer / camara de congelados a <= -18 grados C",
     "Registros de temperatura documentados y actualizados",
-    "Termómetros calibrados y disponibles",
+    "Termometros calibrados y disponibles",
   ]},
   {id:4,nombre:"Almacenamiento de alimentos",items:[
-    "Separación física de alimentos crudos y cocidos / listos para consumo",
-    "Rotulación correcta: denominación, fecha elaboración/vencimiento",
+    "Separacion fisica de alimentos crudos y cocidos / listos para consumo",
+    "Rotulacion correcta: denominacion, fecha elaboracion/vencimiento",
     "Sistema FIFO aplicado (primero en entrar, primero en salir)",
-    "Uso de recipientes herméticos o film protector",
-    "Alimentos alejados del piso y paredes (estanterías)",
+    "Uso de recipientes hermeticos o film protector",
+    "Alimentos alejados del piso y paredes (estanterias)",
     "Alimentos no alimentarios separados (productos de limpieza, etc.)",
   ]},
   {id:5,nombre:"Agua",items:[
-    "Agua potable disponible y de red pública / fuente habilitada",
-    "Tanque de agua con limpieza y desinfección documentada",
-    "Análisis bacteriológico vigente (CAA Cap. II Art. 17)",
-    "Análisis físico-químico vigente",
+    "Agua potable disponible y de red publica / fuente habilitada",
+    "Tanque de agua con limpieza y desinfeccion documentada",
+    "Analisis bacteriologico vigente (CAA Cap. II Art. 17)",
+    "Analisis fisico-quimico vigente",
   ]},
   {id:6,nombre:"Control de plagas",items:[
     "Ausencia de indicios de plagas (roedores, insectos, aves)",
     "Medidas preventivas activas (sellado de grietas, mosquiteros, etc.)",
     "Registros de control de plagas disponibles (empresa habilitada)",
-    "Desmalezamiento y orden en perímetro exterior (si aplica)",
+    "Desmalezamiento y orden en perimetro exterior (si aplica)",
   ]},
-  {id:7,nombre:"Manipulación de alimentos",items:[
+  {id:7,nombre:"Manipulacion de alimentos",items:[
     "Uso de bandejas, recipientes y utensilios limpios",
-    "Ausencia de contaminación cruzada en la práctica observada",
-    "Cocción adecuada (temperatura interna ≥ 75°C en carnes)",
-    "Descongelación correcta (bajo refrigeración o agua fría corriente)",
+    "Ausencia de contaminacion cruzada en la practica observada",
+    "Coccion adecuada (temperatura interna >= 75 grados C en carnes)",
+    "Descongelacion correcta (bajo refrigeracion o agua fria corriente)",
     "Recambio de aceite de fritura documentado (si aplica)",
   ]},
-  {id:8,nombre:"Gestión de residuos",items:[
+  {id:8,nombre:"Gestion de residuos",items:[
     "Contenedores con tapa y en buen estado",
     "Apertura no manual (pedal o similar)",
-    "Limpieza y desinfección de contenedores frecuente",
+    "Limpieza y desinfeccion de contenedores frecuente",
     "Residuos retirados con frecuencia adecuada",
   ]},
-  {id:9,nombre:"Documentación y habilitaciones",items:[
-    "Habilitación municipal vigente y exhibida",
+  {id:9,nombre:"Documentacion y habilitaciones",items:[
+    "Habilitacion municipal vigente y exhibida",
     "Cumplimiento de ordenanzas municipales aplicables",
     "Procedimientos Operativos Estandarizados de Saneamiento (POES) disponibles",
     "Registros de autocontrol presentes y actualizados",
@@ -156,54 +156,55 @@ function generarPDF(auditoria){
   const W=210,M=15;
   let y=15;
 
-  const salto=(h=6)=>{y+=h;if(y>270){doc.addPage();y=20;}};
-  const linea=(texto,x=M,size=10,bold=false,color=[0,0,0])=>{
-    doc.setFontSize(size);
-    doc.setFont('helvetica',bold?'bold':'normal');
-    doc.setTextColor(...color);
-    const lines=doc.splitTextToSize(texto,W-x-M);
-    lines.forEach(l=>{
-      if(y>270){doc.addPage();y=20;}
-      doc.text(l,x,y);
-      y+=size*0.4;
-    });
-  };
+  const checkPage=()=>{if(y>270){doc.addPage();y=20;}};
 
   // ENCABEZADO
   doc.setFillColor(27,79,114);
   doc.rect(0,0,210,28,'F');
   doc.setTextColor(255,255,255);
-  doc.setFontSize(16);doc.setFont('helvetica','bold');
-  doc.text('INOCUA°tec Servicios',M,12);
+  doc.setFontSize(15);doc.setFont('helvetica','bold');
+  doc.text('INOCUA tec Servicios',M,12);
   doc.setFontSize(9);doc.setFont('helvetica','normal');
-  doc.text('Planilla de Relevamiento BPM — Modalidad A',M,19);
-  doc.text('César Orlando Álvarez Aguilar — Téc. Higiene y Seguridad Alimentaria',M,25);
+  doc.text('Planilla de Relevamiento BPM - Modalidad A',M,19);
+  doc.text('Cesar Orlando Alvarez Aguilar - Tec. Higiene y Seguridad Alimentaria',M,25);
   y=35;
 
   // DATOS DEL ESTABLECIMIENTO
-  doc.setFillColor(214,234,248);
-  doc.rect(M,y-5,W-M*2,32,'F');
-  doc.setTextColor(0,0,0);
   const mod=auditoria.modulos||{};
+  doc.setFillColor(214,234,248);
+  doc.rect(M,y-5,W-M*2,36,'F');
+  doc.setTextColor(27,79,114);
+  doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.text('DATOS DEL ESTABLECIMIENTO',M+2,y);
+  y+=7;
   const campos=[
-    ['Establecimiento:',auditoria.establecimiento||'—'],
-    ['Responsable presente:',auditoria.responsable||'—'],
-    ['Fecha de auditoría:',auditoria.fecha||'—'],
-    ['Rubro:',mod.rubro||'—'],
-    ['Domicilio:',mod.domicilio||'—'],
-    ['N° Habilitación:',mod.nroHab||'—'],
+    ['Establecimiento:',auditoria.establecimiento||'---'],
+    ['Responsable:',auditoria.responsable||'---'],
+    ['Fecha:',auditoria.fecha||'---'],
+    ['Rubro:',mod.rubro||'---'],
+    ['Domicilio:',mod.domicilio||'---'],
+    ['N Habilitacion:',mod.nroHab||'---'],
   ];
+  doc.setTextColor(0,0,0);doc.setFontSize(9);
   campos.forEach(([k,v],i)=>{
-    const col=i%2===0?M:M+95;
+    const col=i%2===0?M+2:M+97;
     const row=Math.floor(i/2);
-    doc.setFontSize(8);doc.setFont('helvetica','bold');
-    doc.text(k,col,y+row*8);
+    doc.setFont('helvetica','bold');doc.text(k,col,y+row*7);
     doc.setFont('helvetica','normal');
-    doc.text(String(v).substring(0,35),col+30,y+row*8);
+    const val=String(v).substring(0,38);
+    doc.text(val,col+32,y+row*7);
   });
-  y+=35;
+  y+=26;
 
-  // MÓDULOS
+  if(mod.condiciones){
+    checkPage();
+    doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(80,80,80);
+    doc.text('Condiciones al inicio: '+String(mod.condiciones).substring(0,120),M+2,y);
+    y+=6;
+  }
+  y+=4;
+
+  // MODULOS
   const estados=mod.estados||[];
   const obsMods=mod.observaciones_modulos||[];
 
@@ -215,57 +216,55 @@ function generarPDF(auditoria){
     const total=cumple+nc;
     const pMod=total>0?Math.round((cumple/total)*100):0;
 
-    // Header módulo
-    if(y>250){doc.addPage();y=20;}
+    checkPage();
+    // Header modulo
     doc.setFillColor(21,67,96);
     doc.rect(M,y-4,W-M*2,8,'F');
     doc.setTextColor(255,255,255);
     doc.setFontSize(9);doc.setFont('helvetica','bold');
-    doc.text(`MÓDULO ${mi+1} — ${modulo.nombre.toUpperCase()}`,M+2,y+1);
-    doc.text(`✓${cumple} ✗${nc} N/A${na} | ${pMod}%`,W-M-30,y+1);
-    y+=8;
+    doc.text('MODULO '+String(mi+1)+' - '+modulo.nombre.toUpperCase(),M+2,y+1);
+    doc.text('[C]'+String(cumple)+' [NC]'+String(nc)+' [NA]'+String(na)+' | '+String(pMod)+'%',W-M-35,y+1);
+    y+=10;
 
     // Items
     modulo.items.forEach((item,ii)=>{
-      if(y>270){doc.addPage();y=20;}
+      checkPage();
       const est=estMod[ii];
-      const icono=est==='C'?'✓':est==='NC'?'✗':est==='NA'?'N/A':'—';
+      const tag=est==='C'?'[C] ':est==='NC'?'[NC]':est==='NA'?'[NA]':'[--]';
       const color=est==='C'?[30,132,73]:est==='NC'?[192,57,43]:[100,100,100];
-      doc.setTextColor(...color);
-      doc.setFontSize(8);doc.setFont('helvetica','bold');
-      doc.text(icono,M+1,y);
-      doc.setTextColor(0,0,0);doc.setFont('helvetica','normal');
-      const lines=doc.splitTextToSize(item,W-M*2-12);
+      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...color);
+      doc.text(tag,M+2,y);
+      doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
+      const lines=doc.splitTextToSize(item,W-M*2-16);
       lines.forEach((l,li)=>{
-        if(y>270){doc.addPage();y=20;}
-        doc.text(l,M+10,y);
+        checkPage();
+        doc.text(l,M+14,y);
         if(li<lines.length-1)y+=4;
       });
       y+=5;
     });
 
-    // Observaciones del módulo
-    if(obsMods[mi]){
-      if(y>265){doc.addPage();y=20;}
+    // Observaciones
+    if(obsMods[mi]&&obsMods[mi].trim()){
+      checkPage();
       doc.setFillColor(255,253,231);
-      const obsLines=doc.splitTextToSize(obsMods[mi],W-M*2-8);
-      const obsH=obsLines.length*4+6;
-      doc.rect(M,y-3,W-M*2,obsH,'F');
-      doc.setTextColor(100,80,0);doc.setFontSize(7.5);doc.setFont('helvetica','italic');
-      doc.text('Obs:',M+2,y+1);
-      doc.setFont('helvetica','normal');
+      const obsText='Obs: '+obsMods[mi];
+      const obsLines=doc.splitTextToSize(obsText,W-M*2-6);
+      const obsH=obsLines.length*4.5+4;
+      doc.rect(M,y-2,W-M*2,obsH,'F');
+      doc.setFontSize(7.5);doc.setFont('helvetica','italic');doc.setTextColor(100,80,0);
       obsLines.forEach((l,li)=>{
-        if(y>270){doc.addPage();y=20;}
-        doc.text(l,M+10,y+1+li*4);
+        checkPage();
+        doc.text(l,M+3,y+1+li*4.5);
       });
-      y+=obsH+2;
+      y+=obsH+3;
     }
-    y+=3;
+    y+=4;
   });
 
   // RESUMEN EJECUTIVO
-  if(y>220){doc.addPage();y=20;}
-  y+=5;
+  checkPage();
+  y+=4;
   doc.setFillColor(27,79,114);
   doc.rect(M,y-4,W-M*2,8,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
@@ -276,74 +275,87 @@ function generarPDF(auditoria){
   const cumpleT=resumen.cumple||0;
   const ncT=resumen.noCumple||0;
   const puntaje=auditoria.puntaje||0;
-  const resultado=auditoria.resultado||'—';
+  const resultado=auditoria.resultado||'---';
 
-  doc.setTextColor(0,0,0);doc.setFontSize(9);
-  const cols=[[`Ítems que cumplen: ${cumpleT}`,M],[`No cumplen: ${ncT}`,M+60],[`Puntaje: ${puntaje}%`,M+110],[`Resultado: ${resultado}`,M+150]];
-  cols.forEach(([txt,x])=>{
+  // Caja resumen
+  doc.setFillColor(214,234,248);
+  doc.rect(M,y-4,W-M*2,12,'F');
+  doc.setTextColor(0,0,0);doc.setFontSize(10);
+  const resItems=[
+    ['Cumplen: '+cumpleT,M+5],
+    ['No cumplen: '+ncT,M+55],
+    ['Puntaje: '+puntaje+'%',M+110],
+    ['Resultado: '+resultado,M+148],
+  ];
+  resItems.forEach(([txt,x])=>{
     doc.setFont('helvetica','bold');
-    doc.text(txt,x,y);
+    doc.setTextColor(resultado==='Aprobado'&&txt.includes('Resultado')?30:resultado==='No aprobado'&&txt.includes('Resultado')?192:0,
+      resultado==='Aprobado'&&txt.includes('Resultado')?132:resultado==='No aprobado'&&txt.includes('Resultado')?57:0,
+      resultado==='Aprobado'&&txt.includes('Resultado')?73:resultado==='No aprobado'&&txt.includes('Resultado')?43:0);
+    doc.text(txt,x,y+3);
   });
+  y+=16;
+
+  // Tabla por modulo
+  checkPage();
+  doc.setFontSize(8);doc.setTextColor(0,0,0);
+  doc.setFillColor(214,234,248);
+  doc.rect(M,y-3,W-M*2,7,'F');
+  doc.setFont('helvetica','bold');
+  doc.text('Modulo',M+2,y+1);
+  doc.text('Cumplen',M+100,y+1);
+  doc.text('No cumplen',M+120,y+1);
+  doc.text('N/A',M+143,y+1);
+  doc.text('%',M+158,y+1);
   y+=8;
 
-  // Tabla resumen por módulo
-  if(y>240){doc.addPage();y=20;}
-  doc.setFontSize(8);
-  doc.setFillColor(214,234,248);
-  doc.rect(M,y-3,W-M*2,6,'F');
-  doc.setFont('helvetica','bold');doc.setTextColor(0,0,0);
-  doc.text('Módulo',M+1,y+1);
-  doc.text('C',M+95,y+1);doc.text('NC',M+108,y+1);doc.text('N/A',M+120,y+1);doc.text('%',M+135,y+1);
-  y+=7;
-
-  const estadosMod=mod.estados||[];
   MODULOS.forEach((modulo,mi)=>{
-    if(y>270){doc.addPage();y=20;}
-    const estMod=estadosMod[mi]||[];
+    checkPage();
+    const estMod=estados[mi]||[];
     const c=estMod.filter(e=>e==='C').length;
     const nc=estMod.filter(e=>e==='NC').length;
     const na=estMod.filter(e=>e==='NA').length;
     const t=c+nc;
     const p=t>0?Math.round((c/t)*100):0;
-    if(mi%2===0){doc.setFillColor(248,249,250);doc.rect(M,y-3,W-M*2,6,'F');}
-    doc.setFont('helvetica','normal');
-    doc.text(`${mi+1}. ${modulo.nombre}`,M+1,y+1);
-    doc.text(String(c),M+95,y+1);
-    doc.text(String(nc),M+108,y+1);
-    doc.text(String(na),M+120,y+1);
+    if(mi%2===0){doc.setFillColor(248,249,250);doc.rect(M,y-3,W-M*2,7,'F');}
+    doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
+    doc.text(String(mi+1)+'. '+modulo.nombre,M+2,y+1);
+    doc.text(String(c),M+107,y+1);
+    doc.text(String(nc),M+130,y+1);
+    doc.text(String(na),M+147,y+1);
     doc.setFont('helvetica','bold');
     doc.setTextColor(p>=80?30:192,p>=80?132:57,p>=80?73:43);
-    doc.text(`${p}%`,M+135,y+1);
+    doc.text(String(p)+'%',M+158,y+1);
     doc.setTextColor(0,0,0);
-    y+=6;
+    y+=7;
   });
 
   // FIRMAS
   y+=15;
-  if(y>250){doc.addPage();y=20;}
-  doc.setDrawColor(0,0,0);
+  checkPage();
+  doc.setDrawColor(100,100,100);
   doc.line(M,y,M+75,y);
-  doc.line(M+100,y,W-M,y);
+  doc.line(M+105,y,W-M,y);
   y+=5;
-  doc.setFontSize(8);doc.setFont('helvetica','normal');
-  doc.text('César Orlando Álvarez Aguilar',M,y);
-  doc.text('Firma y aclaración del responsable',M+100,y);
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
+  doc.text('Cesar Orlando Alvarez Aguilar',M,y);
+  doc.text('Firma y aclaracion del responsable',M+105,y);
   y+=4;
-  doc.text('Téc. Higiene y Seguridad Alimentaria',M,y);
-  doc.text(`Establecimiento: ${auditoria.establecimiento||''}`,M+100,y);
+  doc.text('Tec. Higiene y Seguridad Alimentaria',M,y);
+  doc.text('Establecimiento: '+(auditoria.establecimiento||''),M+105,y);
   y+=4;
-  doc.text('INOCUA°tec Servicios — Auditoría BPM Modalidad A',M,y);
+  doc.text('INOCUA tec Servicios - Auditoria BPM Modalidad A',M,y);
 
   // FOOTER
-  const totalPages=doc.getNumberOfPages();
-  for(let i=1;i<=totalPages;i++){
+  const total=doc.getNumberOfPages();
+  for(let i=1;i<=total;i++){
     doc.setPage(i);
     doc.setFontSize(7);doc.setTextColor(150,150,150);
-    doc.text(`INOCUA°tec Servicios | Auditoría BPM | Página ${i} de ${totalPages}`,M,290);
+    doc.text('INOCUA tec Servicios | Auditoria BPM | Pagina '+String(i)+' de '+String(total),M,290);
     doc.text(new Date().toLocaleDateString('es-AR'),W-M-20,290);
   }
 
-  doc.save(`BPM_${auditoria.establecimiento||'auditoria'}_${auditoria.fecha||''}.pdf`);
+  doc.save('BPM_'+(auditoria.establecimiento||'auditoria')+'_'+(auditoria.fecha||'')+'.pdf');
 }
 
 // ── LOGIN ──────────────────────────────────────────────────
@@ -354,26 +366,26 @@ function Login({onLogin}){
   const [error,setError]=useState('');
 
   const login=async()=>{
-    if(!email||!pass){setError('Completá email y contraseña');return;}
+    if(!email||!pass){setError('Completa email y contrasena');return;}
     setCargando(true);setError('');
     const {data,error:e}=await supabase.auth.signInWithPassword({email,password:pass});
-    if(e){setError('Email o contraseña incorrectos');setCargando(false);return;}
+    if(e){setError('Email o contrasena incorrectos');setCargando(false);return;}
     const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',data.user.id).maybeSingle();
     setCargando(false);
-    if(cliente) onLogin({tipo:'cliente',user:data.user,cliente});
+    if(cliente)onLogin({tipo:'cliente',user:data.user,cliente});
     else onLogin({tipo:'auditor',user:data.user});
   };
 
   return(
     <div className="login-wrap">
       <div className="login-box">
-        <h2>INOCUA°tec</h2>
-        <p>Sistema de Auditorías BPM</p>
+        <h2>INOCUA tec</h2>
+        <p>Sistema de Auditorias BPM</p>
         {error&&<div className="alert error">{error}</div>}
         <label>Email</label>
         <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
-        <label>Contraseña</label>
-        <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••"
+        <label>Contrasena</label>
+        <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="********"
           onKeyDown={e=>e.key==='Enter'&&login()}/>
         <button className="btn btn-primary" style={{width:'100%',marginTop:4}} onClick={login} disabled={cargando}>
           {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar'}
@@ -393,10 +405,10 @@ function SubirFotos({auditoriaId}){
   useEffect(()=>{cargarFotos();},[auditoriaId]);
 
   const cargarFotos=async()=>{
-    const {data}=await supabase.storage.from('evidencias').list(`${auditoriaId}/`);
+    const {data}=await supabase.storage.from('evidencias').list(auditoriaId+'/');
     if(data){
       const urls=data.map(f=>{
-        const {data:u}=supabase.storage.from('evidencias').getPublicUrl(`${auditoriaId}/${f.name}`);
+        const {data:u}=supabase.storage.from('evidencias').getPublicUrl(auditoriaId+'/'+f.name);
         return{name:f.name,url:u.publicUrl};
       });
       setFotos(urls);
@@ -408,11 +420,11 @@ function SubirFotos({auditoriaId}){
     if(!files.length)return;
     setSubiendo(true);setMsg('');
     for(const file of files){
-      const nombre=`${Date.now()}_${file.name}`;
-      await supabase.storage.from('evidencias').upload(`${auditoriaId}/${nombre}`,file);
+      const nombre=Date.now()+'_'+file.name;
+      await supabase.storage.from('evidencias').upload(auditoriaId+'/'+nombre,file);
     }
     setSubiendo(false);
-    setMsg(`✅ ${files.length} archivo(s) subido(s)`);
+    setMsg('OK: '+files.length+' archivo(s) subido(s)');
     cargarFotos();
     inputRef.current.value='';
   };
@@ -420,27 +432,27 @@ function SubirFotos({auditoriaId}){
   return(
     <div>
       <div className="upload-area" onClick={()=>inputRef.current.click()}>
-        <div style={{fontSize:32}}>📎</div>
-        <p style={{color:'#999',fontSize:13,marginTop:8}}>Hacé clic para subir fotos o documentos<br/><small>JPG, PNG, PDF — hasta 50MB</small></p>
+        <div style={{fontSize:32}}>+</div>
+        <p style={{color:'#999',fontSize:13,marginTop:8}}>Clic para subir fotos o documentos (JPG, PNG, PDF)</p>
         <input ref={inputRef} type="file" multiple accept="image/*,.pdf" style={{display:'none'}} onChange={subirArchivo}/>
       </div>
-      {subiendo&&<div className="alert info" style={{marginTop:8}}>⏳ Subiendo archivos...</div>}
+      {subiendo&&<div className="alert info" style={{marginTop:8}}>Subiendo archivos...</div>}
       {msg&&<div className="alert success" style={{marginTop:8}}>{msg}</div>}
       {fotos.length>0&&(
         <div className="foto-grid">
           {fotos.map((f,i)=>
             f.name.endsWith('.pdf')?
-            <a key={i} href={f.url} target="_blank" style={{display:'flex',alignItems:'center',justifyContent:'center',height:80,background:'#f8f9fa',borderRadius:4,border:'2px solid #eee',textDecoration:'none',color:'#C0392B',fontSize:12,fontWeight:'bold'}}>📄 PDF</a>:
+            <a key={i} href={f.url} target="_blank" style={{display:'flex',alignItems:'center',justifyContent:'center',height:80,background:'#f8f9fa',borderRadius:4,border:'2px solid #eee',textDecoration:'none',color:'#C0392B',fontSize:12,fontWeight:'bold'}}>PDF</a>:
             <img key={i} src={f.url} alt={f.name} onClick={()=>window.open(f.url,'_blank')}/>
           )}
         </div>
       )}
-      {fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:8}}>No hay evidencias cargadas aún.</p>}
+      {fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:8}}>Sin evidencias cargadas.</p>}
     </div>
   );
 }
 
-// ── MÓDULO CHECKLIST ───────────────────────────────────────
+// ── MODULO CHECKLIST ───────────────────────────────────────
 function ModuloChecklist({modulo,estados,obsMod,onEstado,onObsMod}){
   const cumple=modulo.items.filter((_,i)=>estados[i]==='C').length;
   const noCumple=modulo.items.filter((_,i)=>estados[i]==='NC').length;
@@ -449,7 +461,7 @@ function ModuloChecklist({modulo,estados,obsMod,onEstado,onObsMod}){
     <div className="card">
       <h2>{modulo.id+1}. {modulo.nombre}
         <span style={{float:'right',fontSize:11,fontWeight:'normal',color:'#666'}}>
-          ✅{cumple} ❌{noCumple} ➖{na}
+          C:{cumple} NC:{noCumple} NA:{na}
         </span>
       </h2>
       {modulo.items.map((texto,i)=>(
@@ -458,24 +470,24 @@ function ModuloChecklist({modulo,estados,obsMod,onEstado,onObsMod}){
           <div className="estado-btns">
             {['C','NC','NA'].map(v=>(
               <button key={v}
-                className={`estado-btn${estados[i]===v?' activo-'+v:''}`}
+                className={'estado-btn'+(estados[i]===v?' activo-'+v:'')}
                 onClick={()=>onEstado(i,estados[i]===v?null:v)}>
-                {v==='C'?'✅ Cumple':v==='NC'?'❌ No cumple':'➖ N/A'}
+                {v==='C'?'Cumple':v==='NC'?'No cumple':'N/A'}
               </button>
             ))}
           </div>
         </div>
       ))}
-      <div className="mod-obs" style={{marginTop:10}}>
-        <label>Observaciones generales del módulo:</label>
+      <div style={{marginTop:10}}>
+        <label>Observaciones del modulo:</label>
         <textarea rows={2} placeholder="Observaciones, hallazgos, acciones correctivas..."
-          value={obsMod||''} onChange={e=>onObsMod(e.target.value)}/>
+          value={obsMod||''} onChange={e=>onObsMod(e.target.value)} style={{background:'#FFFDE7',marginBottom:0}}/>
       </div>
     </div>
   );
 }
 
-// ── NUEVA AUDITORÍA ────────────────────────────────────────
+// ── NUEVA AUDITORIA ────────────────────────────────────────
 function NuevaAuditoria({onGuardar}){
   const [estab,setEstab]=useState('');
   const [domicilio,setDomicilio]=useState('');
@@ -510,7 +522,7 @@ function NuevaAuditoria({onGuardar}){
   };
 
   const guardar=async()=>{
-    if(!estab){alert('Ingresá el nombre del establecimiento');return;}
+    if(!estab){alert('Ingresa el nombre del establecimiento');return;}
     setGuardando(true);setError('');
     const {puntaje,cumple,noCumple,na}=calcular();
     const resultado=puntaje>=80?'Aprobado':'No aprobado';
@@ -538,14 +550,14 @@ function NuevaAuditoria({onGuardar}){
 
   if(guardado)return(
     <div className="card">
-      <div className="alert success">✅ Auditoría guardada correctamente.</div>
+      <div className="alert success">Auditoria guardada correctamente.</div>
       <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
-        <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>📄 Descargar PDF</button>
+        <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>Descargar PDF</button>
         <button className="btn btn-primary" onClick={()=>{
           setEstab('');setDomicilio('');setNroHab('');setRubro('');setResp('');
           setCondiciones('');setEstados(MODULOS.map(m=>Array(m.items.length).fill(null)));
           setObsMod(Array(MODULOS.length).fill(''));setGuardado(false);setAuditGuardada(null);
-        }}>Nueva auditoría</button>
+        }}>Nueva auditoria</button>
       </div>
       <h2 style={{color:'#1B4F72',marginBottom:12}}>Subir evidencias</h2>
       {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
@@ -558,21 +570,21 @@ function NuevaAuditoria({onGuardar}){
       {error&&<div className="alert error">{error}</div>}
       <div className="card">
         <h2>Datos del establecimiento</h2>
-        <label>Establecimiento / Razón social *</label>
+        <label>Establecimiento / Razon social *</label>
         <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Nombre del establecimiento"/>
         <label>Domicilio</label>
-        <input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Dirección"/>
-        <label>N° de habilitación</label>
-        <input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Número de habilitación municipal"/>
+        <input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion"/>
+        <label>N de habilitacion</label>
+        <input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion municipal"/>
         <label>Rubro / Actividad</label>
-        <input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panadería, Restaurante, Catering..."/>
+        <input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panaderia, Restaurante, Catering..."/>
         <label>Responsable presente</label>
         <input value={resp} onChange={e=>setResp(e.target.value)} placeholder="Nombre y apellido"/>
-        <label>Fecha de auditoría</label>
+        <label>Fecha de auditoria</label>
         <input type="date" value={fecha} onChange={e=>setFecha(e.target.value)}/>
         <label>Condiciones generales al inicio</label>
         <textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)}
-          placeholder="Descripción de las condiciones generales al momento de iniciar la auditoría"/>
+          placeholder="Descripcion de las condiciones generales al momento de iniciar la auditoria"/>
       </div>
       {MODULOS.map((mod,mi)=>(
         <ModuloChecklist key={mi} modulo={mod}
@@ -586,11 +598,11 @@ function NuevaAuditoria({onGuardar}){
           <div className="stat"><div className="num" style={{color:'#1E8449'}}>{cumple}</div><div className="label">Cumplen</div></div>
           <div className="stat"><div className="num" style={{color:'#C0392B'}}>{noCumple}</div><div className="label">No cumplen</div></div>
           <div className="stat"><div className="num">{puntaje}%</div><div className="label">Puntaje</div></div>
-          <div className="stat"><span className={`badge ${puntaje>=80?'verde':'rojo'}`} style={{fontSize:14,padding:'6px 12px',marginTop:8,display:'inline-block'}}>{puntaje>=80?'APROBADO':'NO APROBADO'}</span></div>
+          <div className="stat"><span className={'badge '+(puntaje>=80?'verde':'rojo')} style={{fontSize:14,padding:'6px 12px',marginTop:8,display:'inline-block'}}>{puntaje>=80?'APROBADO':'NO APROBADO'}</span></div>
         </div>
         <button className="btn btn-success" onClick={guardar} disabled={guardando}>
           {guardando&&<span className="spinner"></span>}
-          {guardando?'Guardando...':'💾 Guardar auditoría'}
+          {guardando?'Guardando...':'Guardar auditoria'}
         </button>
       </div>
     </div>
@@ -600,32 +612,32 @@ function NuevaAuditoria({onGuardar}){
 // ── DASHBOARD ──────────────────────────────────────────────
 function Dashboard({auditorias,cargando,onVerEvidencias}){
   const total=auditorias.length;
-  const aprobadas=auditorias.filter(a=>a.resultado==="Aprobado").length;
+  const aprobadas=auditorias.filter(a=>a.resultado==='Aprobado').length;
   const conNC=auditorias.filter(a=>(a.modulos?.resumen?.noCumple||0)>0).length;
   const promedio=total>0?Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total):0;
   return(
     <div>
       <div className="grid2" style={{marginBottom:16}}>
-        <div className="stat"><div className="num">{total}</div><div className="label">Auditorías realizadas</div></div>
+        <div className="stat"><div className="num">{total}</div><div className="label">Auditorias realizadas</div></div>
         <div className="stat"><div className="num">{aprobadas}</div><div className="label">Aprobados</div></div>
         <div className="stat"><div className="num">{conNC}</div><div className="label">Con no conformidades</div></div>
         <div className="stat"><div className="num">{promedio}%</div><div className="label">Puntaje promedio</div></div>
       </div>
       <div className="card">
-        <h2>Últimas auditorías</h2>
-        {cargando&&<p style={{color:'#999',fontSize:14}}>⏳ Cargando...</p>}
-        {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>}
+        <h2>Ultimas auditorias</h2>
+        {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
+        {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
         {!cargando&&auditorias.length>0&&
           <table><thead><tr><th>Establecimiento</th><th>Responsable</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>PDF</th><th>Evidencias</th></tr></thead>
           <tbody>{auditorias.map((a,i)=>(
             <tr key={i}>
               <td>{a.establecimiento}</td>
-              <td>{a.responsable||'—'}</td>
+              <td>{a.responsable||'---'}</td>
               <td>{a.fecha}</td>
               <td>{a.puntaje}%</td>
-              <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
-              <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>📄 PDF</button></td>
-              <td><button className="btn btn-warning" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerEvidencias(a)}>📎 Ver</button></td>
+              <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
+              <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
+              <td><button className="btn btn-warning" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerEvidencias(a)}>Ver</button></td>
             </tr>
           ))}</tbody></table>}
       </div>
@@ -633,7 +645,7 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
   );
 }
 
-// ── GESTIÓN CLIENTES ───────────────────────────────────────
+// ── GESTION CLIENTES ───────────────────────────────────────
 function GestionClientes(){
   const [clientes,setClientes]=useState([]);
   const [email,setEmail]=useState('');
@@ -651,18 +663,18 @@ function GestionClientes(){
   };
 
   const crearCliente=async()=>{
-    if(!email||!pass||!estab){setError('Completá todos los campos');return;}
+    if(!email||!pass||!estab){setError('Completa todos los campos');return;}
     setCargando(true);setError('');setMsg('');
     const {data,error:e}=await supabase.auth.admin.createUser({email,password:pass,email_confirm:true});
     if(e){setError('Error: '+e.message);setCargando(false);return;}
     await supabase.from('clientes').insert([{user_id:data.user.id,establecimiento:estab,email}]);
-    setMsg(`✅ Cliente "${estab}" creado. Email: ${email} / Contraseña: ${pass}`);
+    setMsg('Cliente "'+estab+'" creado. Email: '+email+' / Contrasena: '+pass);
     setEmail('');setPass('');setEstab('');
     cargarClientes();setCargando(false);
   };
 
   const eliminarCliente=async(c)=>{
-    if(!confirm(`¿Eliminar acceso de "${c.establecimiento}"?`))return;
+    if(!confirm('Eliminar acceso de "'+c.establecimiento+'"?'))return;
     await supabase.auth.admin.deleteUser(c.user_id);
     await supabase.from('clientes').delete().eq('id',c.id);
     cargarClientes();
@@ -675,26 +687,26 @@ function GestionClientes(){
         {error&&<div className="alert error">{error}</div>}
         {msg&&<div className="alert success">{msg}</div>}
         <label>Nombre del establecimiento</label>
-        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panadería San Martín"/>
+        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panaderia San Martin"/>
         <label>Email del cliente</label>
         <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="cliente@email.com"/>
-        <label>Contraseña inicial</label>
-        <input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contraseña para el cliente"/>
+        <label>Contrasena inicial</label>
+        <input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contrasena para el cliente"/>
         <button className="btn btn-success" onClick={crearCliente} disabled={cargando}>
-          {cargando&&<span className="spinner"></span>}{cargando?'Creando...':'➕ Crear acceso'}
+          {cargando&&<span className="spinner"></span>}{cargando?'Creando...':'Crear acceso'}
         </button>
       </div>
       <div className="card">
         <h2>Clientes con acceso</h2>
         {clientes.length===0&&<p style={{color:'#999',fontSize:14}}>No hay clientes registrados.</p>}
         {clientes.length>0&&(
-          <table><thead><tr><th>Establecimiento</th><th>Email</th><th>Creado</th><th>Acción</th></tr></thead>
+          <table><thead><tr><th>Establecimiento</th><th>Email</th><th>Creado</th><th>Accion</th></tr></thead>
           <tbody>{clientes.map((c,i)=>(
             <tr key={i}>
               <td>{c.establecimiento}</td>
               <td>{c.email}</td>
               <td>{new Date(c.created_at).toLocaleDateString('es-AR')}</td>
-              <td><button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>eliminarCliente(c)}>🗑 Eliminar</button></td>
+              <td><button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>eliminarCliente(c)}>Eliminar</button></td>
             </tr>
           ))}</tbody></table>
         )}
@@ -713,7 +725,7 @@ function VistaCliente({session,onLogout}){
   useEffect(()=>{
     (async()=>{
       const {data}=await supabase.from('auditorias').select('*')
-        .ilike('establecimiento',`%${cliente.establecimiento}%`).order('created_at',{ascending:false});
+        .ilike('establecimiento','%'+cliente.establecimiento+'%').order('created_at',{ascending:false});
       if(data)setAuditorias(data);
       setCargando(false);
     })();
@@ -722,30 +734,30 @@ function VistaCliente({session,onLogout}){
   return(
     <div>
       <div className="header">
-        <div><h1>🏪 {cliente.establecimiento}</h1><span>Portal de evidencias — INOCUA°tec</span></div>
+        <div><h1>{cliente.establecimiento}</h1><span>Portal de evidencias - INOCUA tec</span></div>
         <button className="btn btn-danger" style={{marginLeft:'auto'}} onClick={onLogout}>Salir</button>
       </div>
       <div className="container">
         {!seleccionada?(
           <div className="card">
-            <h2>Mis auditorías</h2>
-            {cargando&&<p style={{color:'#999',fontSize:14}}>⏳ Cargando...</p>}
-            {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>}
+            <h2>Mis auditorias</h2>
+            {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
+            {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
             {!cargando&&auditorias.length>0&&(
-              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Acción</th></tr></thead>
+              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Accion</th></tr></thead>
               <tbody>{auditorias.map((a,i)=>(
                 <tr key={i}>
                   <td>{a.fecha}</td><td>{a.puntaje}%</td>
-                  <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
-                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>📎 Subir evidencia</button></td>
+                  <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
+                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>Subir evidencia</button></td>
                 </tr>
               ))}</tbody></table>
             )}
           </div>
         ):(
           <div className="card">
-            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>← Volver</button>
-            <h2>Evidencias — {seleccionada.fecha}</h2>
+            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>Volver</button>
+            <h2>Evidencias - {seleccionada.fecha}</h2>
             <SubirFotos auditoriaId={seleccionada.id}/>
           </div>
         )}
@@ -796,24 +808,24 @@ function App(){
   return(
     <div>
       <div className="header">
-        <div><h1>INOCUA°tec Servicios</h1><span>Sistema de Auditorías BPM — Panel Auditor</span></div>
+        <div><h1>INOCUA tec Servicios</h1><span>Sistema de Auditorias BPM - Panel Auditor</span></div>
         <div style={{marginLeft:'auto',display:'flex',alignItems:'center',gap:12}}>
-          <span style={{fontSize:11,opacity:0.7}}>{cargando?'⏳':'✅ '+auditorias.length+' auditorías'}</span>
+          <span style={{fontSize:11,opacity:0.7}}>{cargando?'Cargando...':auditorias.length+' auditorias'}</span>
           <button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={logout}>Salir</button>
         </div>
       </div>
       <div className="nav">
-        <button className={tab==='dashboard'?'active':''} onClick={()=>{setTab('dashboard');setAuditoriaEvidencia(null);}}>📊 Dashboard</button>
-        <button className={tab==='nueva'?'active':''} onClick={()=>{setTab('nueva');setAuditoriaEvidencia(null);}}>➕ Nueva auditoría</button>
-        <button className={tab==='clientes'?'active':''} onClick={()=>{setTab('clientes');setAuditoriaEvidencia(null);}}>👥 Clientes</button>
+        <button className={tab==='dashboard'?'active':''} onClick={()=>{setTab('dashboard');setAuditoriaEvidencia(null);}}>Dashboard</button>
+        <button className={tab==='nueva'?'active':''} onClick={()=>{setTab('nueva');setAuditoriaEvidencia(null);}}>Nueva auditoria</button>
+        <button className={tab==='clientes'?'active':''} onClick={()=>{setTab('clientes');setAuditoriaEvidencia(null);}}>Clientes</button>
       </div>
       <div className="container">
         {tab==='dashboard'&&!auditoriaEvidencia&&
           <Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)}/>}
         {tab==='dashboard'&&auditoriaEvidencia&&(
           <div className="card">
-            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>← Volver</button>
-            <h2>Evidencias — {auditoriaEvidencia.establecimiento} ({auditoriaEvidencia.fecha})</h2>
+            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>Volver</button>
+            <h2>Evidencias - {auditoriaEvidencia.establecimiento} ({auditoriaEvidencia.fecha})</h2>
             <SubirFotos auditoriaId={auditoriaEvidencia.id}/>
           </div>
         )}
