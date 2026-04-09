@@ -8,6 +8,7 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#f0f4f8;color:#333}
@@ -23,12 +24,12 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#333}
 .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:bold}
 .badge.verde{background:#D5F5E3;color:#1E8449}
 .badge.rojo{background:#FADBD8;color:#C0392B}
-.badge.amarillo{background:#FEF9E7;color:#D4AC0D}
 .btn{padding:8px 16px;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-weight:bold;transition:all 0.15s}
 .btn-primary{background:#1B4F72;color:white}
 .btn-success{background:#1E8449;color:white}
 .btn-danger{background:#C0392B;color:white}
 .btn-warning{background:#D4AC0D;color:white}
+.btn-pdf{background:#8E44AD;color:white}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .stat{text-align:center;padding:16px;background:#D6EAF8;border-radius:8px}
@@ -63,9 +64,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .estado-btn.activo-C{background:#1E8449;border-color:#1E8449;color:white}
 .estado-btn.activo-NC{background:#C0392B;border-color:#C0392B;color:white}
 .estado-btn.activo-NA{background:#888;border-color:#888;color:white}
-.mod-obs{margin-top:10px}
 .mod-obs textarea{margin-bottom:0;font-size:13px;background:#FFFDE7}
-.resumen-mod{display:flex;gap:8px;align-items:center;font-size:12px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -77,7 +76,6 @@ const SUPA_URL='https://fcltfzvuxtlgdxdxddjd.supabase.co';
 const SUPA_KEY='sb_publishable_DyKago_O2C7d8G22Vb7WGg_-kt-F6yR';
 const supabase=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 
-// ── CHECKLIST REAL ─────────────────────────────────────────
 const MODULOS=[
   {id:0,nombre:"Higiene del personal",items:[
     "Uso de indumentaria adecuada (cofia, delantal, calzado)",
@@ -150,6 +148,203 @@ const MODULOS=[
     "Registros de autocontrol presentes y actualizados",
   ]},
 ];
+
+// ── GENERAR PDF ────────────────────────────────────────────
+function generarPDF(auditoria){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,M=15;
+  let y=15;
+
+  const salto=(h=6)=>{y+=h;if(y>270){doc.addPage();y=20;}};
+  const linea=(texto,x=M,size=10,bold=false,color=[0,0,0])=>{
+    doc.setFontSize(size);
+    doc.setFont('helvetica',bold?'bold':'normal');
+    doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(texto,W-x-M);
+    lines.forEach(l=>{
+      if(y>270){doc.addPage();y=20;}
+      doc.text(l,x,y);
+      y+=size*0.4;
+    });
+  };
+
+  // ENCABEZADO
+  doc.setFillColor(27,79,114);
+  doc.rect(0,0,210,28,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(16);doc.setFont('helvetica','bold');
+  doc.text('INOCUA°tec Servicios',M,12);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');
+  doc.text('Planilla de Relevamiento BPM — Modalidad A',M,19);
+  doc.text('César Orlando Álvarez Aguilar — Téc. Higiene y Seguridad Alimentaria',M,25);
+  y=35;
+
+  // DATOS DEL ESTABLECIMIENTO
+  doc.setFillColor(214,234,248);
+  doc.rect(M,y-5,W-M*2,32,'F');
+  doc.setTextColor(0,0,0);
+  const mod=auditoria.modulos||{};
+  const campos=[
+    ['Establecimiento:',auditoria.establecimiento||'—'],
+    ['Responsable presente:',auditoria.responsable||'—'],
+    ['Fecha de auditoría:',auditoria.fecha||'—'],
+    ['Rubro:',mod.rubro||'—'],
+    ['Domicilio:',mod.domicilio||'—'],
+    ['N° Habilitación:',mod.nroHab||'—'],
+  ];
+  campos.forEach(([k,v],i)=>{
+    const col=i%2===0?M:M+95;
+    const row=Math.floor(i/2);
+    doc.setFontSize(8);doc.setFont('helvetica','bold');
+    doc.text(k,col,y+row*8);
+    doc.setFont('helvetica','normal');
+    doc.text(String(v).substring(0,35),col+30,y+row*8);
+  });
+  y+=35;
+
+  // MÓDULOS
+  const estados=mod.estados||[];
+  const obsMods=mod.observaciones_modulos||[];
+
+  MODULOS.forEach((modulo,mi)=>{
+    const estMod=estados[mi]||[];
+    const cumple=estMod.filter(e=>e==='C').length;
+    const nc=estMod.filter(e=>e==='NC').length;
+    const na=estMod.filter(e=>e==='NA').length;
+    const total=cumple+nc;
+    const pMod=total>0?Math.round((cumple/total)*100):0;
+
+    // Header módulo
+    if(y>250){doc.addPage();y=20;}
+    doc.setFillColor(21,67,96);
+    doc.rect(M,y-4,W-M*2,8,'F');
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.text(`MÓDULO ${mi+1} — ${modulo.nombre.toUpperCase()}`,M+2,y+1);
+    doc.text(`✓${cumple} ✗${nc} N/A${na} | ${pMod}%`,W-M-30,y+1);
+    y+=8;
+
+    // Items
+    modulo.items.forEach((item,ii)=>{
+      if(y>270){doc.addPage();y=20;}
+      const est=estMod[ii];
+      const icono=est==='C'?'✓':est==='NC'?'✗':est==='NA'?'N/A':'—';
+      const color=est==='C'?[30,132,73]:est==='NC'?[192,57,43]:[100,100,100];
+      doc.setTextColor(...color);
+      doc.setFontSize(8);doc.setFont('helvetica','bold');
+      doc.text(icono,M+1,y);
+      doc.setTextColor(0,0,0);doc.setFont('helvetica','normal');
+      const lines=doc.splitTextToSize(item,W-M*2-12);
+      lines.forEach((l,li)=>{
+        if(y>270){doc.addPage();y=20;}
+        doc.text(l,M+10,y);
+        if(li<lines.length-1)y+=4;
+      });
+      y+=5;
+    });
+
+    // Observaciones del módulo
+    if(obsMods[mi]){
+      if(y>265){doc.addPage();y=20;}
+      doc.setFillColor(255,253,231);
+      const obsLines=doc.splitTextToSize(obsMods[mi],W-M*2-8);
+      const obsH=obsLines.length*4+6;
+      doc.rect(M,y-3,W-M*2,obsH,'F');
+      doc.setTextColor(100,80,0);doc.setFontSize(7.5);doc.setFont('helvetica','italic');
+      doc.text('Obs:',M+2,y+1);
+      doc.setFont('helvetica','normal');
+      obsLines.forEach((l,li)=>{
+        if(y>270){doc.addPage();y=20;}
+        doc.text(l,M+10,y+1+li*4);
+      });
+      y+=obsH+2;
+    }
+    y+=3;
+  });
+
+  // RESUMEN EJECUTIVO
+  if(y>220){doc.addPage();y=20;}
+  y+=5;
+  doc.setFillColor(27,79,114);
+  doc.rect(M,y-4,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.text('RESUMEN EJECUTIVO DE CUMPLIMIENTO',M+2,y+1);
+  y+=12;
+
+  const resumen=mod.resumen||{};
+  const cumpleT=resumen.cumple||0;
+  const ncT=resumen.noCumple||0;
+  const puntaje=auditoria.puntaje||0;
+  const resultado=auditoria.resultado||'—';
+
+  doc.setTextColor(0,0,0);doc.setFontSize(9);
+  const cols=[[`Ítems que cumplen: ${cumpleT}`,M],[`No cumplen: ${ncT}`,M+60],[`Puntaje: ${puntaje}%`,M+110],[`Resultado: ${resultado}`,M+150]];
+  cols.forEach(([txt,x])=>{
+    doc.setFont('helvetica','bold');
+    doc.text(txt,x,y);
+  });
+  y+=8;
+
+  // Tabla resumen por módulo
+  if(y>240){doc.addPage();y=20;}
+  doc.setFontSize(8);
+  doc.setFillColor(214,234,248);
+  doc.rect(M,y-3,W-M*2,6,'F');
+  doc.setFont('helvetica','bold');doc.setTextColor(0,0,0);
+  doc.text('Módulo',M+1,y+1);
+  doc.text('C',M+95,y+1);doc.text('NC',M+108,y+1);doc.text('N/A',M+120,y+1);doc.text('%',M+135,y+1);
+  y+=7;
+
+  const estadosMod=mod.estados||[];
+  MODULOS.forEach((modulo,mi)=>{
+    if(y>270){doc.addPage();y=20;}
+    const estMod=estadosMod[mi]||[];
+    const c=estMod.filter(e=>e==='C').length;
+    const nc=estMod.filter(e=>e==='NC').length;
+    const na=estMod.filter(e=>e==='NA').length;
+    const t=c+nc;
+    const p=t>0?Math.round((c/t)*100):0;
+    if(mi%2===0){doc.setFillColor(248,249,250);doc.rect(M,y-3,W-M*2,6,'F');}
+    doc.setFont('helvetica','normal');
+    doc.text(`${mi+1}. ${modulo.nombre}`,M+1,y+1);
+    doc.text(String(c),M+95,y+1);
+    doc.text(String(nc),M+108,y+1);
+    doc.text(String(na),M+120,y+1);
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(p>=80?30:192,p>=80?132:57,p>=80?73:43);
+    doc.text(`${p}%`,M+135,y+1);
+    doc.setTextColor(0,0,0);
+    y+=6;
+  });
+
+  // FIRMAS
+  y+=15;
+  if(y>250){doc.addPage();y=20;}
+  doc.setDrawColor(0,0,0);
+  doc.line(M,y,M+75,y);
+  doc.line(M+100,y,W-M,y);
+  y+=5;
+  doc.setFontSize(8);doc.setFont('helvetica','normal');
+  doc.text('César Orlando Álvarez Aguilar',M,y);
+  doc.text('Firma y aclaración del responsable',M+100,y);
+  y+=4;
+  doc.text('Téc. Higiene y Seguridad Alimentaria',M,y);
+  doc.text(`Establecimiento: ${auditoria.establecimiento||''}`,M+100,y);
+  y+=4;
+  doc.text('INOCUA°tec Servicios — Auditoría BPM Modalidad A',M,y);
+
+  // FOOTER
+  const totalPages=doc.getNumberOfPages();
+  for(let i=1;i<=totalPages;i++){
+    doc.setPage(i);
+    doc.setFontSize(7);doc.setTextColor(150,150,150);
+    doc.text(`INOCUA°tec Servicios | Auditoría BPM | Página ${i} de ${totalPages}`,M,290);
+    doc.text(new Date().toLocaleDateString('es-AR'),W-M-20,290);
+  }
+
+  doc.save(`BPM_${auditoria.establecimiento||'auditoria'}_${auditoria.fecha||''}.pdf`);
+}
 
 // ── LOGIN ──────────────────────────────────────────────────
 function Login({onLogin}){
@@ -246,11 +441,10 @@ function SubirFotos({auditoriaId}){
 }
 
 // ── MÓDULO CHECKLIST ───────────────────────────────────────
-function ModuloChecklist({modulo,estados,obsItems,obsMod,onEstado,onObsMod}){
+function ModuloChecklist({modulo,estados,obsMod,onEstado,onObsMod}){
   const cumple=modulo.items.filter((_,i)=>estados[i]==='C').length;
   const noCumple=modulo.items.filter((_,i)=>estados[i]==='NC').length;
   const na=modulo.items.filter((_,i)=>estados[i]==='NA').length;
-
   return(
     <div className="card">
       <h2>{modulo.id+1}. {modulo.nombre}
@@ -265,15 +459,15 @@ function ModuloChecklist({modulo,estados,obsItems,obsMod,onEstado,onObsMod}){
             {['C','NC','NA'].map(v=>(
               <button key={v}
                 className={`estado-btn${estados[i]===v?' activo-'+v:''}`}
-                onClick={()=>onEstado(i, estados[i]===v ? null : v)}>
+                onClick={()=>onEstado(i,estados[i]===v?null:v)}>
                 {v==='C'?'✅ Cumple':v==='NC'?'❌ No cumple':'➖ N/A'}
               </button>
             ))}
           </div>
         </div>
       ))}
-      <div className="mod-obs">
-        <label style={{marginTop:8}}>Observaciones generales del módulo:</label>
+      <div className="mod-obs" style={{marginTop:10}}>
+        <label>Observaciones generales del módulo:</label>
         <textarea rows={2} placeholder="Observaciones, hallazgos, acciones correctivas..."
           value={obsMod||''} onChange={e=>onObsMod(e.target.value)}/>
       </div>
@@ -290,9 +484,7 @@ function NuevaAuditoria({onGuardar}){
   const [resp,setResp]=useState('');
   const [fecha,setFecha]=useState(new Date().toISOString().split('T')[0]);
   const [condiciones,setCondiciones]=useState('');
-  // estados[modId][itemIdx] = 'C'|'NC'|'NA'|null
   const [estados,setEstados]=useState(()=>MODULOS.map(m=>Array(m.items.length).fill(null)));
-  // observaciones por módulo
   const [obsMod,setObsMod]=useState(Array(MODULOS.length).fill(''));
   const [guardando,setGuardando]=useState(false);
   const [guardado,setGuardado]=useState(false);
@@ -300,27 +492,21 @@ function NuevaAuditoria({onGuardar}){
   const [auditGuardada,setAuditGuardada]=useState(null);
 
   const setEstado=(modId,itemIdx,val)=>{
-    setEstados(prev=>{
-      const nuevo=[...prev];
-      nuevo[modId]=[...nuevo[modId]];
-      nuevo[modId][itemIdx]=val;
-      return nuevo;
-    });
+    setEstados(prev=>{const n=[...prev];n[modId]=[...n[modId]];n[modId][itemIdx]=val;return n;});
   };
-
   const setObsModulo=(modId,val)=>{
     setObsMod(prev=>{const n=[...prev];n[modId]=val;return n;});
   };
 
   const calcular=()=>{
-    let cumple=0,noCumple=0,na=0,total=0;
+    let cumple=0,noCumple=0,na=0;
     estados.forEach(mod=>mod.forEach(e=>{
-      if(e==='C'){cumple++;total++;}
-      else if(e==='NC'){noCumple++;total++;}
-      else if(e==='NA') na++;
+      if(e==='C')cumple++;
+      else if(e==='NC')noCumple++;
+      else if(e==='NA')na++;
     }));
-    const puntaje=total>0?Math.round((cumple/total)*100):0;
-    return{puntaje,cumple,noCumple,na};
+    const total=cumple+noCumple;
+    return{puntaje:total>0?Math.round((cumple/total)*100):0,cumple,noCumple,na};
   };
 
   const guardar=async()=>{
@@ -329,8 +515,8 @@ function NuevaAuditoria({onGuardar}){
     const {puntaje,cumple,noCumple,na}=calcular();
     const resultado=puntaje>=80?'Aprobado':'No aprobado';
     const modulosData={
-      estados,
-      observaciones_modulos:obsMod,
+      estados,observaciones_modulos:obsMod,
+      domicilio,nroHab,rubro,condiciones,
       resumen:{cumple,noCumple,na},
       detalle:MODULOS.map((m,mi)=>({
         nombre:m.nombre,
@@ -341,8 +527,7 @@ function NuevaAuditoria({onGuardar}){
       }))
     };
     const {data,error:err}=await supabase.from('auditorias').insert([{
-      establecimiento:estab,responsable:resp,fecha,puntaje,resultado,
-      modulos:modulosData
+      establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData
     }]).select();
     setGuardando(false);
     if(err){setError('Error: '+err.message);return;}
@@ -354,20 +539,20 @@ function NuevaAuditoria({onGuardar}){
   if(guardado)return(
     <div className="card">
       <div className="alert success">✅ Auditoría guardada correctamente.</div>
-      <p style={{fontSize:13,color:'#666',marginBottom:16}}>Podés subir evidencias ahora mismo:</p>
-      {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
-      <div style={{marginTop:16}}>
+      <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
+        <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>📄 Descargar PDF</button>
         <button className="btn btn-primary" onClick={()=>{
           setEstab('');setDomicilio('');setNroHab('');setRubro('');setResp('');
           setCondiciones('');setEstados(MODULOS.map(m=>Array(m.items.length).fill(null)));
           setObsMod(Array(MODULOS.length).fill(''));setGuardado(false);setAuditGuardada(null);
         }}>Nueva auditoría</button>
       </div>
+      <h2 style={{color:'#1B4F72',marginBottom:12}}>Subir evidencias</h2>
+      {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
     </div>
   );
 
   const {puntaje,cumple,noCumple}=calcular();
-
   return(
     <div>
       {error&&<div className="alert error">{error}</div>}
@@ -389,27 +574,19 @@ function NuevaAuditoria({onGuardar}){
         <textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)}
           placeholder="Descripción de las condiciones generales al momento de iniciar la auditoría"/>
       </div>
-
       {MODULOS.map((mod,mi)=>(
         <ModuloChecklist key={mi} modulo={mod}
-          estados={estados[mi]}
-          obsMod={obsMod[mi]}
-          onEstado={(itemIdx,val)=>setEstado(mi,itemIdx,val)}
-          onObsMod={val=>setObsModulo(mi,val)}
-        />
+          estados={estados[mi]} obsMod={obsMod[mi]}
+          onEstado={(idx,val)=>setEstado(mi,idx,val)}
+          onObsMod={val=>setObsModulo(mi,val)}/>
       ))}
-
       <div className="card">
-        <h2>Resumen de la auditoría</h2>
+        <h2>Resumen</h2>
         <div className="grid4" style={{marginBottom:16}}>
           <div className="stat"><div className="num" style={{color:'#1E8449'}}>{cumple}</div><div className="label">Cumplen</div></div>
           <div className="stat"><div className="num" style={{color:'#C0392B'}}>{noCumple}</div><div className="label">No cumplen</div></div>
           <div className="stat"><div className="num">{puntaje}%</div><div className="label">Puntaje</div></div>
-          <div className="stat">
-            <div className="num" style={{fontSize:20,marginTop:4}}>
-              <span className={`badge ${puntaje>=80?'verde':'rojo'}`}>{puntaje>=80?'APROBADO':'NO APROBADO'}</span>
-            </div>
-          </div>
+          <div className="stat"><span className={`badge ${puntaje>=80?'verde':'rojo'}`} style={{fontSize:14,padding:'6px 12px',marginTop:8,display:'inline-block'}}>{puntaje>=80?'APROBADO':'NO APROBADO'}</span></div>
         </div>
         <button className="btn btn-success" onClick={guardar} disabled={guardando}>
           {guardando&&<span className="spinner"></span>}
@@ -439,7 +616,7 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
         {cargando&&<p style={{color:'#999',fontSize:14}}>⏳ Cargando...</p>}
         {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorías registradas aún.</p>}
         {!cargando&&auditorias.length>0&&
-          <table><thead><tr><th>Establecimiento</th><th>Responsable</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Evidencias</th></tr></thead>
+          <table><thead><tr><th>Establecimiento</th><th>Responsable</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>PDF</th><th>Evidencias</th></tr></thead>
           <tbody>{auditorias.map((a,i)=>(
             <tr key={i}>
               <td>{a.establecimiento}</td>
@@ -447,6 +624,7 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
               <td>{a.fecha}</td>
               <td>{a.puntaje}%</td>
               <td><span className={`badge ${a.resultado==='Aprobado'?'verde':'rojo'}`}>{a.resultado}</span></td>
+              <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>📄 PDF</button></td>
               <td><button className="btn btn-warning" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerEvidencias(a)}>📎 Ver</button></td>
             </tr>
           ))}</tbody></table>}
@@ -568,7 +746,6 @@ function VistaCliente({session,onLogout}){
           <div className="card">
             <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>← Volver</button>
             <h2>Evidencias — {seleccionada.fecha}</h2>
-            <p style={{fontSize:13,color:'#666',marginBottom:16}}>Subí fotos, actas, análisis de agua, certificados de plagas, lo que necesites.</p>
             <SubirFotos auditoriaId={seleccionada.id}/>
           </div>
         )}
@@ -590,7 +767,7 @@ function App(){
       if(data.session){
         const u=data.session.user;
         const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',u.id).maybeSingle();
-        if(cliente) setSession({tipo:'cliente',user:u,cliente});
+        if(cliente)setSession({tipo:'cliente',user:u,cliente});
         else{setSession({tipo:'auditor',user:u});cargarAuditorias();}
       } else setCargando(false);
     });
