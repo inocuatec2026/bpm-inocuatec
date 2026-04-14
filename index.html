@@ -52,7 +52,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .alert.success{background:#D5F5E3;color:#1E8449;border-left:4px solid #1E8449}
 .alert.warning{background:#FEF9E7;color:#9A7D0A;border-left:4px solid #D4AC0D}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
-.spinner-dark{display:inline-block;width:14px;height:14px;border:2px solid #E67E22;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f0f4f8}
 .login-box{background:white;border-radius:12px;padding:40px;width:100%;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
@@ -71,7 +70,6 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .estado-btn.activo-C{background:#1E8449;border-color:#1E8449;color:white}
 .estado-btn.activo-NC{background:#C0392B;border-color:#C0392B;color:white}
 .estado-btn.activo-NA{background:#888;border-color:#888;color:white}
-.mod-obs textarea{margin-bottom:0;font-size:13px;background:#FFFDE7}
 .nc-panel{background:#FEF5F5;border:1px solid #FADBD8;border-radius:6px;padding:14px;margin-top:10px}
 .nc-panel h4{color:#C0392B;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .nc-sugerencia{background:#FFF9F0;border:1px solid #FAD7A0;border-radius:6px;padding:12px;margin-top:10px}
@@ -82,7 +80,7 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .nc-estado-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .nc-estado-btn{padding:4px 10px;border:1px solid #ddd;border-radius:12px;cursor:pointer;font-size:11px;font-weight:bold;background:white;color:#666;transition:all 0.15s}
 .nc-estado-btn.activo-pendiente{background:#FADBD8;border-color:#C0392B;color:#C0392B}
-.nc-estado-btn.activo-proceso{background:#FEF9E7;border-color:#D4AC0D;color:#9A7D0A}
+.nc-estado-btn.activo-enproceso{background:#FEF9E7;border-color:#D4AC0D;color:#9A7D0A}
 .nc-estado-btn.activo-verificada{background:#D6EAF8;border-color:#1B4F72;color:#1B4F72}
 .nc-estado-btn.activo-cerrada{background:#D5F5E3;border-color:#1E8449;color:#1E8449}
 </style>
@@ -91,125 +89,105 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 <div id="root"></div>
 <script type="text/babel">
 const {useState,useEffect,useRef}=React;
-
 const SUPA_URL='https://fcltfzvuxtlgdxdxddjd.supabase.co';
 const SUPA_KEY='sb_publishable_DyKago_O2C7d8G22Vb7WGg_-kt-F6yR';
 const supabase=window.supabase.createClient(SUPA_URL,SUPA_KEY);
-
 const PLAZOS=['Inmediato','24 horas','48 horas','72 horas','5 dias','A convenir'];
 
-const MODULOS=[
-  {id:0,nombre:"Higiene del personal",items:[
-    "Uso de indumentaria adecuada (cofia, delantal, calzado)",
-    "Tecnica de lavado de manos correcta",
-    "Dispensadores de jabon y toallas descartables operativos",
-    "Carteleria de lavado de manos visible",
-    "Carnet sanitario / libreta sanitaria vigente",
-  ]},
-  {id:1,nombre:"Instalaciones",items:[
-    "Pisos sin grietas, limpios y de facil limpieza",
-    "Paredes y techos en buen estado, sin humedad ni descascaramiento",
-    "Iluminacion suficiente y protegida",
-    "Ventilacion adecuada (natural o mecanica)",
-    "Mesadas aptas para uso alimentario y en buen estado",
-    "Agua fria y caliente disponible en zona de trabajo",
-    "Tela mosquitera en aberturas (ventanas, rejillas)",
-    "Antebano con carteleria y elementos de higiene",
-    "Vestuario diferenciado (si aplica)",
-  ]},
-  {id:2,nombre:"Limpieza y desinfeccion",items:[
-    "Plan de limpieza y desinfeccion definido y disponible",
-    "Uso correcto de productos (concentracion, tiempo de contacto)",
-    "Elementos de limpieza diferenciados por area / superficie",
-    "Frecuencia de limpieza adecuada y registrada",
-    "Productos almacenados separados de alimentos",
-  ]},
-  {id:3,nombre:"Control de temperaturas",items:[
-    "Heladeras a <= 5 grados C (verificado con termometro)",
-    "Freezer / camara de congelados a <= -18 grados C",
-    "Registros de temperatura documentados y actualizados",
-    "Termometros calibrados y disponibles",
-  ]},
-  {id:4,nombre:"Almacenamiento de alimentos",items:[
-    "Separacion fisica de alimentos crudos y cocidos / listos para consumo",
-    "Rotulacion correcta: denominacion, fecha elaboracion/vencimiento",
-    "Sistema FIFO aplicado (primero en entrar, primero en salir)",
-    "Uso de recipientes hermeticos o film protector",
-    "Alimentos alejados del piso y paredes (estanterias)",
-    "Alimentos no alimentarios separados (productos de limpieza, etc.)",
-  ]},
-  {id:5,nombre:"Agua",items:[
-    "Agua potable disponible y de red publica / fuente habilitada",
-    "Tanque de agua con limpieza y desinfeccion documentada",
-    "Analisis bacteriologico vigente (CAA Cap. II Art. 17)",
-    "Analisis fisico-quimico vigente",
-  ]},
-  {id:6,nombre:"Control de plagas",items:[
-    "Ausencia de indicios de plagas (roedores, insectos, aves)",
-    "Medidas preventivas activas (sellado de grietas, mosquiteros, etc.)",
-    "Registros de control de plagas disponibles (empresa habilitada)",
-    "Desmalezamiento y orden en perimetro exterior (si aplica)",
-  ]},
-  {id:7,nombre:"Manipulacion de alimentos",items:[
-    "Uso de bandejas, recipientes y utensilios limpios",
-    "Ausencia de contaminacion cruzada en la practica observada",
-    "Coccion adecuada (temperatura interna >= 75 grados C en carnes)",
-    "Descongelacion correcta (bajo refrigeracion o agua fria corriente)",
-    "Recambio de aceite de fritura documentado (si aplica)",
-  ]},
-  {id:8,nombre:"Gestion de residuos",items:[
-    "Contenedores con tapa y en buen estado",
-    "Apertura no manual (pedal o similar)",
-    "Limpieza y desinfeccion de contenedores frecuente",
-    "Residuos retirados con frecuencia adecuada",
-  ]},
-  {id:9,nombre:"Documentacion y habilitaciones",items:[
-    "Habilitacion municipal vigente y exhibida",
-    "Cumplimiento de ordenanzas municipales aplicables",
-    "Procedimientos Operativos Estandarizados de Saneamiento (POES) disponibles",
-    "Registros de autocontrol presentes y actualizados",
-  ]},
+const SUGERENCIAS=[
+  // MODULO 0 - Higiene del personal
+  {ac:"Proveer de inmediato indumentaria completa al personal: cofia, delantal limpio y calzado adecuado. Retirar al manipulador de la linea hasta que cuente con el equipo completo.",ap:"Incorporar control de indumentaria al inicio de cada jornada. Designar un responsable de verificacion diaria.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  {ac:"Reforzar la tecnica de lavado de manos con el personal presente. Colocar cartel ilustrativo paso a paso en el area de lavamanos.",ap:"Implementar capacitacion periodica de lavado de manos. Incluir verificacion en rutina de apertura.",resp:"Responsable de higiene / Encargado",plazo:"24 horas"},
+  {ac:"Reponer jabon liquido y toallas descartables en los dispensadores. Verificar funcionamiento del dispensador.",ap:"Establecer control diario de insumos de higiene. Mantener stock minimo de reposicion.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  {ac:"Colocar carteleria visible de lavado de manos en el area correspondiente.",ap:"Incluir revision de carteleria en check diario de apertura.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  {ac:"Gestionar la renovacion del carnet sanitario / libreta sanitaria del personal con vencimiento proximo o vencido.",ap:"Llevar registro de vencimientos de carnets y generar alerta con 30 dias de anticipacion.",resp:"Titular / Encargado",plazo:"5 dias"},
+  // MODULO 1 - Instalaciones
+  {ac:"Sellar grietas y fisuras en pisos con material apto. Realizar limpieza profunda del area.",ap:"Incluir revision de estado de pisos en mantenimiento preventivo mensual.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  {ac:"Reparar sector con humedad o descascaramiento. Aplicar pintura lavable apta para uso alimentario.",ap:"Realizar inspeccion mensual de paredes y techos. Atender filtraciones a la brevedad.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  {ac:"Reparar o reponer luminarias deficientes. Colocar proteccion en artefactos sin proteger.",ap:"Incluir iluminacion en check mensual de mantenimiento.",resp:"Titular / Electricista habilitado",plazo:"48 horas"},
+  {ac:"Habilitar ventilacion natural o verificar funcionamiento del sistema mecanico. Limpiar filtros si corresponde.",ap:"Incorporar limpieza de filtros de ventilacion en plan de mantenimiento periodico.",resp:"Encargado del establecimiento",plazo:"48 horas"},
+  {ac:"Reemplazar o reparar mesadas en mal estado. Verificar que el material sea apto para contacto alimentario.",ap:"Realizar revision semestral de superficies de trabajo.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  {ac:"Gestionar la disponibilidad de agua fria y caliente en la zona de trabajo. Verificar instalacion.",ap:"Incluir verificacion de agua en check diario de apertura.",resp:"Titular / Plomero habilitado",plazo:"48 horas"},
+  {ac:"Instalar o reparar tela mosquitera en aberturas identificadas.",ap:"Revisar estado de mosquiteros mensualmente. Reparar roturas de inmediato.",resp:"Encargado del establecimiento",plazo:"72 horas"},
+  {ac:"Equipar el antebano con jabon, toallas descartables y carteleria de lavado de manos.",ap:"Incluir control de antebano en rutina diaria de apertura.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  {ac:"Habilitar o acondicionar vestuario diferenciado para el personal.",ap:"Mantener el espacio ordenado y limpio. Incluir en rutina de limpieza diaria.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  // MODULO 2 - Limpieza y desinfeccion
+  {ac:"Elaborar y documentar un plan de limpieza y desinfeccion con frecuencias, productos y responsables por area.",ap:"Mantener el plan actualizado y disponible para consulta del personal.",resp:"Encargado / Responsable tecnico",plazo:"5 dias"},
+  {ac:"Capacitar al personal en uso correcto de productos: concentracion adecuada y tiempos de contacto requeridos.",ap:"Incorporar instructivo de uso de productos en el plan de limpieza.",resp:"Encargado del establecimiento",plazo:"48 horas"},
+  {ac:"Diferenciar y rotular los elementos de limpieza por area o superficie. Usar codigo de colores.",ap:"Establecer y comunicar sistema de colores al personal. Reponer elementos faltantes.",resp:"Encargado del establecimiento",plazo:"48 horas"},
+  {ac:"Retomar el registro de frecuencia de limpieza. Completar planilla con fecha, area, producto y firma.",ap:"Implementar planilla de registro diario de limpieza y desinfeccion.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
+  {ac:"Reubicar productos de limpieza en espacio separado y correctamente identificado, lejos de alimentos.",ap:"Designar area exclusiva para almacenamiento de productos de limpieza.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  // MODULO 3 - Control de temperaturas
+  {ac:"Verificar temperatura de heladera con termometro calibrado. Si supera 5 grados C, revisar carga, sello de puerta y funcionamiento del equipo.",ap:"Implementar registro diario de temperatura con planilla. Establecer accion correctiva ante desvio.",resp:"Encargado / Responsable de deposito",plazo:"Inmediato"},
+  {ac:"Verificar temperatura del freezer. Si supera -18 grados C, revisar equipo y evaluar estado de los productos almacenados.",ap:"Registrar temperatura de congelados diariamente. Definir protocolo ante falla del equipo.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  {ac:"Retomar el registro de temperaturas. Completar con fecha, hora, equipo y valor registrado.",ap:"Implementar planilla de control de temperatura de uso diario.",resp:"Encargado / Manipulador responsable",plazo:"Inmediato"},
+  {ac:"Verificar calibracion del termometro disponible. Si no hay termometro, adquirir uno apto para uso alimentario.",ap:"Incluir verificacion de termometros en check mensual de equipos.",resp:"Titular del establecimiento",plazo:"48 horas"},
+  // MODULO 4 - Almacenamiento
+  {ac:"Separar fisicamente alimentos crudos de cocidos y listos para consumo. Reorganizar heladera y deposito.",ap:"Establecer criterio de ordenamiento por tipo de alimento. Capacitar al personal.",resp:"Encargado / Manipuladores",plazo:"Inmediato"},
+  {ac:"Rotular todos los productos sin identificacion con denominacion, fecha de elaboracion y vencimiento.",ap:"Incorporar rotulado obligatorio como paso del proceso de elaboracion y almacenamiento.",resp:"Manipuladores / Encargado",plazo:"Inmediato"},
+  {ac:"Reorganizar el deposito aplicando sistema FIFO: los productos mas antiguos al frente, los nuevos atras.",ap:"Capacitar al personal en sistema FIFO. Reforzar en cada recepcion de mercaderia.",resp:"Encargado de deposito",plazo:"24 horas"},
+  {ac:"Cubrir o envasar los productos sin proteccion con film, tapa o recipiente hermetico.",ap:"Establecer como norma que ningun alimento quede descubierto en heladera o deposito.",resp:"Manipuladores",plazo:"Inmediato"},
+  {ac:"Reubicar alimentos en estanterias a una altura minima de 15 cm del piso y separados de paredes.",ap:"Instalar estanterias suficientes. Incluir control en rutina de orden diario.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  {ac:"Separar y almacenar productos no alimentarios en area diferenciada, correctamente identificada.",ap:"Designar espacio exclusivo para productos de limpieza y otros no alimentarios.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  // MODULO 5 - Agua
+  {ac:"Verificar conexion a red publica o fuente habilitada. Documentar procedencia del agua utilizada.",ap:"Mantener documentacion de la fuente de agua disponible para presentar ante inspeccion.",resp:"Titular del establecimiento",plazo:"48 horas"},
+  {ac:"Realizar limpieza y desinfeccion del tanque de agua y documentar la tarea con fecha y producto utilizado.",ap:"Programar limpieza semestral del tanque. Registrar cada intervencion.",resp:"Titular / Empresa habilitada",plazo:"A convenir"},
+  {ac:"Gestionar analisis bacteriologico del agua ante laboratorio habilitado.",ap:"Programar analisis anual como minimo. Archivar resultados para presentar ante inspeccion.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  {ac:"Gestionar analisis fisico-quimico del agua ante laboratorio habilitado.",ap:"Programar junto al analisis bacteriologico. Mantener resultados archivados y vigentes.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  // MODULO 6 - Control de plagas
+  {ac:"Realizar inspeccion visual inmediata del establecimiento. Identificar posibles vias de ingreso y productos o areas afectadas.",ap:"Contratar empresa habilitada de control de plagas para tratamiento preventivo periodico.",resp:"Titular del establecimiento",plazo:"Inmediato"},
+  {ac:"Sellar grietas, instalar mosquiteros faltantes y corregir condiciones que favorecen el ingreso de plagas.",ap:"Incluir revision de barreras fisicas en mantenimiento mensual.",resp:"Encargado / Titular",plazo:"72 horas"},
+  {ac:"Solicitar certificado de control de plagas a empresa habilitada. Programar proximo servicio.",ap:"Mantener contrato vigente con empresa habilitada. Archivar certificados.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  {ac:"Realizar desmalezamiento y ordenamiento del perimetro exterior del establecimiento.",ap:"Incluir limpieza de perimetro en rutina mensual.",resp:"Encargado / Personal de limpieza",plazo:"72 horas"},
+  // MODULO 7 - Manipulacion
+  {ac:"Reemplazar de inmediato utensilios sucios o en mal estado. Realizar lavado y desinfeccion del equipamiento.",ap:"Establecer rutina de lavado de utensilios antes y despues de cada uso.",resp:"Manipuladores",plazo:"Inmediato"},
+  {ac:"Corregir de inmediato la practica observada que genera contaminacion cruzada. Separar circuitos de alimentos crudos y cocidos.",ap:"Capacitar al personal en prevencion de contaminacion cruzada. Definir flujo de trabajo unidireccional.",resp:"Encargado / Manipuladores",plazo:"Inmediato"},
+  {ac:"Verificar temperatura interna de coccion con termometro. Continuar coccion hasta alcanzar minimo 75 grados C en el centro del producto.",ap:"Incorporar control de temperatura de coccion como paso obligatorio del proceso.",resp:"Cocinero / Manipulador responsable",plazo:"Inmediato"},
+  {ac:"Corregir el metodo de descongelacion. Pasar el producto a heladera o usar agua fria corriente. Nunca a temperatura ambiente.",ap:"Capacitar al personal en tecnicas correctas de descongelacion.",resp:"Manipuladores / Encargado",plazo:"Inmediato"},
+  {ac:"Documentar el recambio de aceite con fecha, frecuencia y criterio de cambio utilizado.",ap:"Establecer criterio de cambio de aceite basado en color, olor o numero de usos. Registrar cada recambio.",resp:"Cocinero / Encargado",plazo:"24 horas"},
+  // MODULO 8 - Residuos
+  {ac:"Reemplazar o reparar contenedores sin tapa. Verificar estado general de los recipientes de residuos.",ap:"Incluir estado de contenedores en check diario. Reemplazar ante deterioro.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  {ac:"Instalar contenedores con apertura no manual (pedal o similar) en areas de manipulacion de alimentos.",ap:"Mantener contenedores con pedal en todas las areas de trabajo.",resp:"Titular del establecimiento",plazo:"48 horas"},
+  {ac:"Realizar limpieza y desinfeccion de todos los contenedores de residuos.",ap:"Establecer frecuencia de limpieza de contenedores en plan de limpieza y desinfeccion.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
+  {ac:"Retirar residuos acumulados de inmediato. Establecer frecuencia de retiro acorde al volumen generado.",ap:"Definir horarios de retiro de residuos en el plan de limpieza.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
+  // MODULO 9 - Documentacion
+  {ac:"Gestionar la renovacion de la habilitacion municipal vencida o tramitar la habilitacion si no cuenta con ella.",ap:"Llevar registro de vencimiento de habilitacion con alerta previa de 60 dias.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  {ac:"Verificar cumplimiento de ordenanzas municipales aplicables al rubro. Consultar con bromatologia si hay dudas.",ap:"Mantenerse informado sobre normativa vigente. Consultar ante cualquier modificacion.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  {ac:"Elaborar o actualizar los Procedimientos Operativos Estandarizados de Saneamiento (POES) del establecimiento.",ap:"Mantener POES documentados, actualizados y disponibles para el personal.",resp:"Responsable tecnico / Titular",plazo:"5 dias"},
+  {ac:"Retomar el registro de autocontrol. Completar con fecha, item controlado y resultado.",ap:"Implementar planilla de autocontrol diario. Designar responsable de completarla.",resp:"Encargado del establecimiento",plazo:"24 horas"},
 ];
 
-async function generarSugerenciaIA(modulo,item,observacion){
-  const prompt=`Eres un asesor tecnico en inocuidad alimentaria con experiencia en establecimientos de pequeno y mediano porte en Argentina. Tu rol es acompanar al establecimiento en la mejora, con un tono constructivo, claro y orientado a soluciones practicas. Nunca uses lenguaje punitivo.\n\nSe detecto una No Conformidad en una auditoria BPM:\n- Modulo: ${modulo}\n- Item evaluado: ${item}\n${observacion?'- Observacion del auditor: '+observacion:''}\n\nGenera una sugerencia de accion correctiva en formato JSON con estos campos exactos:\n{\n  "accion_correctiva": "descripcion de que hacer para resolver el problema ahora",\n  "accion_preventiva": "descripcion de que hacer para que no vuelva a ocurrir",\n  "responsable_sugerido": "quien deberia ejecutar la accion",\n  "plazo_sugerido": "uno de estos valores exactos: Inmediato, 24 horas, 48 horas, 72 horas, 5 dias, A convenir",\n  "justificacion_plazo": "breve explicacion de por que ese plazo"\n}\n\nResponde SOLO el JSON, sin texto adicional.`;
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
-  });
-  const data=await resp.json();
-  const texto=data.content?.find(b=>b.type==='text')?.text||'{}';
-  try{return JSON.parse(texto.replace(/```json|```/g,'').trim());}
-  catch(e){return null;}
+function getSugerencia(moduloIdx,itemIdx){
+  const offsets=[0,5,14,19,23,27,31,35,40,44];
+  const idx=offsets[moduloIdx]+itemIdx;
+  return SUGERENCIAS[idx]||{ac:'Implementar la correccion necesaria segun lo observado.',ap:'Establecer medidas para evitar la recurrencia.',resp:'Encargado del establecimiento',plazo:'A convenir'};
 }
 
-function PanelNC({modulo,item,observacion,ncData,onChange}){
-  const [generando,setGenerando]=useState(false);
-  const [error,setError]=useState('');
-  const generar=async()=>{
-    setGenerando(true);setError('');
-    const sug=await generarSugerenciaIA(modulo,item,observacion);
-    if(!sug){setError('No se pudo generar. Intenta de nuevo.');setGenerando(false);return;}
-    onChange({accion_correctiva:sug.accion_correctiva||'',accion_preventiva:sug.accion_preventiva||'',responsable:sug.responsable_sugerido||'',plazo:sug.plazo_sugerido||'A convenir',justificacion:sug.justificacion_plazo||'',estado:'Pendiente',observacion_cierre:''});
-    setGenerando(false);
+function PanelNC({moduloIdx,itemIdx,modulo,item,observacion,ncData,onChange}){
+  const generar=()=>{
+    const s=getSugerencia(moduloIdx,itemIdx);
+    onChange({
+      accion_correctiva:s.ac,
+      accion_preventiva:s.ap,
+      responsable:s.resp,
+      plazo:s.plazo,
+      estado:'Pendiente',
+      observacion_cierre:''
+    });
   };
   return(
     <div className="nc-panel">
       <h4><span style={{background:'#C0392B',color:'white',borderRadius:4,padding:'1px 6px',fontSize:11}}>NC</span>Accion Correctiva</h4>
       {!ncData&&(
         <div>
-          <p style={{fontSize:12,color:'#888',marginBottom:10}}>Genera automaticamente una sugerencia con IA o completala manualmente.</p>
+          <p style={{fontSize:12,color:'#888',marginBottom:10}}>Genera una sugerencia automatica o completala manualmente.</p>
           <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-            <button className="btn btn-ia" onClick={generar} disabled={generando}>
-              {generando&&<span className="spinner-dark"></span>}{generando?'Generando...':'✨ Generar con IA'}
-            </button>
+            <button className="btn btn-ia" onClick={generar}>Sugerir accion correctiva</button>
             <button className="btn" style={{background:'#ECF0F1',color:'#555',fontSize:12,padding:'5px 10px'}}
-              onClick={()=>onChange({accion_correctiva:'',accion_preventiva:'',responsable:'',plazo:'A convenir',justificacion:'',estado:'Pendiente',observacion_cierre:''})}>
+              onClick={()=>onChange({accion_correctiva:'',accion_preventiva:'',responsable:'',plazo:'A convenir',estado:'Pendiente',observacion_cierre:''})}>
               Completar manualmente
             </button>
           </div>
-          {error&&<div className="alert error" style={{marginTop:8,fontSize:12}}>{error}</div>}
         </div>
       )}
       {ncData&&(
@@ -235,23 +213,20 @@ function PanelNC({modulo,item,observacion,ncData,onChange}){
               </select>
             </div>
           </div>
-          {ncData.justificacion&&<div style={{fontSize:11,color:'#888',marginBottom:8,fontStyle:'italic'}}>{ncData.justificacion}</div>}
           <div className="nc-campo">
             <label>Estado</label>
             <div className="nc-estado-btns">
-              {['Pendiente','En proceso','Verificada','Cerrada'].map(est=>(
-                <button key={est}
-                  className={'nc-estado-btn'+(ncData.estado===est?' activo-'+est.toLowerCase().replace(' ',''):'')}
-                  onClick={()=>onChange({...ncData,estado:est})}>
-                  {est==='Pendiente'?'🔴':est==='En proceso'?'🟡':est==='Verificada'?'🔵':'🟢'} {est}
+              {[['Pendiente','pendiente','🔴'],['En proceso','enproceso','🟡'],['Verificada','verificada','🔵'],['Cerrada','cerrada','🟢']].map(([lbl,cls,ico])=>(
+                <button key={cls}
+                  className={'nc-estado-btn'+(ncData.estado===lbl?' activo-'+cls:'')}
+                  onClick={()=>onChange({...ncData,estado:lbl})}>
+                  {ico} {lbl}
                 </button>
               ))}
             </div>
           </div>
           <div style={{marginTop:8,display:'flex',gap:8}}>
-            <button className="btn btn-ia" onClick={generar} disabled={generando} style={{fontSize:11}}>
-              {generando&&<span className="spinner-dark"></span>}{generando?'Regenerando...':'Regenerar con IA'}
-            </button>
+            <button className="btn btn-ia" onClick={generar} style={{fontSize:11}}>Regenerar sugerencia</button>
             <button className="btn" style={{background:'#ECF0F1',color:'#C0392B',fontSize:11,padding:'4px 8px'}} onClick={()=>onChange(null)}>Quitar</button>
           </div>
         </div>
@@ -263,8 +238,7 @@ function PanelNC({modulo,item,observacion,ncData,onChange}){
 function generarPDF(auditoria){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const W=210,M=15;
-  let y=15;
+  const W=210,M=15;let y=15;
   const checkPage=()=>{if(y>270){doc.addPage();y=20;}};
   doc.setFillColor(27,79,114);doc.rect(0,0,210,28,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(15);doc.setFont('helvetica','bold');
@@ -405,10 +379,8 @@ function Login({onLogin}){
     <div className="login-wrap"><div className="login-box">
       <h2>INOCUA tec</h2><p>Sistema de Auditorias BPM</p>
       {error&&<div className="alert error">{error}</div>}
-      <label>Email</label>
-      <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
-      <label>Contrasena</label>
-      <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="********" onKeyDown={e=>e.key==='Enter'&&login()}/>
+      <label>Email</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
+      <label>Contrasena</label><input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="********" onKeyDown={e=>e.key==='Enter'&&login()}/>
       <button className="btn btn-primary" style={{width:'100%',marginTop:4}} onClick={login} disabled={cargando}>
         {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar'}
       </button>
@@ -444,7 +416,20 @@ function SubirFotos({auditoriaId}){
   );
 }
 
-function ModuloChecklist({modulo,estados,obsMod,ncsModulo,onEstado,onObsMod,onNcChange}){
+const MODULOS=[
+  {id:0,nombre:"Higiene del personal",items:["Uso de indumentaria adecuada (cofia, delantal, calzado)","Tecnica de lavado de manos correcta","Dispensadores de jabon y toallas descartables operativos","Carteleria de lavado de manos visible","Carnet sanitario / libreta sanitaria vigente"]},
+  {id:1,nombre:"Instalaciones",items:["Pisos sin grietas, limpios y de facil limpieza","Paredes y techos en buen estado, sin humedad ni descascaramiento","Iluminacion suficiente y protegida","Ventilacion adecuada (natural o mecanica)","Mesadas aptas para uso alimentario y en buen estado","Agua fria y caliente disponible en zona de trabajo","Tela mosquitera en aberturas (ventanas, rejillas)","Antebano con carteleria y elementos de higiene","Vestuario diferenciado (si aplica)"]},
+  {id:2,nombre:"Limpieza y desinfeccion",items:["Plan de limpieza y desinfeccion definido y disponible","Uso correcto de productos (concentracion, tiempo de contacto)","Elementos de limpieza diferenciados por area / superficie","Frecuencia de limpieza adecuada y registrada","Productos almacenados separados de alimentos"]},
+  {id:3,nombre:"Control de temperaturas",items:["Heladeras a <= 5 grados C (verificado con termometro)","Freezer / camara de congelados a <= -18 grados C","Registros de temperatura documentados y actualizados","Termometros calibrados y disponibles"]},
+  {id:4,nombre:"Almacenamiento de alimentos",items:["Separacion fisica de alimentos crudos y cocidos / listos para consumo","Rotulacion correcta: denominacion, fecha elaboracion/vencimiento","Sistema FIFO aplicado (primero en entrar, primero en salir)","Uso de recipientes hermeticos o film protector","Alimentos alejados del piso y paredes (estanterias)","Alimentos no alimentarios separados (productos de limpieza, etc.)"]},
+  {id:5,nombre:"Agua",items:["Agua potable disponible y de red publica / fuente habilitada","Tanque de agua con limpieza y desinfeccion documentada","Analisis bacteriologico vigente (CAA Cap. II Art. 17)","Analisis fisico-quimico vigente"]},
+  {id:6,nombre:"Control de plagas",items:["Ausencia de indicios de plagas (roedores, insectos, aves)","Medidas preventivas activas (sellado de grietas, mosquiteros, etc.)","Registros de control de plagas disponibles (empresa habilitada)","Desmalezamiento y orden en perimetro exterior (si aplica)"]},
+  {id:7,nombre:"Manipulacion de alimentos",items:["Uso de bandejas, recipientes y utensilios limpios","Ausencia de contaminacion cruzada en la practica observada","Coccion adecuada (temperatura interna >= 75 grados C en carnes)","Descongelacion correcta (bajo refrigeracion o agua fria corriente)","Recambio de aceite de fritura documentado (si aplica)"]},
+  {id:8,nombre:"Gestion de residuos",items:["Contenedores con tapa y en buen estado","Apertura no manual (pedal o similar)","Limpieza y desinfeccion de contenedores frecuente","Residuos retirados con frecuencia adecuada"]},
+  {id:9,nombre:"Documentacion y habilitaciones",items:["Habilitacion municipal vigente y exhibida","Cumplimiento de ordenanzas municipales aplicables","Procedimientos Operativos Estandarizados de Saneamiento (POES) disponibles","Registros de autocontrol presentes y actualizados"]},
+];
+
+function ModuloChecklist({moduloIdx,modulo,estados,obsMod,ncsModulo,onEstado,onObsMod,onNcChange}){
   const cumple=modulo.items.filter((_,i)=>estados[i]==='C').length;
   const noCumple=modulo.items.filter((_,i)=>estados[i]==='NC').length;
   const na=modulo.items.filter((_,i)=>estados[i]==='NA').length;
@@ -461,7 +446,9 @@ function ModuloChecklist({modulo,estados,obsMod,ncsModulo,onEstado,onObsMod,onNc
               </button>
             ))}
           </div>
-          {estados[i]==='NC'&&<PanelNC modulo={modulo.nombre} item={texto} observacion={obsMod} ncData={ncsModulo[i]||null} onChange={val=>onNcChange(i,val)}/>}
+          {estados[i]==='NC'&&(
+            <PanelNC moduloIdx={moduloIdx} itemIdx={i} modulo={modulo.nombre} item={texto} observacion={obsMod} ncData={ncsModulo[i]||null} onChange={val=>onNcChange(i,val)}/>
+          )}
         </div>
       ))}
       <div style={{marginTop:10}}>
@@ -489,32 +476,29 @@ function NuevaAuditoria({onGuardar}){
   };
   const setObsModulo=(modId,val)=>{setObsMod(prev=>{const n=[...prev];n[modId]=val;return n;});};
   const setNcData=(modId,itemIdx,val)=>{setNcs(prev=>{const n=prev.map(a=>[...a]);n[modId][itemIdx]=val;return n;});};
-
   const calcular=()=>{
     let cumple=0,noCumple=0,na=0;
     estados.forEach(mod=>mod.forEach(e=>{if(e==='C')cumple++;else if(e==='NC')noCumple++;else if(e==='NA')na++;}));
     const total=cumple+noCumple;
     return{puntaje:total>0?Math.round((cumple/total)*100):0,cumple,noCumple,na};
   };
-
   const aplanarNCs=()=>{
     const lista=[];
     ncs.forEach((modNcs,mi)=>{modNcs.forEach((nc,ii)=>{if(nc&&estados[mi][ii]==='NC')lista.push({modulo:MODULOS[mi].nombre,item:MODULOS[mi].items[ii],...nc});});});
     return lista;
   };
-
   const guardar=async()=>{
     if(!estab){alert('Ingresa el nombre del establecimiento');return;}
     setGuardando(true);setError('');
     const {puntaje,cumple,noCumple,na}=calcular();
     const resultado=puntaje>=80?'Aprobado':'No aprobado';
-    const modulosData={estados,observaciones_modulos:obsMod,domicilio,nroHab,rubro,condiciones,no_conformidades:aplanarNCs(),resumen:{cumple,noCumple,na},detalle:MODULOS.map((m,mi)=>({nombre:m.nombre,cumple:estados[mi].filter(e=>e==='C').length,noCumple:estados[mi].filter(e=>e==='NC').length,na:estados[mi].filter(e=>e==='NA').length,obs:obsMod[mi]}))};
+    const modulosData={estados,observaciones_modulos:obsMod,domicilio,nroHab,rubro,condiciones,no_conformidades:aplanarNCs(),resumen:{cumple,noCumple,na},
+      detalle:MODULOS.map((m,mi)=>({nombre:m.nombre,cumple:estados[mi].filter(e=>e==='C').length,noCumple:estados[mi].filter(e=>e==='NC').length,na:estados[mi].filter(e=>e==='NA').length,obs:obsMod[mi]}))};
     const {data,error:err}=await supabase.from('auditorias').insert([{establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData}]).select();
     setGuardando(false);
     if(err){setError('Error: '+err.message);return;}
     setAuditGuardada(data[0]);onGuardar(data[0]);setGuardado(true);
   };
-
   const ncTotal=aplanarNCs().filter(nc=>nc.accion_correctiva).length;
   const ncSinGestionar=estados.flat().filter(e=>e==='NC').length-ncTotal;
 
@@ -545,7 +529,7 @@ function NuevaAuditoria({onGuardar}){
         <label>Condiciones generales al inicio</label><textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)} placeholder="Descripcion de las condiciones generales al momento de iniciar la auditoria"/>
       </div>
       {MODULOS.map((mod,mi)=>(
-        <ModuloChecklist key={mi} modulo={mod} estados={estados[mi]} obsMod={obsMod[mi]} ncsModulo={ncs[mi]}
+        <ModuloChecklist key={mi} moduloIdx={mi} modulo={mod} estados={estados[mi]} obsMod={obsMod[mi]} ncsModulo={ncs[mi]}
           onEstado={(idx,val)=>setEstado(mi,idx,val)} onObsMod={val=>setObsModulo(mi,val)} onNcChange={(idx,val)=>setNcData(mi,idx,val)}/>
       ))}
       <div className="card">
@@ -556,7 +540,7 @@ function NuevaAuditoria({onGuardar}){
           <div className="stat"><div className="num">{puntaje}%</div><div className="label">Puntaje</div></div>
           <div className="stat"><span className={'badge '+(puntaje>=80?'verde':'rojo')} style={{fontSize:14,padding:'6px 12px',marginTop:8,display:'inline-block'}}>{puntaje>=80?'APROBADO':'NO APROBADO'}</span></div>
         </div>
-        {ncSinGestionar>0&&<div className="alert warning" style={{marginBottom:12}}>Tenes {ncSinGestionar} NC sin accion correctiva. Podes guardar igual o volver a completarlas.</div>}
+        {ncSinGestionar>0&&<div className="alert warning" style={{marginBottom:12}}>Tenes {ncSinGestionar} NC sin accion correctiva. Podes guardar igual o completarlas primero.</div>}
         {ncTotal>0&&<div className="alert info" style={{marginBottom:12}}>{ncTotal} accion(es) correctiva(s) registrada(s) — se incluiran en el PDF.</div>}
         <button className="btn btn-success" onClick={guardar} disabled={guardando}>
           {guardando&&<span className="spinner"></span>}{guardando?'Guardando...':'Guardar auditoria'}
@@ -715,7 +699,6 @@ function App(){
     </div>
   );
 }
-
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
