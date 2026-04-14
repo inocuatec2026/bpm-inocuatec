@@ -24,12 +24,17 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#333}
 .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:bold}
 .badge.verde{background:#D5F5E3;color:#1E8449}
 .badge.rojo{background:#FADBD8;color:#C0392B}
+.badge.amarillo{background:#FEF9E7;color:#D4AC0D}
+.badge.azul{background:#D6EAF8;color:#1B4F72}
+.badge.gris{background:#F2F3F4;color:#888}
 .btn{padding:8px 16px;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-weight:bold;transition:all 0.15s}
 .btn-primary{background:#1B4F72;color:white}
 .btn-success{background:#1E8449;color:white}
 .btn-danger{background:#C0392B;color:white}
 .btn-warning{background:#D4AC0D;color:white}
 .btn-pdf{background:#8E44AD;color:white}
+.btn-ia{background:#E67E22;color:white;font-size:12px;padding:5px 10px}
+.btn-ia:hover{background:#CA6F1E}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .stat{text-align:center;padding:16px;background:#D6EAF8;border-radius:8px}
@@ -45,7 +50,9 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .alert.info{background:#D6EAF8;color:#1B4F72;border-left:4px solid #1B4F72}
 .alert.error{background:#FADBD8;color:#C0392B;border-left:4px solid #C0392B}
 .alert.success{background:#D5F5E3;color:#1E8449;border-left:4px solid #1E8449}
+.alert.warning{background:#FEF9E7;color:#9A7D0A;border-left:4px solid #D4AC0D}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
+.spinner-dark{display:inline-block;width:14px;height:14px;border:2px solid #E67E22;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f0f4f8}
 .login-box{background:white;border-radius:12px;padding:40px;width:100%;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
@@ -58,13 +65,26 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .item-row{padding:12px 0;border-bottom:1px solid #f0f0f0}
 .item-row:last-child{border-bottom:none}
 .item-texto{font-size:14px;margin-bottom:8px;color:#333}
-.estado-btns{display:flex;gap:6px;flex-wrap:wrap}
+.estado-btns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .estado-btn{padding:6px 12px;border:2px solid #ddd;border-radius:4px;cursor:pointer;font-size:12px;font-weight:bold;background:white;color:#666;transition:all 0.15s}
 .estado-btn:hover{border-color:#1B4F72}
 .estado-btn.activo-C{background:#1E8449;border-color:#1E8449;color:white}
 .estado-btn.activo-NC{background:#C0392B;border-color:#C0392B;color:white}
 .estado-btn.activo-NA{background:#888;border-color:#888;color:white}
 .mod-obs textarea{margin-bottom:0;font-size:13px;background:#FFFDE7}
+.nc-panel{background:#FEF5F5;border:1px solid #FADBD8;border-radius:6px;padding:14px;margin-top:10px}
+.nc-panel h4{color:#C0392B;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.nc-sugerencia{background:#FFF9F0;border:1px solid #FAD7A0;border-radius:6px;padding:12px;margin-top:10px}
+.nc-sugerencia h5{color:#E67E22;font-size:12px;font-weight:bold;margin-bottom:8px}
+.nc-campo{margin-bottom:8px}
+.nc-campo label{font-size:11px;color:#888;margin-bottom:2px}
+.nc-campo textarea,.nc-campo select,.nc-campo input{margin-bottom:0;font-size:13px}
+.nc-estado-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.nc-estado-btn{padding:4px 10px;border:1px solid #ddd;border-radius:12px;cursor:pointer;font-size:11px;font-weight:bold;background:white;color:#666;transition:all 0.15s}
+.nc-estado-btn.activo-pendiente{background:#FADBD8;border-color:#C0392B;color:#C0392B}
+.nc-estado-btn.activo-proceso{background:#FEF9E7;border-color:#D4AC0D;color:#9A7D0A}
+.nc-estado-btn.activo-verificada{background:#D6EAF8;border-color:#1B4F72;color:#1B4F72}
+.nc-estado-btn.activo-cerrada{background:#D5F5E3;border-color:#1E8449;color:#1E8449}
 </style>
 </head>
 <body>
@@ -75,6 +95,8 @@ const {useState,useEffect,useRef}=React;
 const SUPA_URL='https://fcltfzvuxtlgdxdxddjd.supabase.co';
 const SUPA_KEY='sb_publishable_DyKago_O2C7d8G22Vb7WGg_-kt-F6yR';
 const supabase=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+
+const PLAZOS=['Inmediato','24 horas','48 horas','72 horas','5 dias','A convenir'];
 
 const MODULOS=[
   {id:0,nombre:"Higiene del personal",items:[
@@ -149,222 +171,226 @@ const MODULOS=[
   ]},
 ];
 
-// ── GENERAR PDF ────────────────────────────────────────────
+async function generarSugerenciaIA(modulo,item,observacion){
+  const prompt=`Eres un asesor tecnico en inocuidad alimentaria con experiencia en establecimientos de pequeno y mediano porte en Argentina. Tu rol es acompanar al establecimiento en la mejora, con un tono constructivo, claro y orientado a soluciones practicas. Nunca uses lenguaje punitivo.\n\nSe detecto una No Conformidad en una auditoria BPM:\n- Modulo: ${modulo}\n- Item evaluado: ${item}\n${observacion?'- Observacion del auditor: '+observacion:''}\n\nGenera una sugerencia de accion correctiva en formato JSON con estos campos exactos:\n{\n  "accion_correctiva": "descripcion de que hacer para resolver el problema ahora",\n  "accion_preventiva": "descripcion de que hacer para que no vuelva a ocurrir",\n  "responsable_sugerido": "quien deberia ejecutar la accion",\n  "plazo_sugerido": "uno de estos valores exactos: Inmediato, 24 horas, 48 horas, 72 horas, 5 dias, A convenir",\n  "justificacion_plazo": "breve explicacion de por que ese plazo"\n}\n\nResponde SOLO el JSON, sin texto adicional.`;
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+  });
+  const data=await resp.json();
+  const texto=data.content?.find(b=>b.type==='text')?.text||'{}';
+  try{return JSON.parse(texto.replace(/```json|```/g,'').trim());}
+  catch(e){return null;}
+}
+
+function PanelNC({modulo,item,observacion,ncData,onChange}){
+  const [generando,setGenerando]=useState(false);
+  const [error,setError]=useState('');
+  const generar=async()=>{
+    setGenerando(true);setError('');
+    const sug=await generarSugerenciaIA(modulo,item,observacion);
+    if(!sug){setError('No se pudo generar. Intenta de nuevo.');setGenerando(false);return;}
+    onChange({accion_correctiva:sug.accion_correctiva||'',accion_preventiva:sug.accion_preventiva||'',responsable:sug.responsable_sugerido||'',plazo:sug.plazo_sugerido||'A convenir',justificacion:sug.justificacion_plazo||'',estado:'Pendiente',observacion_cierre:''});
+    setGenerando(false);
+  };
+  return(
+    <div className="nc-panel">
+      <h4><span style={{background:'#C0392B',color:'white',borderRadius:4,padding:'1px 6px',fontSize:11}}>NC</span>Accion Correctiva</h4>
+      {!ncData&&(
+        <div>
+          <p style={{fontSize:12,color:'#888',marginBottom:10}}>Genera automaticamente una sugerencia con IA o completala manualmente.</p>
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            <button className="btn btn-ia" onClick={generar} disabled={generando}>
+              {generando&&<span className="spinner-dark"></span>}{generando?'Generando...':'✨ Generar con IA'}
+            </button>
+            <button className="btn" style={{background:'#ECF0F1',color:'#555',fontSize:12,padding:'5px 10px'}}
+              onClick={()=>onChange({accion_correctiva:'',accion_preventiva:'',responsable:'',plazo:'A convenir',justificacion:'',estado:'Pendiente',observacion_cierre:''})}>
+              Completar manualmente
+            </button>
+          </div>
+          {error&&<div className="alert error" style={{marginTop:8,fontSize:12}}>{error}</div>}
+        </div>
+      )}
+      {ncData&&(
+        <div className="nc-sugerencia">
+          <h5>Accion Correctiva y Preventiva</h5>
+          <div className="nc-campo">
+            <label>Accion correctiva (que hacer ahora)</label>
+            <textarea rows={2} value={ncData.accion_correctiva} onChange={e=>onChange({...ncData,accion_correctiva:e.target.value})}/>
+          </div>
+          <div className="nc-campo">
+            <label>Accion preventiva (como evitar que vuelva a ocurrir)</label>
+            <textarea rows={2} value={ncData.accion_preventiva} onChange={e=>onChange({...ncData,accion_preventiva:e.target.value})}/>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div className="nc-campo">
+              <label>Responsable</label>
+              <input value={ncData.responsable} onChange={e=>onChange({...ncData,responsable:e.target.value})} placeholder="Ej: Encargado"/>
+            </div>
+            <div className="nc-campo">
+              <label>Plazo</label>
+              <select value={ncData.plazo} onChange={e=>onChange({...ncData,plazo:e.target.value})}>
+                {PLAZOS.map(p=><option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+          </div>
+          {ncData.justificacion&&<div style={{fontSize:11,color:'#888',marginBottom:8,fontStyle:'italic'}}>{ncData.justificacion}</div>}
+          <div className="nc-campo">
+            <label>Estado</label>
+            <div className="nc-estado-btns">
+              {['Pendiente','En proceso','Verificada','Cerrada'].map(est=>(
+                <button key={est}
+                  className={'nc-estado-btn'+(ncData.estado===est?' activo-'+est.toLowerCase().replace(' ',''):'')}
+                  onClick={()=>onChange({...ncData,estado:est})}>
+                  {est==='Pendiente'?'🔴':est==='En proceso'?'🟡':est==='Verificada'?'🔵':'🟢'} {est}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{marginTop:8,display:'flex',gap:8}}>
+            <button className="btn btn-ia" onClick={generar} disabled={generando} style={{fontSize:11}}>
+              {generando&&<span className="spinner-dark"></span>}{generando?'Regenerando...':'Regenerar con IA'}
+            </button>
+            <button className="btn" style={{background:'#ECF0F1',color:'#C0392B',fontSize:11,padding:'4px 8px'}} onClick={()=>onChange(null)}>Quitar</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function generarPDF(auditoria){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   const W=210,M=15;
   let y=15;
-
   const checkPage=()=>{if(y>270){doc.addPage();y=20;}};
-
-  // ENCABEZADO
-  doc.setFillColor(27,79,114);
-  doc.rect(0,0,210,28,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(15);doc.setFont('helvetica','bold');
+  doc.setFillColor(27,79,114);doc.rect(0,0,210,28,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(15);doc.setFont('helvetica','bold');
   doc.text('INOCUA tec Servicios',M,12);
   doc.setFontSize(9);doc.setFont('helvetica','normal');
   doc.text('Planilla de Relevamiento BPM - Modalidad A',M,19);
   doc.text('Cesar Orlando Alvarez Aguilar - Tec. Higiene y Seguridad Alimentaria',M,25);
   y=35;
-
-  // DATOS DEL ESTABLECIMIENTO
   const mod=auditoria.modulos||{};
-  doc.setFillColor(214,234,248);
-  doc.rect(M,y-5,W-M*2,36,'F');
-  doc.setTextColor(27,79,114);
-  doc.setFontSize(10);doc.setFont('helvetica','bold');
-  doc.text('DATOS DEL ESTABLECIMIENTO',M+2,y);
-  y+=7;
-  const campos=[
-    ['Establecimiento:',auditoria.establecimiento||'---'],
-    ['Responsable:',auditoria.responsable||'---'],
-    ['Fecha:',auditoria.fecha||'---'],
-    ['Rubro:',mod.rubro||'---'],
-    ['Domicilio:',mod.domicilio||'---'],
-    ['N Habilitacion:',mod.nroHab||'---'],
-  ];
+  doc.setFillColor(214,234,248);doc.rect(M,y-5,W-M*2,36,'F');
+  doc.setTextColor(27,79,114);doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.text('DATOS DEL ESTABLECIMIENTO',M+2,y);y+=7;
+  const campos=[['Establecimiento:',auditoria.establecimiento||'---'],['Responsable:',auditoria.responsable||'---'],['Fecha:',auditoria.fecha||'---'],['Rubro:',mod.rubro||'---'],['Domicilio:',mod.domicilio||'---'],['N Habilitacion:',mod.nroHab||'---']];
   doc.setTextColor(0,0,0);doc.setFontSize(9);
   campos.forEach(([k,v],i)=>{
-    const col=i%2===0?M+2:M+97;
-    const row=Math.floor(i/2);
+    const col=i%2===0?M+2:M+97;const row=Math.floor(i/2);
     doc.setFont('helvetica','bold');doc.text(k,col,y+row*7);
-    doc.setFont('helvetica','normal');
-    const val=String(v).substring(0,38);
-    doc.text(val,col+32,y+row*7);
+    doc.setFont('helvetica','normal');doc.text(String(v).substring(0,38),col+32,y+row*7);
   });
   y+=26;
-
-  if(mod.condiciones){
-    checkPage();
-    doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(80,80,80);
-    doc.text('Condiciones al inicio: '+String(mod.condiciones).substring(0,120),M+2,y);
-    y+=6;
-  }
+  if(mod.condiciones){checkPage();doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(80,80,80);doc.text('Condiciones al inicio: '+String(mod.condiciones).substring(0,120),M+2,y);y+=6;}
   y+=4;
-
-  // MODULOS
-  const estados=mod.estados||[];
-  const obsMods=mod.observaciones_modulos||[];
-
+  const estados=mod.estados||[];const obsMods=mod.observaciones_modulos||[];const ncsData=mod.no_conformidades||[];
   MODULOS.forEach((modulo,mi)=>{
     const estMod=estados[mi]||[];
-    const cumple=estMod.filter(e=>e==='C').length;
-    const nc=estMod.filter(e=>e==='NC').length;
-    const na=estMod.filter(e=>e==='NA').length;
-    const total=cumple+nc;
-    const pMod=total>0?Math.round((cumple/total)*100):0;
-
+    const cumple=estMod.filter(e=>e==='C').length;const nc=estMod.filter(e=>e==='NC').length;const na=estMod.filter(e=>e==='NA').length;
+    const total=cumple+nc;const pMod=total>0?Math.round((cumple/total)*100):0;
     checkPage();
-    // Header modulo
-    doc.setFillColor(21,67,96);
-    doc.rect(M,y-4,W-M*2,8,'F');
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.setFillColor(21,67,96);doc.rect(M,y-4,W-M*2,8,'F');
+    doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
     doc.text('MODULO '+String(mi+1)+' - '+modulo.nombre.toUpperCase(),M+2,y+1);
     doc.text('[C]'+String(cumple)+' [NC]'+String(nc)+' [NA]'+String(na)+' | '+String(pMod)+'%',W-M-35,y+1);
     y+=10;
-
-    // Items
     modulo.items.forEach((item,ii)=>{
       checkPage();
-      const est=estMod[ii];
-      const tag=est==='C'?'[C] ':est==='NC'?'[NC]':est==='NA'?'[NA]':'[--]';
+      const est=estMod[ii];const tag=est==='C'?'[C] ':est==='NC'?'[NC]':est==='NA'?'[NA]':'[--]';
       const color=est==='C'?[30,132,73]:est==='NC'?[192,57,43]:[100,100,100];
-      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...color);
-      doc.text(tag,M+2,y);
+      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...color);doc.text(tag,M+2,y);
       doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
       const lines=doc.splitTextToSize(item,W-M*2-16);
-      lines.forEach((l,li)=>{
-        checkPage();
-        doc.text(l,M+14,y);
-        if(li<lines.length-1)y+=4;
-      });
+      lines.forEach((l,li)=>{checkPage();doc.text(l,M+14,y);if(li<lines.length-1)y+=4;});
       y+=5;
     });
-
-    // Observaciones
     if(obsMods[mi]&&obsMods[mi].trim()){
-      checkPage();
-      doc.setFillColor(255,253,231);
-      const obsText='Obs: '+obsMods[mi];
-      const obsLines=doc.splitTextToSize(obsText,W-M*2-6);
-      const obsH=obsLines.length*4.5+4;
-      doc.rect(M,y-2,W-M*2,obsH,'F');
-      doc.setFontSize(7.5);doc.setFont('helvetica','italic');doc.setTextColor(100,80,0);
-      obsLines.forEach((l,li)=>{
-        checkPage();
-        doc.text(l,M+3,y+1+li*4.5);
-      });
-      y+=obsH+3;
+      checkPage();doc.setFillColor(255,253,231);
+      const obsText='Obs: '+obsMods[mi];const obsLines=doc.splitTextToSize(obsText,W-M*2-6);const obsH=obsLines.length*4.5+4;
+      doc.rect(M,y-2,W-M*2,obsH,'F');doc.setFontSize(7.5);doc.setFont('helvetica','italic');doc.setTextColor(100,80,0);
+      obsLines.forEach((l,li)=>{checkPage();doc.text(l,M+3,y+1+li*4.5);});y+=obsH+3;
     }
     y+=4;
   });
-
-  // RESUMEN EJECUTIVO
-  checkPage();
-  y+=4;
-  doc.setFillColor(27,79,114);
-  doc.rect(M,y-4,W-M*2,8,'F');
+  checkPage();y+=4;
+  doc.setFillColor(27,79,114);doc.rect(M,y-4,W-M*2,8,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
-  doc.text('RESUMEN EJECUTIVO DE CUMPLIMIENTO',M+2,y+1);
-  y+=12;
-
-  const resumen=mod.resumen||{};
-  const cumpleT=resumen.cumple||0;
-  const ncT=resumen.noCumple||0;
-  const puntaje=auditoria.puntaje||0;
-  const resultado=auditoria.resultado||'---';
-
-  // Caja resumen
-  doc.setFillColor(214,234,248);
-  doc.rect(M,y-4,W-M*2,12,'F');
+  doc.text('RESUMEN EJECUTIVO DE CUMPLIMIENTO',M+2,y+1);y+=12;
+  const resumen=mod.resumen||{};const cumpleT=resumen.cumple||0;const ncT=resumen.noCumple||0;
+  const puntaje=auditoria.puntaje||0;const resultado=auditoria.resultado||'---';
+  doc.setFillColor(214,234,248);doc.rect(M,y-4,W-M*2,12,'F');
   doc.setTextColor(0,0,0);doc.setFontSize(10);
-  const resItems=[
-    ['Cumplen: '+cumpleT,M+5],
-    ['No cumplen: '+ncT,M+55],
-    ['Puntaje: '+puntaje+'%',M+110],
-    ['Resultado: '+resultado,M+148],
-  ];
-  resItems.forEach(([txt,x])=>{
+  [['Cumplen: '+cumpleT,M+5],['No cumplen: '+ncT,M+55],['Puntaje: '+puntaje+'%',M+110],['Resultado: '+resultado,M+148]].forEach(([txt,x])=>{
     doc.setFont('helvetica','bold');
-    doc.setTextColor(resultado==='Aprobado'&&txt.includes('Resultado')?30:resultado==='No aprobado'&&txt.includes('Resultado')?192:0,
-      resultado==='Aprobado'&&txt.includes('Resultado')?132:resultado==='No aprobado'&&txt.includes('Resultado')?57:0,
-      resultado==='Aprobado'&&txt.includes('Resultado')?73:resultado==='No aprobado'&&txt.includes('Resultado')?43:0);
+    const esR=txt.includes('Resultado');
+    if(esR&&resultado==='Aprobado')doc.setTextColor(30,132,73);
+    else if(esR)doc.setTextColor(192,57,43);
+    else doc.setTextColor(0,0,0);
     doc.text(txt,x,y+3);
   });
   y+=16;
-
-  // Tabla por modulo
-  checkPage();
-  doc.setFontSize(8);doc.setTextColor(0,0,0);
-  doc.setFillColor(214,234,248);
-  doc.rect(M,y-3,W-M*2,7,'F');
-  doc.setFont('helvetica','bold');
-  doc.text('Modulo',M+2,y+1);
-  doc.text('Cumplen',M+100,y+1);
-  doc.text('No cumplen',M+120,y+1);
-  doc.text('N/A',M+143,y+1);
-  doc.text('%',M+158,y+1);
-  y+=8;
-
+  checkPage();doc.setFontSize(8);doc.setTextColor(0,0,0);
+  doc.setFillColor(214,234,248);doc.rect(M,y-3,W-M*2,7,'F');doc.setFont('helvetica','bold');
+  doc.text('Modulo',M+2,y+1);doc.text('Cumplen',M+100,y+1);doc.text('No cumplen',M+120,y+1);doc.text('N/A',M+143,y+1);doc.text('%',M+158,y+1);y+=8;
   MODULOS.forEach((modulo,mi)=>{
-    checkPage();
-    const estMod=estados[mi]||[];
-    const c=estMod.filter(e=>e==='C').length;
-    const nc=estMod.filter(e=>e==='NC').length;
-    const na=estMod.filter(e=>e==='NA').length;
-    const t=c+nc;
-    const p=t>0?Math.round((c/t)*100):0;
+    checkPage();const estMod=estados[mi]||[];
+    const c=estMod.filter(e=>e==='C').length;const nc=estMod.filter(e=>e==='NC').length;const na=estMod.filter(e=>e==='NA').length;
+    const t=c+nc;const p=t>0?Math.round((c/t)*100):0;
     if(mi%2===0){doc.setFillColor(248,249,250);doc.rect(M,y-3,W-M*2,7,'F');}
     doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
-    doc.text(String(mi+1)+'. '+modulo.nombre,M+2,y+1);
-    doc.text(String(c),M+107,y+1);
-    doc.text(String(nc),M+130,y+1);
-    doc.text(String(na),M+147,y+1);
-    doc.setFont('helvetica','bold');
-    doc.setTextColor(p>=80?30:192,p>=80?132:57,p>=80?73:43);
-    doc.text(String(p)+'%',M+158,y+1);
-    doc.setTextColor(0,0,0);
-    y+=7;
+    doc.text(String(mi+1)+'. '+modulo.nombre,M+2,y+1);doc.text(String(c),M+107,y+1);doc.text(String(nc),M+130,y+1);doc.text(String(na),M+147,y+1);
+    doc.setFont('helvetica','bold');doc.setTextColor(p>=80?30:192,p>=80?132:57,p>=80?73:43);doc.text(String(p)+'%',M+158,y+1);doc.setTextColor(0,0,0);y+=7;
   });
-
-  // FIRMAS
-  y+=15;
-  checkPage();
-  doc.setDrawColor(100,100,100);
-  doc.line(M,y,M+75,y);
-  doc.line(M+105,y,W-M,y);
-  y+=5;
+  const ncsConData=(ncsData||[]).filter(nc=>nc&&nc.accion_correctiva);
+  y+=10;checkPage();
+  doc.setFillColor(192,57,43);doc.rect(M,y-4,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
+  doc.text('REGISTRO DE NO CONFORMIDADES Y ACCIONES CORRECTIVAS',M+2,y+1);y+=12;
+  if(ncsConData.length>0){
+    ncsConData.forEach((nc,idx)=>{
+      checkPage();
+      doc.setFillColor(253,245,245);doc.rect(M,y-3,W-M*2,nc.accion_preventiva?32:24,'F');
+      doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(192,57,43);
+      doc.text('NC '+String(idx+1)+' | '+nc.modulo+' - '+nc.item.substring(0,55),M+2,y+1);y+=6;
+      doc.setFont('helvetica','bold');doc.setTextColor(0,0,0);doc.text('Correctiva:',M+2,y);
+      doc.setFont('helvetica','normal');doc.text(doc.splitTextToSize(nc.accion_correctiva,W-M*2-40)[0]||'',M+28,y);y+=5;
+      if(nc.accion_preventiva){
+        doc.setFont('helvetica','bold');doc.text('Preventiva:',M+2,y);
+        doc.setFont('helvetica','normal');doc.text(doc.splitTextToSize(nc.accion_preventiva,W-M*2-40)[0]||'',M+28,y);y+=5;
+      }
+      doc.setFont('helvetica','bold');doc.text('Responsable:',M+2,y);doc.setFont('helvetica','normal');doc.text(nc.responsable||'---',M+28,y);
+      doc.setFont('helvetica','bold');doc.text('Plazo:',M+90,y);doc.setFont('helvetica','normal');doc.text(nc.plazo||'---',M+102,y);
+      doc.setFont('helvetica','bold');doc.text('Estado:',M+140,y);doc.setFont('helvetica','normal');doc.text(nc.estado||'Pendiente',M+155,y);
+      y+=10;
+    });
+  } else {
+    doc.setFillColor(248,249,250);doc.rect(M,y-3,W-M*2,7,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(0,0,0);
+    doc.text('Item / No Conformidad',M+2,y+1);doc.text('Accion Correctiva',M+65,y+1);doc.text('Responsable',M+125,y+1);doc.text('Plazo',M+155,y+1);y+=8;
+    for(let i=0;i<4;i++){checkPage();doc.setDrawColor(200,200,200);doc.line(M,y,W-M,y);y+=8;}
+  }
+  y+=15;checkPage();
+  doc.setDrawColor(100,100,100);doc.line(M,y,M+75,y);doc.line(M+105,y,W-M,y);y+=5;
   doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
-  doc.text('Cesar Orlando Alvarez Aguilar',M,y);
-  doc.text('Firma y aclaracion del responsable',M+105,y);
-  y+=4;
-  doc.text('Tec. Higiene y Seguridad Alimentaria',M,y);
-  doc.text('Establecimiento: '+(auditoria.establecimiento||''),M+105,y);
-  y+=4;
+  doc.text('Cesar Orlando Alvarez Aguilar',M,y);doc.text('Firma y aclaracion del responsable',M+105,y);y+=4;
+  doc.text('Tec. Higiene y Seguridad Alimentaria',M,y);doc.text('Establecimiento: '+(auditoria.establecimiento||''),M+105,y);y+=4;
   doc.text('INOCUA tec Servicios - Auditoria BPM Modalidad A',M,y);
-
-  // FOOTER
   const total=doc.getNumberOfPages();
   for(let i=1;i<=total;i++){
-    doc.setPage(i);
-    doc.setFontSize(7);doc.setTextColor(150,150,150);
+    doc.setPage(i);doc.setFontSize(7);doc.setTextColor(150,150,150);
     doc.text('INOCUA tec Servicios | Auditoria BPM | Pagina '+String(i)+' de '+String(total),M,290);
     doc.text(new Date().toLocaleDateString('es-AR'),W-M-20,290);
   }
-
   doc.save('BPM_'+(auditoria.establecimiento||'auditoria')+'_'+(auditoria.fecha||'')+'.pdf');
 }
 
-// ── LOGIN ──────────────────────────────────────────────────
 function Login({onLogin}){
-  const [email,setEmail]=useState('');
-  const [pass,setPass]=useState('');
-  const [cargando,setCargando]=useState(false);
-  const [error,setError]=useState('');
-
+  const [email,setEmail]=useState('');const [pass,setPass]=useState('');
+  const [cargando,setCargando]=useState(false);const [error,setError]=useState('');
   const login=async()=>{
     if(!email||!pass){setError('Completa email y contrasena');return;}
     setCargando(true);setError('');
@@ -375,60 +401,34 @@ function Login({onLogin}){
     if(cliente)onLogin({tipo:'cliente',user:data.user,cliente});
     else onLogin({tipo:'auditor',user:data.user});
   };
-
   return(
-    <div className="login-wrap">
-      <div className="login-box">
-        <h2>INOCUA tec</h2>
-        <p>Sistema de Auditorias BPM</p>
-        {error&&<div className="alert error">{error}</div>}
-        <label>Email</label>
-        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
-        <label>Contrasena</label>
-        <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="********"
-          onKeyDown={e=>e.key==='Enter'&&login()}/>
-        <button className="btn btn-primary" style={{width:'100%',marginTop:4}} onClick={login} disabled={cargando}>
-          {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar'}
-        </button>
-      </div>
-    </div>
+    <div className="login-wrap"><div className="login-box">
+      <h2>INOCUA tec</h2><p>Sistema de Auditorias BPM</p>
+      {error&&<div className="alert error">{error}</div>}
+      <label>Email</label>
+      <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/>
+      <label>Contrasena</label>
+      <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="********" onKeyDown={e=>e.key==='Enter'&&login()}/>
+      <button className="btn btn-primary" style={{width:'100%',marginTop:4}} onClick={login} disabled={cargando}>
+        {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar'}
+      </button>
+    </div></div>
   );
 }
 
-// ── SUBIR FOTOS ────────────────────────────────────────────
 function SubirFotos({auditoriaId}){
-  const [fotos,setFotos]=useState([]);
-  const [subiendo,setSubiendo]=useState(false);
-  const [msg,setMsg]=useState('');
-  const inputRef=useRef();
-
+  const [fotos,setFotos]=useState([]);const [subiendo,setSubiendo]=useState(false);const [msg,setMsg]=useState('');const inputRef=useRef();
   useEffect(()=>{cargarFotos();},[auditoriaId]);
-
   const cargarFotos=async()=>{
     const {data}=await supabase.storage.from('evidencias').list(auditoriaId+'/');
-    if(data){
-      const urls=data.map(f=>{
-        const {data:u}=supabase.storage.from('evidencias').getPublicUrl(auditoriaId+'/'+f.name);
-        return{name:f.name,url:u.publicUrl};
-      });
-      setFotos(urls);
-    }
+    if(data){const urls=data.map(f=>{const {data:u}=supabase.storage.from('evidencias').getPublicUrl(auditoriaId+'/'+f.name);return{name:f.name,url:u.publicUrl};});setFotos(urls);}
   };
-
   const subirArchivo=async(e)=>{
-    const files=Array.from(e.target.files);
-    if(!files.length)return;
+    const files=Array.from(e.target.files);if(!files.length)return;
     setSubiendo(true);setMsg('');
-    for(const file of files){
-      const nombre=Date.now()+'_'+file.name;
-      await supabase.storage.from('evidencias').upload(auditoriaId+'/'+nombre,file);
-    }
-    setSubiendo(false);
-    setMsg('OK: '+files.length+' archivo(s) subido(s)');
-    cargarFotos();
-    inputRef.current.value='';
+    for(const file of files){const nombre=Date.now()+'_'+file.name;await supabase.storage.from('evidencias').upload(auditoriaId+'/'+nombre,file);}
+    setSubiendo(false);setMsg('OK: '+files.length+' archivo(s) subido(s)');cargarFotos();inputRef.current.value='';
   };
-
   return(
     <div>
       <div className="upload-area" onClick={()=>inputRef.current.click()}>
@@ -438,87 +438,69 @@ function SubirFotos({auditoriaId}){
       </div>
       {subiendo&&<div className="alert info" style={{marginTop:8}}>Subiendo archivos...</div>}
       {msg&&<div className="alert success" style={{marginTop:8}}>{msg}</div>}
-      {fotos.length>0&&(
-        <div className="foto-grid">
-          {fotos.map((f,i)=>
-            f.name.endsWith('.pdf')?
-            <a key={i} href={f.url} target="_blank" style={{display:'flex',alignItems:'center',justifyContent:'center',height:80,background:'#f8f9fa',borderRadius:4,border:'2px solid #eee',textDecoration:'none',color:'#C0392B',fontSize:12,fontWeight:'bold'}}>PDF</a>:
-            <img key={i} src={f.url} alt={f.name} onClick={()=>window.open(f.url,'_blank')}/>
-          )}
-        </div>
-      )}
+      {fotos.length>0&&<div className="foto-grid">{fotos.map((f,i)=>f.name.endsWith('.pdf')?<a key={i} href={f.url} target="_blank" style={{display:'flex',alignItems:'center',justifyContent:'center',height:80,background:'#f8f9fa',borderRadius:4,border:'2px solid #eee',textDecoration:'none',color:'#C0392B',fontSize:12,fontWeight:'bold'}}>PDF</a>:<img key={i} src={f.url} alt={f.name} onClick={()=>window.open(f.url,'_blank')}/>)}</div>}
       {fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:8}}>Sin evidencias cargadas.</p>}
     </div>
   );
 }
 
-// ── MODULO CHECKLIST ───────────────────────────────────────
-function ModuloChecklist({modulo,estados,obsMod,onEstado,onObsMod}){
+function ModuloChecklist({modulo,estados,obsMod,ncsModulo,onEstado,onObsMod,onNcChange}){
   const cumple=modulo.items.filter((_,i)=>estados[i]==='C').length;
   const noCumple=modulo.items.filter((_,i)=>estados[i]==='NC').length;
   const na=modulo.items.filter((_,i)=>estados[i]==='NA').length;
   return(
     <div className="card">
-      <h2>{modulo.id+1}. {modulo.nombre}
-        <span style={{float:'right',fontSize:11,fontWeight:'normal',color:'#666'}}>
-          C:{cumple} NC:{noCumple} NA:{na}
-        </span>
-      </h2>
+      <h2>{modulo.id+1}. {modulo.nombre}<span style={{float:'right',fontSize:11,fontWeight:'normal',color:'#666'}}>C:{cumple} NC:{noCumple} NA:{na}</span></h2>
       {modulo.items.map((texto,i)=>(
         <div className="item-row" key={i}>
           <p className="item-texto">{texto}</p>
           <div className="estado-btns">
             {['C','NC','NA'].map(v=>(
-              <button key={v}
-                className={'estado-btn'+(estados[i]===v?' activo-'+v:'')}
-                onClick={()=>onEstado(i,estados[i]===v?null:v)}>
-                {v==='C'?'Cumple':v==='NC'?'No cumple':'N/A'}
+              <button key={v} className={'estado-btn'+(estados[i]===v?' activo-'+v:'')} onClick={()=>onEstado(i,estados[i]===v?null:v)}>
+                {v==='C'?'✓ Cumple':v==='NC'?'✗ No cumple':'— N/A'}
               </button>
             ))}
           </div>
+          {estados[i]==='NC'&&<PanelNC modulo={modulo.nombre} item={texto} observacion={obsMod} ncData={ncsModulo[i]||null} onChange={val=>onNcChange(i,val)}/>}
         </div>
       ))}
       <div style={{marginTop:10}}>
         <label>Observaciones del modulo:</label>
-        <textarea rows={2} placeholder="Observaciones, hallazgos, acciones correctivas..."
-          value={obsMod||''} onChange={e=>onObsMod(e.target.value)} style={{background:'#FFFDE7',marginBottom:0}}/>
+        <textarea rows={2} placeholder="Observaciones, hallazgos..." value={obsMod||''} onChange={e=>onObsMod(e.target.value)} style={{background:'#FFFDE7',marginBottom:0}}/>
       </div>
     </div>
   );
 }
 
-// ── NUEVA AUDITORIA ────────────────────────────────────────
 function NuevaAuditoria({onGuardar}){
-  const [estab,setEstab]=useState('');
-  const [domicilio,setDomicilio]=useState('');
-  const [nroHab,setNroHab]=useState('');
-  const [rubro,setRubro]=useState('');
-  const [resp,setResp]=useState('');
+  const [estab,setEstab]=useState('');const [domicilio,setDomicilio]=useState('');const [nroHab,setNroHab]=useState('');
+  const [rubro,setRubro]=useState('');const [resp,setResp]=useState('');
   const [fecha,setFecha]=useState(new Date().toISOString().split('T')[0]);
   const [condiciones,setCondiciones]=useState('');
   const [estados,setEstados]=useState(()=>MODULOS.map(m=>Array(m.items.length).fill(null)));
   const [obsMod,setObsMod]=useState(Array(MODULOS.length).fill(''));
-  const [guardando,setGuardando]=useState(false);
-  const [guardado,setGuardado]=useState(false);
-  const [error,setError]=useState('');
-  const [auditGuardada,setAuditGuardada]=useState(null);
+  const [ncs,setNcs]=useState(()=>MODULOS.map(m=>Array(m.items.length).fill(null)));
+  const [guardando,setGuardando]=useState(false);const [guardado,setGuardado]=useState(false);
+  const [error,setError]=useState('');const [auditGuardada,setAuditGuardada]=useState(null);
 
   const setEstado=(modId,itemIdx,val)=>{
     setEstados(prev=>{const n=[...prev];n[modId]=[...n[modId]];n[modId][itemIdx]=val;return n;});
+    if(val!=='NC')setNcs(prev=>{const n=prev.map(a=>[...a]);n[modId][itemIdx]=null;return n;});
   };
-  const setObsModulo=(modId,val)=>{
-    setObsMod(prev=>{const n=[...prev];n[modId]=val;return n;});
-  };
+  const setObsModulo=(modId,val)=>{setObsMod(prev=>{const n=[...prev];n[modId]=val;return n;});};
+  const setNcData=(modId,itemIdx,val)=>{setNcs(prev=>{const n=prev.map(a=>[...a]);n[modId][itemIdx]=val;return n;});};
 
   const calcular=()=>{
     let cumple=0,noCumple=0,na=0;
-    estados.forEach(mod=>mod.forEach(e=>{
-      if(e==='C')cumple++;
-      else if(e==='NC')noCumple++;
-      else if(e==='NA')na++;
-    }));
+    estados.forEach(mod=>mod.forEach(e=>{if(e==='C')cumple++;else if(e==='NC')noCumple++;else if(e==='NA')na++;}));
     const total=cumple+noCumple;
     return{puntaje:total>0?Math.round((cumple/total)*100):0,cumple,noCumple,na};
+  };
+
+  const aplanarNCs=()=>{
+    const lista=[];
+    ncs.forEach((modNcs,mi)=>{modNcs.forEach((nc,ii)=>{if(nc&&estados[mi][ii]==='NC')lista.push({modulo:MODULOS[mi].nombre,item:MODULOS[mi].items[ii],...nc});});});
+    return lista;
   };
 
   const guardar=async()=>{
@@ -526,38 +508,22 @@ function NuevaAuditoria({onGuardar}){
     setGuardando(true);setError('');
     const {puntaje,cumple,noCumple,na}=calcular();
     const resultado=puntaje>=80?'Aprobado':'No aprobado';
-    const modulosData={
-      estados,observaciones_modulos:obsMod,
-      domicilio,nroHab,rubro,condiciones,
-      resumen:{cumple,noCumple,na},
-      detalle:MODULOS.map((m,mi)=>({
-        nombre:m.nombre,
-        cumple:estados[mi].filter(e=>e==='C').length,
-        noCumple:estados[mi].filter(e=>e==='NC').length,
-        na:estados[mi].filter(e=>e==='NA').length,
-        obs:obsMod[mi]
-      }))
-    };
-    const {data,error:err}=await supabase.from('auditorias').insert([{
-      establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData
-    }]).select();
+    const modulosData={estados,observaciones_modulos:obsMod,domicilio,nroHab,rubro,condiciones,no_conformidades:aplanarNCs(),resumen:{cumple,noCumple,na},detalle:MODULOS.map((m,mi)=>({nombre:m.nombre,cumple:estados[mi].filter(e=>e==='C').length,noCumple:estados[mi].filter(e=>e==='NC').length,na:estados[mi].filter(e=>e==='NA').length,obs:obsMod[mi]}))};
+    const {data,error:err}=await supabase.from('auditorias').insert([{establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData}]).select();
     setGuardando(false);
     if(err){setError('Error: '+err.message);return;}
-    setAuditGuardada(data[0]);
-    onGuardar(data[0]);
-    setGuardado(true);
+    setAuditGuardada(data[0]);onGuardar(data[0]);setGuardado(true);
   };
+
+  const ncTotal=aplanarNCs().filter(nc=>nc.accion_correctiva).length;
+  const ncSinGestionar=estados.flat().filter(e=>e==='NC').length-ncTotal;
 
   if(guardado)return(
     <div className="card">
       <div className="alert success">Auditoria guardada correctamente.</div>
       <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
         <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>Descargar PDF</button>
-        <button className="btn btn-primary" onClick={()=>{
-          setEstab('');setDomicilio('');setNroHab('');setRubro('');setResp('');
-          setCondiciones('');setEstados(MODULOS.map(m=>Array(m.items.length).fill(null)));
-          setObsMod(Array(MODULOS.length).fill(''));setGuardado(false);setAuditGuardada(null);
-        }}>Nueva auditoria</button>
+        <button className="btn btn-primary" onClick={()=>{setEstab('');setDomicilio('');setNroHab('');setRubro('');setResp('');setCondiciones('');setEstados(MODULOS.map(m=>Array(m.items.length).fill(null)));setObsMod(Array(MODULOS.length).fill(''));setNcs(MODULOS.map(m=>Array(m.items.length).fill(null)));setGuardado(false);setAuditGuardada(null);}}>Nueva auditoria</button>
       </div>
       <h2 style={{color:'#1B4F72',marginBottom:12}}>Subir evidencias</h2>
       {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
@@ -570,27 +536,17 @@ function NuevaAuditoria({onGuardar}){
       {error&&<div className="alert error">{error}</div>}
       <div className="card">
         <h2>Datos del establecimiento</h2>
-        <label>Establecimiento / Razon social *</label>
-        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Nombre del establecimiento"/>
-        <label>Domicilio</label>
-        <input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion"/>
-        <label>N de habilitacion</label>
-        <input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion municipal"/>
-        <label>Rubro / Actividad</label>
-        <input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panaderia, Restaurante, Catering..."/>
-        <label>Responsable presente</label>
-        <input value={resp} onChange={e=>setResp(e.target.value)} placeholder="Nombre y apellido"/>
-        <label>Fecha de auditoria</label>
-        <input type="date" value={fecha} onChange={e=>setFecha(e.target.value)}/>
-        <label>Condiciones generales al inicio</label>
-        <textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)}
-          placeholder="Descripcion de las condiciones generales al momento de iniciar la auditoria"/>
+        <label>Establecimiento / Razon social *</label><input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Nombre del establecimiento"/>
+        <label>Domicilio</label><input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion"/>
+        <label>N de habilitacion</label><input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion municipal"/>
+        <label>Rubro / Actividad</label><input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panaderia, Restaurante, Catering..."/>
+        <label>Responsable presente</label><input value={resp} onChange={e=>setResp(e.target.value)} placeholder="Nombre y apellido"/>
+        <label>Fecha de auditoria</label><input type="date" value={fecha} onChange={e=>setFecha(e.target.value)}/>
+        <label>Condiciones generales al inicio</label><textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)} placeholder="Descripcion de las condiciones generales al momento de iniciar la auditoria"/>
       </div>
       {MODULOS.map((mod,mi)=>(
-        <ModuloChecklist key={mi} modulo={mod}
-          estados={estados[mi]} obsMod={obsMod[mi]}
-          onEstado={(idx,val)=>setEstado(mi,idx,val)}
-          onObsMod={val=>setObsModulo(mi,val)}/>
+        <ModuloChecklist key={mi} modulo={mod} estados={estados[mi]} obsMod={obsMod[mi]} ncsModulo={ncs[mi]}
+          onEstado={(idx,val)=>setEstado(mi,idx,val)} onObsMod={val=>setObsModulo(mi,val)} onNcChange={(idx,val)=>setNcData(mi,idx,val)}/>
       ))}
       <div className="card">
         <h2>Resumen</h2>
@@ -600,19 +556,18 @@ function NuevaAuditoria({onGuardar}){
           <div className="stat"><div className="num">{puntaje}%</div><div className="label">Puntaje</div></div>
           <div className="stat"><span className={'badge '+(puntaje>=80?'verde':'rojo')} style={{fontSize:14,padding:'6px 12px',marginTop:8,display:'inline-block'}}>{puntaje>=80?'APROBADO':'NO APROBADO'}</span></div>
         </div>
+        {ncSinGestionar>0&&<div className="alert warning" style={{marginBottom:12}}>Tenes {ncSinGestionar} NC sin accion correctiva. Podes guardar igual o volver a completarlas.</div>}
+        {ncTotal>0&&<div className="alert info" style={{marginBottom:12}}>{ncTotal} accion(es) correctiva(s) registrada(s) — se incluiran en el PDF.</div>}
         <button className="btn btn-success" onClick={guardar} disabled={guardando}>
-          {guardando&&<span className="spinner"></span>}
-          {guardando?'Guardando...':'Guardar auditoria'}
+          {guardando&&<span className="spinner"></span>}{guardando?'Guardando...':'Guardar auditoria'}
         </button>
       </div>
     </div>
   );
 }
 
-// ── DASHBOARD ──────────────────────────────────────────────
 function Dashboard({auditorias,cargando,onVerEvidencias}){
-  const total=auditorias.length;
-  const aprobadas=auditorias.filter(a=>a.resultado==='Aprobado').length;
+  const total=auditorias.length;const aprobadas=auditorias.filter(a=>a.resultado==='Aprobado').length;
   const conNC=auditorias.filter(a=>(a.modulos?.resumen?.noCumple||0)>0).length;
   const promedio=total>0?Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total):0;
   return(
@@ -628,40 +583,28 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
         {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
         {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
         {!cargando&&auditorias.length>0&&
-          <table><thead><tr><th>Establecimiento</th><th>Responsable</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>PDF</th><th>Evidencias</th></tr></thead>
-          <tbody>{auditorias.map((a,i)=>(
-            <tr key={i}>
-              <td>{a.establecimiento}</td>
-              <td>{a.responsable||'---'}</td>
-              <td>{a.fecha}</td>
-              <td>{a.puntaje}%</td>
+          <table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>PDF</th><th>Evidencias</th></tr></thead>
+          <tbody>{auditorias.map((a,i)=>{
+            const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;
+            const totalNC=a.modulos?.resumen?.noCumple||0;
+            return(<tr key={i}>
+              <td>{a.establecimiento}</td><td>{a.fecha}</td><td>{a.puntaje}%</td>
               <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
+              <td>{totalNC>0?<span><span className="badge rojo">{totalNC} NC</span>{ncsCount>0&&<span className="badge azul" style={{marginLeft:4}}>{ncsCount} gest.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
               <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
               <td><button className="btn btn-warning" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerEvidencias(a)}>Ver</button></td>
-            </tr>
-          ))}</tbody></table>}
+            </tr>);
+          })}</tbody></table>}
       </div>
     </div>
   );
 }
 
-// ── GESTION CLIENTES ───────────────────────────────────────
 function GestionClientes(){
-  const [clientes,setClientes]=useState([]);
-  const [email,setEmail]=useState('');
-  const [pass,setPass]=useState('');
-  const [estab,setEstab]=useState('');
-  const [cargando,setCargando]=useState(false);
-  const [msg,setMsg]=useState('');
-  const [error,setError]=useState('');
-
+  const [clientes,setClientes]=useState([]);const [email,setEmail]=useState('');const [pass,setPass]=useState('');
+  const [estab,setEstab]=useState('');const [cargando,setCargando]=useState(false);const [msg,setMsg]=useState('');const [error,setError]=useState('');
   useEffect(()=>{cargarClientes();},[]);
-
-  const cargarClientes=async()=>{
-    const {data}=await supabase.from('clientes').select('*').order('created_at',{ascending:false});
-    if(data)setClientes(data);
-  };
-
+  const cargarClientes=async()=>{const {data}=await supabase.from('clientes').select('*').order('created_at',{ascending:false});if(data)setClientes(data);};
   const crearCliente=async()=>{
     if(!email||!pass||!estab){setError('Completa todos los campos');return;}
     setCargando(true);setError('');setMsg('');
@@ -669,68 +612,35 @@ function GestionClientes(){
     if(e){setError('Error: '+e.message);setCargando(false);return;}
     await supabase.from('clientes').insert([{user_id:data.user.id,establecimiento:estab,email}]);
     setMsg('Cliente "'+estab+'" creado. Email: '+email+' / Contrasena: '+pass);
-    setEmail('');setPass('');setEstab('');
-    cargarClientes();setCargando(false);
+    setEmail('');setPass('');setEstab('');cargarClientes();setCargando(false);
   };
-
   const eliminarCliente=async(c)=>{
     if(!confirm('Eliminar acceso de "'+c.establecimiento+'"?'))return;
-    await supabase.auth.admin.deleteUser(c.user_id);
-    await supabase.from('clientes').delete().eq('id',c.id);
-    cargarClientes();
+    await supabase.auth.admin.deleteUser(c.user_id);await supabase.from('clientes').delete().eq('id',c.id);cargarClientes();
   };
-
   return(
     <div>
       <div className="card">
         <h2>Nuevo cliente</h2>
-        {error&&<div className="alert error">{error}</div>}
-        {msg&&<div className="alert success">{msg}</div>}
-        <label>Nombre del establecimiento</label>
-        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panaderia San Martin"/>
-        <label>Email del cliente</label>
-        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="cliente@email.com"/>
-        <label>Contrasena inicial</label>
-        <input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contrasena para el cliente"/>
-        <button className="btn btn-success" onClick={crearCliente} disabled={cargando}>
-          {cargando&&<span className="spinner"></span>}{cargando?'Creando...':'Crear acceso'}
-        </button>
+        {error&&<div className="alert error">{error}</div>}{msg&&<div className="alert success">{msg}</div>}
+        <label>Nombre del establecimiento</label><input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panaderia San Martin"/>
+        <label>Email del cliente</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="cliente@email.com"/>
+        <label>Contrasena inicial</label><input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contrasena para el cliente"/>
+        <button className="btn btn-success" onClick={crearCliente} disabled={cargando}>{cargando&&<span className="spinner"></span>}{cargando?'Creando...':'Crear acceso'}</button>
       </div>
       <div className="card">
         <h2>Clientes con acceso</h2>
         {clientes.length===0&&<p style={{color:'#999',fontSize:14}}>No hay clientes registrados.</p>}
-        {clientes.length>0&&(
-          <table><thead><tr><th>Establecimiento</th><th>Email</th><th>Creado</th><th>Accion</th></tr></thead>
-          <tbody>{clientes.map((c,i)=>(
-            <tr key={i}>
-              <td>{c.establecimiento}</td>
-              <td>{c.email}</td>
-              <td>{new Date(c.created_at).toLocaleDateString('es-AR')}</td>
-              <td><button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>eliminarCliente(c)}>Eliminar</button></td>
-            </tr>
-          ))}</tbody></table>
-        )}
+        {clientes.length>0&&<table><thead><tr><th>Establecimiento</th><th>Email</th><th>Creado</th><th>Accion</th></tr></thead>
+        <tbody>{clientes.map((c,i)=>(<tr key={i}><td>{c.establecimiento}</td><td>{c.email}</td><td>{new Date(c.created_at).toLocaleDateString('es-AR')}</td><td><button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>eliminarCliente(c)}>Eliminar</button></td></tr>))}</tbody></table>}
       </div>
     </div>
   );
 }
 
-// ── VISTA CLIENTE ──────────────────────────────────────────
 function VistaCliente({session,onLogout}){
-  const {cliente}=session;
-  const [auditorias,setAuditorias]=useState([]);
-  const [seleccionada,setSeleccionada]=useState(null);
-  const [cargando,setCargando]=useState(true);
-
-  useEffect(()=>{
-    (async()=>{
-      const {data}=await supabase.from('auditorias').select('*')
-        .ilike('establecimiento','%'+cliente.establecimiento+'%').order('created_at',{ascending:false});
-      if(data)setAuditorias(data);
-      setCargando(false);
-    })();
-  },[]);
-
+  const {cliente}=session;const [auditorias,setAuditorias]=useState([]);const [seleccionada,setSeleccionada]=useState(null);const [cargando,setCargando]=useState(true);
+  useEffect(()=>{(async()=>{const {data}=await supabase.from('auditorias').select('*').ilike('establecimiento','%'+cliente.establecimiento+'%').order('created_at',{ascending:false});if(data)setAuditorias(data);setCargando(false);})();},[]);
   return(
     <div>
       <div className="header">
@@ -739,26 +649,16 @@ function VistaCliente({session,onLogout}){
       </div>
       <div className="container">
         {!seleccionada?(
-          <div className="card">
-            <h2>Mis auditorias</h2>
+          <div className="card"><h2>Mis auditorias</h2>
             {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
             {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
-            {!cargando&&auditorias.length>0&&(
-              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Accion</th></tr></thead>
-              <tbody>{auditorias.map((a,i)=>(
-                <tr key={i}>
-                  <td>{a.fecha}</td><td>{a.puntaje}%</td>
-                  <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
-                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>Subir evidencia</button></td>
-                </tr>
-              ))}</tbody></table>
-            )}
+            {!cargando&&auditorias.length>0&&<table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Accion</th></tr></thead>
+            <tbody>{auditorias.map((a,i)=>(<tr key={i}><td>{a.fecha}</td><td>{a.puntaje}%</td><td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td><td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>Subir evidencia</button></td></tr>))}</tbody></table>}
           </div>
         ):(
           <div className="card">
             <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>Volver</button>
-            <h2>Evidencias - {seleccionada.fecha}</h2>
-            <SubirFotos auditoriaId={seleccionada.id}/>
+            <h2>Evidencias - {seleccionada.fecha}</h2><SubirFotos auditoriaId={seleccionada.id}/>
           </div>
         )}
       </div>
@@ -766,14 +666,9 @@ function VistaCliente({session,onLogout}){
   );
 }
 
-// ── APP PRINCIPAL ──────────────────────────────────────────
 function App(){
-  const [session,setSession]=useState(null);
-  const [tab,setTab]=useState('dashboard');
-  const [auditorias,setAuditorias]=useState([]);
-  const [cargando,setCargando]=useState(true);
-  const [auditoriaEvidencia,setAuditoriaEvidencia]=useState(null);
-
+  const [session,setSession]=useState(null);const [tab,setTab]=useState('dashboard');
+  const [auditorias,setAuditorias]=useState([]);const [cargando,setCargando]=useState(true);const [auditoriaEvidencia,setAuditoriaEvidencia]=useState(null);
   useEffect(()=>{
     supabase.auth.getSession().then(async({data})=>{
       if(data.session){
@@ -784,27 +679,13 @@ function App(){
       } else setCargando(false);
     });
   },[]);
-
   const cargarAuditorias=async()=>{
-    setCargando(true);
-    const {data}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
-    if(data)setAuditorias(data);
-    setCargando(false);
+    setCargando(true);const {data}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
+    if(data)setAuditorias(data);setCargando(false);
   };
-
-  const logout=async()=>{
-    await supabase.auth.signOut();
-    setSession(null);setAuditorias([]);setTab('dashboard');setCargando(false);
-  };
-
-  if(!session)return <Login onLogin={async(s)=>{
-    setSession(s);
-    if(s.tipo==='auditor')cargarAuditorias();
-    else setCargando(false);
-  }}/>;
-
+  const logout=async()=>{await supabase.auth.signOut();setSession(null);setAuditorias([]);setTab('dashboard');setCargando(false);};
+  if(!session)return <Login onLogin={async(s)=>{setSession(s);if(s.tipo==='auditor')cargarAuditorias();else setCargando(false);}}/>;
   if(session.tipo==='cliente')return <VistaCliente session={session} onLogout={logout}/>;
-
   return(
     <div>
       <div className="header">
@@ -820,8 +701,7 @@ function App(){
         <button className={tab==='clientes'?'active':''} onClick={()=>{setTab('clientes');setAuditoriaEvidencia(null);}}>Clientes</button>
       </div>
       <div className="container">
-        {tab==='dashboard'&&!auditoriaEvidencia&&
-          <Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)}/>}
+        {tab==='dashboard'&&!auditoriaEvidencia&&<Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)}/>}
         {tab==='dashboard'&&auditoriaEvidencia&&(
           <div className="card">
             <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>Volver</button>
