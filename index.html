@@ -95,69 +95,18 @@ const supabase=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 const PLAZOS=['Inmediato','24 horas','48 horas','72 horas','5 dias','A convenir'];
 
 const MODULOS=[
-  {id:0,nombre:"Higiene del personal",items:[
-    "Uso de indumentaria adecuada (cofia, delantal, calzado)",
-    "Tecnica de lavado de manos correcta",
-    "Dispensadores de jabon y toallas descartables operativos",
-    "Carteleria de lavado de manos visible",
-    "Carnet sanitario / libreta sanitaria vigente"]},
-  {id:1,nombre:"Instalaciones",items:[
-    "Pisos sin grietas, limpios y de facil limpieza",
-    "Paredes y techos en buen estado, sin humedad ni descascaramiento",
-    "Iluminacion suficiente y protegida",
-    "Ventilacion adecuada (natural o mecanica)",
-    "Mesadas aptas para uso alimentario y en buen estado",
-    "Agua fria y caliente disponible en zona de trabajo",
-    "Tela mosquitera en aberturas (ventanas, rejillas)",
-    "Antebano con carteleria y elementos de higiene",
-    "Vestuario diferenciado (si aplica)"]},
-  {id:2,nombre:"Limpieza y desinfeccion",items:[
-    "Plan de limpieza y desinfeccion definido y disponible",
-    "Uso correcto de productos (concentracion, tiempo de contacto)",
-    "Elementos de limpieza diferenciados por area / superficie",
-    "Frecuencia de limpieza adecuada y registrada",
-    "Productos almacenados separados de alimentos"]},
-  {id:3,nombre:"Control de temperaturas",items:[
-    "Heladeras a <= 5 grados C (verificado con termometro)",
-    "Freezer / camara de congelados a <= -18 grados C",
-    "Registros de temperatura documentados y actualizados",
-    "Termometros calibrados y disponibles"]},
-  {id:4,nombre:"Almacenamiento de alimentos",items:[
-    "Separacion fisica de alimentos crudos y cocidos / listos para consumo",
-    "Rotulacion correcta: denominacion, fecha elaboracion/vencimiento",
-    "Sistema FIFO aplicado (primero en entrar, primero en salir)",
-    "Uso de recipientes hermeticos o film protector",
-    "Alimentos alejados del piso y paredes (estanterias)",
-    "Alimentos no alimentarios separados (productos de limpieza, etc.)"]},
-  {id:5,nombre:"Agua",items:[
-    "Agua potable disponible y de red publica / fuente habilitada",
-    "Tanque de agua con limpieza y desinfeccion documentada",
-    "Analisis bacteriologico vigente (CAA Cap. II Art. 17)",
-    "Analisis fisico-quimico vigente"]},
-  {id:6,nombre:"Control de plagas",items:[
-    "Ausencia de indicios de plagas (roedores, insectos, aves)",
-    "Medidas preventivas activas (sellado de grietas, mosquiteros, etc.)",
-    "Registros de control de plagas disponibles (empresa habilitada)",
-    "Desmalezamiento y orden en perimetro exterior (si aplica)"]},
-  {id:7,nombre:"Manipulacion de alimentos",items:[
-    "Uso de bandejas, recipientes y utensilios limpios",
-    "Ausencia de contaminacion cruzada en la practica observada",
-    "Coccion adecuada (temperatura interna >= 75 grados C en carnes)",
-    "Descongelacion correcta (bajo refrigeracion o agua fria corriente)",
-    "Recambio de aceite de fritura documentado (si aplica)"]},
-  {id:8,nombre:"Gestion de residuos",items:[
-    "Contenedores con tapa y en buen estado",
-    "Apertura no manual (pedal o similar)",
-    "Limpieza y desinfeccion de contenedores frecuente",
-    "Residuos retirados con frecuencia adecuada"]},
-  {id:9,nombre:"Documentacion y habilitaciones",items:[
-    "Habilitacion municipal vigente y exhibida",
-    "Cumplimiento de ordenanzas municipales aplicables",
-    "Procedimientos Operativos Estandarizados de Saneamiento (POES) disponibles",
-    "Registros de autocontrol presentes y actualizados"]},
+  {id:0,nombre:"Higiene del personal",items:["Uso de indumentaria adecuada (cofia, delantal, calzado)","Tecnica de lavado de manos correcta","Dispensadores de jabon y toallas descartables operativos","Carteleria de lavado de manos visible","Carnet sanitario / libreta sanitaria vigente"]},
+  {id:1,nombre:"Instalaciones",items:["Pisos sin grietas, limpios y de facil limpieza","Paredes y techos en buen estado, sin humedad ni descascaramiento","Iluminacion suficiente y protegida","Ventilacion adecuada (natural o mecanica)","Mesadas aptas para uso alimentario y en buen estado","Agua fria y caliente disponible en zona de trabajo","Tela mosquitera en aberturas (ventanas, rejillas)","Antebano con carteleria y elementos de higiene","Vestuario diferenciado (si aplica)"]},
+  {id:2,nombre:"Limpieza y desinfeccion",items:["Plan de limpieza y desinfeccion definido y disponible","Uso correcto de productos (concentracion, tiempo de contacto)","Elementos de limpieza diferenciados por area / superficie","Frecuencia de limpieza adecuada y registrada","Productos almacenados separados de alimentos"]},
+  {id:3,nombre:"Control de temperaturas",items:["Heladeras a <= 5 grados C (verificado con termometro)","Freezer / camara de congelados a <= -18 grados C","Registros de temperatura documentados y actualizados","Termometros calibrados y disponibles"]},
+  {id:4,nombre:"Almacenamiento de alimentos",items:["Separacion fisica de alimentos crudos y cocidos / listos para consumo","Rotulacion correcta: denominacion, fecha elaboracion/vencimiento","Sistema FIFO aplicado (primero en entrar, primero en salir)","Uso de recipientes hermeticos o film protector","Alimentos alejados del piso y paredes (estanterias)","Alimentos no alimentarios separados (productos de limpieza, etc.)"]},
+  {id:5,nombre:"Agua",items:["Agua potable disponible y de red publica / fuente habilitada","Tanque de agua con limpieza y desinfeccion documentada","Analisis bacteriologico vigente (CAA Cap. II Art. 17)","Analisis fisico-quimico vigente"]},
+  {id:6,nombre:"Control de plagas",items:["Ausencia de indicios de plagas (roedores, insectos, aves)","Medidas preventivas activas (sellado de grietas, mosquiteros, etc.)","Registros de control de plagas disponibles (empresa habilitada)","Desmalezamiento y orden en perimetro exterior (si aplica)"]},
+  {id:7,nombre:"Manipulacion de alimentos",items:["Uso de bandejas, recipientes y utensilios limpios","Ausencia de contaminacion cruzada en la practica observada","Coccion adecuada (temperatura interna >= 75 grados C en carnes)","Descongelacion correcta (bajo refrigeracion o agua fria corriente)","Recambio de aceite de fritura documentado (si aplica)"]},
+  {id:8,nombre:"Gestion de residuos",items:["Contenedores con tapa y en buen estado","Apertura no manual (pedal o similar)","Limpieza y desinfeccion de contenedores frecuente","Residuos retirados con frecuencia adecuada"]},
+  {id:9,nombre:"Documentacion y habilitaciones",items:["Habilitacion municipal vigente y exhibida","Cumplimiento de ordenanzas municipales aplicables","Procedimientos Operativos Estandarizados de Saneamiento (POES) disponibles","Registros de autocontrol presentes y actualizados"]},
 ];
 
-// Sugerencias indexadas por modulo y item - SIN cruces
 const SUGERENCIAS={
   "0-0":{ac:"Proveer de inmediato indumentaria completa al personal: cofia, delantal limpio y calzado adecuado. Retirar al manipulador de la linea hasta que cuente con el equipo completo.",ap:"Incorporar control de indumentaria al inicio de cada jornada. Designar un responsable de verificacion diaria.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
   "0-1":{ac:"Reforzar la tecnica de lavado de manos con el personal presente. Colocar cartel ilustrativo paso a paso en el area de lavamanos.",ap:"Implementar capacitacion periodica de lavado de manos. Incluir verificacion en rutina de apertura.",resp:"Responsable de higiene / Encargado",plazo:"24 horas"},
@@ -212,8 +161,7 @@ const SUGERENCIAS={
 };
 
 function getSugerencia(moduloIdx,itemIdx){
-  const key=moduloIdx+'-'+itemIdx;
-  return SUGERENCIAS[key]||{ac:"Implementar la correccion necesaria segun lo observado.",ap:"Establecer medidas para evitar la recurrencia.",resp:"Encargado del establecimiento",plazo:"A convenir"};
+  return SUGERENCIAS[moduloIdx+'-'+itemIdx]||{ac:"Implementar la correccion necesaria segun lo observado.",ap:"Establecer medidas para evitar la recurrencia.",resp:"Encargado del establecimiento",plazo:"A convenir"};
 }
 
 function PanelNC({moduloIdx,itemIdx,ncData,onChange}){
@@ -239,28 +187,23 @@ function PanelNC({moduloIdx,itemIdx,ncData,onChange}){
       {ncData&&(
         <div className="nc-sugerencia">
           <h5>Accion Correctiva y Preventiva</h5>
-          <div className="nc-campo">
-            <label>Accion correctiva (que hacer ahora)</label>
+          <div className="nc-campo"><label>Accion correctiva (que hacer ahora)</label>
             <textarea rows={2} value={ncData.accion_correctiva} onChange={e=>onChange({...ncData,accion_correctiva:e.target.value})}/>
           </div>
-          <div className="nc-campo">
-            <label>Accion preventiva (como evitar que vuelva a ocurrir)</label>
+          <div className="nc-campo"><label>Accion preventiva (como evitar que vuelva a ocurrir)</label>
             <textarea rows={2} value={ncData.accion_preventiva} onChange={e=>onChange({...ncData,accion_preventiva:e.target.value})}/>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-            <div className="nc-campo">
-              <label>Responsable</label>
+            <div className="nc-campo"><label>Responsable</label>
               <input value={ncData.responsable} onChange={e=>onChange({...ncData,responsable:e.target.value})} placeholder="Ej: Encargado"/>
             </div>
-            <div className="nc-campo">
-              <label>Plazo</label>
+            <div className="nc-campo"><label>Plazo</label>
               <select value={ncData.plazo} onChange={e=>onChange({...ncData,plazo:e.target.value})}>
                 {PLAZOS.map(p=><option key={p} value={p}>{p}</option>)}
               </select>
             </div>
           </div>
-          <div className="nc-campo">
-            <label>Estado</label>
+          <div className="nc-campo"><label>Estado</label>
             <div className="nc-estado-btns">
               {[['Pendiente','pendiente','🔴'],['En proceso','enproceso','🟡'],['Verificada','verificada','🔵'],['Cerrada','cerrada','🟢']].map(([lbl,cls,ico])=>(
                 <button key={cls} className={'nc-estado-btn'+(ncData.estado===lbl?' activo-'+cls:'')} onClick={()=>onChange({...ncData,estado:lbl})}>{ico} {lbl}</button>
@@ -277,25 +220,19 @@ function PanelNC({moduloIdx,itemIdx,ncData,onChange}){
   );
 }
 
-// PDF con texto completo sin cortes
 function generarPDF(auditoria){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const W=210,M=15,TW=W-M*2;
-  let y=15;
+  const W=210,M=15,TW=W-M*2;let y=15;
   const checkPage=()=>{if(y>270){doc.addPage();y=20;}};
-
-  // Funcion para escribir bloque de texto multilinea con altura calculada
   const escribirBloque=(etiqueta,texto,xEtiq,xTexto,anchoTexto)=>{
     const lines=doc.splitTextToSize(String(texto||''),anchoTexto);
-    const h=lines.length*4.5;
     checkPage();
     doc.setFont('helvetica','bold');doc.text(etiqueta,xEtiq,y);
     doc.setFont('helvetica','normal');
-    lines.forEach((l,li)=>{checkPage();doc.text(l,xTexto,y+li*4.5);});
-    y+=Math.max(h,5);
+    lines.forEach((l,li)=>{if(li>0)checkPage();doc.text(l,xTexto,y+li*4.5);});
+    y+=lines.length*4.5+1;
   };
-
   doc.setFillColor(27,79,114);doc.rect(0,0,210,28,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(15);doc.setFont('helvetica','bold');
   doc.text('INOCUA tec Servicios',M,12);
@@ -303,7 +240,6 @@ function generarPDF(auditoria){
   doc.text('Planilla de Relevamiento BPM - Modalidad A',M,19);
   doc.text('Cesar Orlando Alvarez Aguilar - Tec. Higiene y Seguridad Alimentaria',M,25);
   y=35;
-
   const mod=auditoria.modulos||{};
   doc.setFillColor(214,234,248);doc.rect(M,y-5,TW,36,'F');
   doc.setTextColor(27,79,114);doc.setFontSize(10);doc.setFont('helvetica','bold');
@@ -316,12 +252,12 @@ function generarPDF(auditoria){
     doc.setFont('helvetica','normal');doc.text(String(v).substring(0,38),col+32,y+row*7);
   });
   y+=26;
-  if(mod.condiciones){checkPage();doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(80,80,80);
+  if(mod.condiciones){
+    checkPage();doc.setFontSize(8);doc.setFont('helvetica','italic');doc.setTextColor(80,80,80);
     const cLines=doc.splitTextToSize('Condiciones al inicio: '+String(mod.condiciones),TW-4);
     cLines.forEach(l=>{checkPage();doc.text(l,M+2,y);y+=4.5;});
   }
   y+=4;
-
   const estados=mod.estados||[];const obsMods=mod.observaciones_modulos||[];
   MODULOS.forEach((modulo,mi)=>{
     const estMod=estados[mi]||[];
@@ -354,8 +290,6 @@ function generarPDF(auditoria){
     }
     y+=4;
   });
-
-  // RESUMEN EJECUTIVO
   checkPage();y+=4;
   doc.setFillColor(27,79,114);doc.rect(M,y-4,TW,8,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
@@ -386,48 +320,29 @@ function generarPDF(auditoria){
     doc.setFont('helvetica','bold');doc.setTextColor(p>=80?30:192,p>=80?132:57,p>=80?73:43);
     doc.text(String(p)+'%',M+158,y+1);doc.setTextColor(0,0,0);y+=7;
   });
-
-  // REGISTRO NC - texto completo sin cortes
   const ncsConData=(mod.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva);
   y+=10;checkPage();
   doc.setFillColor(192,57,43);doc.rect(M,y-4,TW,8,'F');
   doc.setTextColor(255,255,255);doc.setFontSize(10);doc.setFont('helvetica','bold');
   doc.text('REGISTRO DE NO CONFORMIDADES Y ACCIONES CORRECTIVAS',M+2,y+1);y+=12;
-
   if(ncsConData.length>0){
     ncsConData.forEach((nc,idx)=>{
       checkPage();
-      // Titulo NC
       doc.setFillColor(253,237,237);doc.rect(M,y-3,TW,7,'F');
       doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(192,57,43);
-      const titulo='NC '+String(idx+1)+' | '+nc.modulo+' - '+nc.item;
-      const tituloLines=doc.splitTextToSize(titulo,TW-4);
+      const tituloLines=doc.splitTextToSize('NC '+String(idx+1)+' | '+nc.modulo+' - '+nc.item,TW-4);
       tituloLines.forEach((l,li)=>{checkPage();doc.text(l,M+2,y+li*4.5);});
       y+=tituloLines.length*4.5+3;
-
-      // Accion correctiva completa
       doc.setTextColor(0,0,0);
       escribirBloque('Correctiva:',nc.accion_correctiva,M+2,M+27,TW-30);
-
-      // Accion preventiva completa
-      if(nc.accion_preventiva){
-        escribirBloque('Preventiva:',nc.accion_preventiva,M+2,M+27,TW-30);
-      }
-
-      // Responsable, Plazo, Estado en una linea
+      if(nc.accion_preventiva)escribirBloque('Preventiva:',nc.accion_preventiva,M+2,M+27,TW-30);
       checkPage();
       doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(0,0,0);
-      doc.text('Responsable:',M+2,y);
-      doc.setFont('helvetica','normal');doc.text(String(nc.responsable||'---'),M+27,y);
-      doc.setFont('helvetica','bold');doc.text('Plazo:',M+95,y);
-      doc.setFont('helvetica','normal');doc.text(String(nc.plazo||'---'),M+108,y);
-      doc.setFont('helvetica','bold');doc.text('Estado:',M+140,y);
-      doc.setFont('helvetica','normal');doc.text(String(nc.estado||'Pendiente'),M+155,y);
+      doc.text('Responsable:',M+2,y);doc.setFont('helvetica','normal');doc.text(String(nc.responsable||'---'),M+27,y);
+      doc.setFont('helvetica','bold');doc.text('Plazo:',M+95,y);doc.setFont('helvetica','normal');doc.text(String(nc.plazo||'---'),M+108,y);
+      doc.setFont('helvetica','bold');doc.text('Estado:',M+140,y);doc.setFont('helvetica','normal');doc.text(String(nc.estado||'Pendiente'),M+155,y);
       y+=8;
-
-      // Separador
-      doc.setDrawColor(220,220,220);doc.line(M,y-2,W-M,y-2);
-      y+=3;
+      doc.setDrawColor(220,220,220);doc.line(M,y-2,W-M,y-2);y+=3;
     });
   } else {
     doc.setFillColor(248,249,250);doc.rect(M,y-3,TW,7,'F');
@@ -435,15 +350,12 @@ function generarPDF(auditoria){
     doc.text('Item / No Conformidad',M+2,y+1);doc.text('Accion Correctiva',M+65,y+1);doc.text('Responsable',M+125,y+1);doc.text('Plazo',M+155,y+1);y+=8;
     for(let i=0;i<4;i++){checkPage();doc.setDrawColor(200,200,200);doc.line(M,y,W-M,y);y+=8;}
   }
-
-  // FIRMAS
   y+=15;checkPage();
   doc.setDrawColor(100,100,100);doc.line(M,y,M+75,y);doc.line(M+105,y,W-M,y);y+=5;
   doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(0,0,0);
   doc.text('Cesar Orlando Alvarez Aguilar',M,y);doc.text('Firma y aclaracion del responsable',M+105,y);y+=4;
   doc.text('Tec. Higiene y Seguridad Alimentaria',M,y);doc.text('Establecimiento: '+(auditoria.establecimiento||''),M+105,y);y+=4;
   doc.text('INOCUA tec Servicios - Auditoria BPM Modalidad A',M,y);
-
   const totalPags=doc.getNumberOfPages();
   for(let i=1;i<=totalPags;i++){
     doc.setPage(i);doc.setFontSize(7);doc.setTextColor(150,150,150);
@@ -626,7 +538,8 @@ function NuevaAuditoria({onGuardar}){
   );
 }
 
-function Dashboard({auditorias,cargando,onVerEvidencias}){
+// ── DASHBOARD CON ELIMINAR ─────────────────────────────────
+function Dashboard({auditorias,cargando,onVerEvidencias,onEliminar}){
   const total=auditorias.length;const aprobadas=auditorias.filter(a=>a.resultado==='Aprobado').length;
   const conNC=auditorias.filter(a=>(a.modulos?.resumen?.noCumple||0)>0).length;
   const promedio=total>0?Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total):0;
@@ -643,7 +556,7 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
         {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
         {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
         {!cargando&&auditorias.length>0&&
-          <table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>PDF</th><th>Evidencias</th></tr></thead>
+          <table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>PDF</th><th>Evidencias</th><th>Eliminar</th></tr></thead>
           <tbody>{auditorias.map((a,i)=>{
             const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;
             const totalNC=a.modulos?.resumen?.noCumple||0;
@@ -653,6 +566,7 @@ function Dashboard({auditorias,cargando,onVerEvidencias}){
               <td>{totalNC>0?<span><span className="badge rojo">{totalNC} NC</span>{ncsCount>0&&<span className="badge azul" style={{marginLeft:4}}>{ncsCount} gest.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
               <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
               <td><button className="btn btn-warning" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerEvidencias(a)}>Ver</button></td>
+              <td><button className="btn btn-danger" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onEliminar(a)}>🗑 Borrar</button></td>
             </tr>);
           })}</tbody></table>}
       </div>
@@ -729,6 +643,7 @@ function VistaCliente({session,onLogout}){
 function App(){
   const [session,setSession]=useState(null);const [tab,setTab]=useState('dashboard');
   const [auditorias,setAuditorias]=useState([]);const [cargando,setCargando]=useState(true);const [auditoriaEvidencia,setAuditoriaEvidencia]=useState(null);
+
   useEffect(()=>{
     supabase.auth.getSession().then(async({data})=>{
       if(data.session){
@@ -739,13 +654,23 @@ function App(){
       } else setCargando(false);
     });
   },[]);
+
   const cargarAuditorias=async()=>{
     setCargando(true);const {data}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
     if(data)setAuditorias(data);setCargando(false);
   };
+
+  const eliminarAuditoria=async(a)=>{
+    if(!confirm('Eliminar auditoria de "'+a.establecimiento+'" del '+a.fecha+'?\nEsta accion no se puede deshacer.'))return;
+    await supabase.from('auditorias').delete().eq('id',a.id);
+    setAuditorias(prev=>prev.filter(x=>x.id!==a.id));
+  };
+
   const logout=async()=>{await supabase.auth.signOut();setSession(null);setAuditorias([]);setTab('dashboard');setCargando(false);};
+
   if(!session)return <Login onLogin={async(s)=>{setSession(s);if(s.tipo==='auditor')cargarAuditorias();else setCargando(false);}}/>;
   if(session.tipo==='cliente')return <VistaCliente session={session} onLogout={logout}/>;
+
   return(
     <div>
       <div className="header">
@@ -761,7 +686,8 @@ function App(){
         <button className={tab==='clientes'?'active':''} onClick={()=>{setTab('clientes');setAuditoriaEvidencia(null);}}>Clientes</button>
       </div>
       <div className="container">
-        {tab==='dashboard'&&!auditoriaEvidencia&&<Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)}/>}
+        {tab==='dashboard'&&!auditoriaEvidencia&&
+          <Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)} onEliminar={eliminarAuditoria}/>}
         {tab==='dashboard'&&auditoriaEvidencia&&(
           <div className="card">
             <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>Volver</button>
