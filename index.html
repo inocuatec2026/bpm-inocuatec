@@ -88,6 +88,15 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .editor-item input{margin-bottom:0;flex:1}
 .editor-modulo{border:1px solid #D6EAF8;border-radius:6px;padding:12px;margin-bottom:12px}
 .editor-modulo h3{color:#1B4F72;font-size:14px;margin-bottom:10px}
+.cliente-selector{background:#EBF5FB;border:1px solid #AED6F1;border-radius:6px;padding:12px;margin-bottom:16px}
+.cliente-selector h3{color:#1B4F72;font-size:13px;font-weight:bold;margin-bottom:8px}
+.cliente-card-sel{background:white;border:2px solid #AED6F1;border-radius:6px;padding:10px;cursor:pointer;margin-bottom:6px;font-size:13px;transition:all 0.15s}
+.cliente-card-sel:hover{border-color:#1B4F72;background:#f0f8ff}
+.cliente-card-sel.seleccionado{border-color:#1E8449;background:#D5F5E3}
+.nc-cliente-card{background:#FEF5F5;border:1px solid #FADBD8;border-radius:6px;padding:14px;margin-bottom:12px}
+.nc-cliente-card h4{color:#C0392B;font-size:13px;margin-bottom:8px}
+.nc-cliente-detalle{font-size:12px;color:#555;margin-bottom:6px;line-height:1.5}
+.nc-acciones-cliente{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center}
 </style>
 </head>
 <body>
@@ -415,16 +424,17 @@ function Login({onLogin}){
   );
 }
 
-function SubirFotos({auditoriaId}){
+function SubirFotos({auditoriaId,ncIndex}){
+  const carpeta=ncIndex!==undefined?auditoriaId+'/nc-'+ncIndex:auditoriaId+'/general';
   const [fotos,setFotos]=useState([]);const [subiendo,setSubiendo]=useState(false);const [msg,setMsg]=useState('');const inputRef=useRef();
-  useEffect(()=>{cargarFotos();},[auditoriaId]);
+  useEffect(()=>{cargarFotos();},[carpeta]);
   const cargarFotos=async()=>{
-    const {data}=await supabase.storage.from('evidencias').list(auditoriaId+'/');
-    if(data){const urls=data.map(f=>{const {data:u}=supabase.storage.from('evidencias').getPublicUrl(auditoriaId+'/'+f.name);return{name:f.name,url:u.publicUrl};});setFotos(urls);}
+    const {data}=await supabase.storage.from('evidencias').list(carpeta+'/');
+    if(data){const urls=data.map(f=>{const {data:u}=supabase.storage.from('evidencias').getPublicUrl(carpeta+'/'+f.name);return{name:f.name,url:u.publicUrl};});setFotos(urls);}
   };
   const subirArchivo=async(e)=>{
     const files=Array.from(e.target.files);if(!files.length)return;setSubiendo(true);setMsg('');
-    for(const file of files){const nombre=Date.now()+'_'+file.name;await supabase.storage.from('evidencias').upload(auditoriaId+'/'+nombre,file);}
+    for(const file of files){const nombre=Date.now()+'_'+file.name;await supabase.storage.from('evidencias').upload(carpeta+'/'+nombre,file);}
     setSubiendo(false);setMsg('OK: '+files.length+' archivo(s) subido(s)');cargarFotos();inputRef.current.value='';
   };
   return(
@@ -471,6 +481,7 @@ function ModuloChecklist({moduloIdx,modulo,estados,obsMod,ncsModulo,onEstado,onO
 }
 
 function NuevaAuditoria({onGuardar,modulos}){
+  const [clientes,setClientes]=useState([]);const [clienteSelId,setClienteSelId]=useState(null);
   const [estab,setEstab]=useState('');const [domicilio,setDomicilio]=useState('');const [nroHab,setNroHab]=useState('');
   const [rubro,setRubro]=useState('');const [resp,setResp]=useState('');
   const [fecha,setFecha]=useState(new Date().toISOString().split('T')[0]);
@@ -480,6 +491,24 @@ function NuevaAuditoria({onGuardar,modulos}){
   const [ncs,setNcs]=useState(()=>modulos.map(m=>Array(m.items.length).fill(null)));
   const [guardando,setGuardando]=useState(false);const [guardado,setGuardado]=useState(false);
   const [error,setError]=useState('');const [auditGuardada,setAuditGuardada]=useState(null);
+  const [cargandoClientes,setCargandoClientes]=useState(true);
+
+  useEffect(()=>{
+    (async()=>{
+      const {data}=await supabase.from('clientes').select('*').order('establecimiento',{ascending:true});
+      if(data)setClientes(data);
+      setCargandoClientes(false);
+    })();
+  },[]);
+
+  const seleccionarCliente=(c)=>{
+    setClienteSelId(c.id);
+    setEstab(c.establecimiento||'');
+    setDomicilio(c.domicilio||'');
+    setNroHab(c.nro_habilitacion||'');
+    setRubro(c.rubro||'');
+  };
+  const limpiarCliente=()=>{setClienteSelId(null);setEstab('');setDomicilio('');setNroHab('');setRubro('');};
 
   const setEstado=(modId,itemIdx,val)=>{
     setEstados(prev=>{const n=[...prev];n[modId]=[...n[modId]];n[modId][itemIdx]=val;return n;});
@@ -498,13 +527,15 @@ function NuevaAuditoria({onGuardar,modulos}){
     return lista;
   };
   const guardar=async()=>{
-    if(!estab){alert('Ingresa el nombre del establecimiento');return;}
+    if(!estab){alert('Selecciona o ingresa el nombre del establecimiento');return;}
     setGuardando(true);setError('');
     const {puntaje,cumple,noCumple,na}=calcular();
     const resultado=puntaje>=80?'Aprobado':'No aprobado';
     const modulosData={estados,observaciones_modulos:obsMod,domicilio,nroHab,rubro,condiciones,no_conformidades:aplanarNCs(),modulos_snapshot:modulos,resumen:{cumple,noCumple,na},
       detalle:modulos.map((m,mi)=>({nombre:m.nombre,cumple:estados[mi].filter(e=>e==='C').length,noCumple:estados[mi].filter(e=>e==='NC').length,na:estados[mi].filter(e=>e==='NA').length,obs:obsMod[mi]}))};
-    const {data,error:err}=await supabase.from('auditorias').insert([{establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData}]).select();
+    const insertData={establecimiento:estab,responsable:resp,fecha,puntaje,resultado,modulos:modulosData};
+    if(clienteSelId)insertData.cliente_id=clienteSelId;
+    const {data,error:err}=await supabase.from('auditorias').insert([insertData]).select();
     setGuardando(false);if(err){setError('Error: '+err.message);return;}
     setAuditGuardada(data[0]);onGuardar(data[0]);setGuardado(true);
   };
@@ -516,9 +547,9 @@ function NuevaAuditoria({onGuardar,modulos}){
       <div className="alert success">Auditoria guardada correctamente.</div>
       <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
         <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>Descargar PDF</button>
-        <button className="btn btn-primary" onClick={()=>{setEstab('');setDomicilio('');setNroHab('');setRubro('');setResp('');setCondiciones('');setEstados(modulos.map(m=>Array(m.items.length).fill(null)));setObsMod(Array(modulos.length).fill(''));setNcs(modulos.map(m=>Array(m.items.length).fill(null)));setGuardado(false);setAuditGuardada(null);}}>Nueva auditoria</button>
+        <button className="btn btn-primary" onClick={()=>{limpiarCliente();setResp('');setCondiciones('');setEstados(modulos.map(m=>Array(m.items.length).fill(null)));setObsMod(Array(modulos.length).fill(''));setNcs(modulos.map(m=>Array(m.items.length).fill(null)));setGuardado(false);setAuditGuardada(null);}}>Nueva auditoria</button>
       </div>
-      <h2 style={{color:'#1B4F72',marginBottom:12}}>Subir evidencias</h2>
+      <h2 style={{color:'#1B4F72',marginBottom:12}}>Subir evidencias generales</h2>
       {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
     </div>
   );
@@ -528,14 +559,39 @@ function NuevaAuditoria({onGuardar,modulos}){
     <div>
       {error&&<div className="alert error">{error}</div>}
       <div className="card">
-        <h2>Datos del establecimiento</h2>
-        <label>Establecimiento / Razon social *</label><input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Nombre del establecimiento"/>
-        <label>Domicilio</label><input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion"/>
-        <label>N de habilitacion</label><input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion municipal"/>
-        <label>Rubro / Actividad</label><input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panaderia, Restaurante, Catering..."/>
-        <label>Responsable presente</label><input value={resp} onChange={e=>setResp(e.target.value)} placeholder="Nombre y apellido"/>
-        <label>Fecha de auditoria</label><input type="date" value={fecha} onChange={e=>setFecha(e.target.value)}/>
-        <label>Condiciones generales al inicio</label><textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)} placeholder="Descripcion de las condiciones generales al momento de iniciar la auditoria"/>
+        <h2>Establecimiento auditado</h2>
+        <div className="cliente-selector">
+          <h3>📋 Seleccionar cliente registrado</h3>
+          {cargandoClientes&&<p style={{fontSize:13,color:'#999'}}>Cargando clientes...</p>}
+          {!cargandoClientes&&clientes.length===0&&<p style={{fontSize:13,color:'#999'}}>No hay clientes registrados. Completa los datos manualmente abajo.</p>}
+          {!cargandoClientes&&clientes.length>0&&(
+            <div>
+              {clientes.map(c=>(
+                <div key={c.id} className={'cliente-card-sel'+(clienteSelId===c.id?' seleccionado':'')} onClick={()=>clienteSelId===c.id?limpiarCliente():seleccionarCliente(c)}>
+                  <strong>{c.establecimiento}</strong>
+                  {c.rubro&&<span style={{color:'#666',fontSize:12,marginLeft:8}}>· {c.rubro}</span>}
+                  {c.domicilio&&<span style={{color:'#999',fontSize:11,marginLeft:8}}>· {c.domicilio}</span>}
+                  {clienteSelId===c.id&&<span style={{float:'right',color:'#1E8449',fontSize:12,fontWeight:'bold'}}>✓ Seleccionado</span>}
+                </div>
+              ))}
+              {clienteSelId&&<button className="btn" style={{background:'#ECF0F1',color:'#555',fontSize:12,marginTop:6}} onClick={limpiarCliente}>✕ Quitar seleccion</button>}
+            </div>
+          )}
+        </div>
+        <label>Establecimiento / Razon social *</label>
+        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Nombre del establecimiento"/>
+        <label>Domicilio</label>
+        <input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion"/>
+        <label>N de habilitacion</label>
+        <input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion municipal"/>
+        <label>Rubro / Actividad</label>
+        <input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panaderia, Restaurante, Catering..."/>
+        <label>Responsable presente</label>
+        <input value={resp} onChange={e=>setResp(e.target.value)} placeholder="Nombre y apellido"/>
+        <label>Fecha de auditoria</label>
+        <input type="date" value={fecha} onChange={e=>setFecha(e.target.value)}/>
+        <label>Condiciones generales al inicio</label>
+        <textarea rows={2} value={condiciones} onChange={e=>setCondiciones(e.target.value)} placeholder="Descripcion de las condiciones generales al momento de iniciar la auditoria"/>
       </div>
       {modulos.map((mod,mi)=>(
         <ModuloChecklist key={mi} moduloIdx={mi} modulo={mod} estados={estados[mi]} obsMod={obsMod[mi]} ncsModulo={ncs[mi]}
@@ -581,7 +637,8 @@ function Dashboard({auditorias,cargando,onVerEvidencias,onEliminar}){
             const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;
             const totalNC=a.modulos?.resumen?.noCumple||0;
             return(<tr key={i}>
-              <td>{a.establecimiento}</td><td>{a.fecha}</td><td>{a.puntaje}%</td>
+              <td>{a.establecimiento}{a.cliente_id&&<span style={{marginLeft:4,fontSize:10,background:'#D5F5E3',color:'#1E8449',borderRadius:3,padding:'1px 5px'}}>vinc.</span>}</td>
+              <td>{a.fecha}</td><td>{a.puntaje}%</td>
               <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
               <td>{totalNC>0?<span><span className="badge rojo">{totalNC} NC</span>{ncsCount>0&&<span className="badge azul" style={{marginLeft:4}}>{ncsCount} gest.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
               <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
@@ -594,26 +651,25 @@ function Dashboard({auditorias,cargando,onVerEvidencias,onEliminar}){
   );
 }
 
-// ── GESTION CLIENTES — CORREGIDO con signUp ────────────────
 function GestionClientes(){
   const [clientes,setClientes]=useState([]);const [email,setEmail]=useState('');const [pass,setPass]=useState('');
-  const [estab,setEstab]=useState('');const [cargando,setCargando]=useState(false);const [msg,setMsg]=useState('');const [error,setError]=useState('');
+  const [estab,setEstab]=useState('');const [domicilio,setDomicilio]=useState('');const [nroHab,setNroHab]=useState('');const [rubro,setRubro]=useState('');
+  const [cargando,setCargando]=useState(false);const [msg,setMsg]=useState('');const [error,setError]=useState('');
   useEffect(()=>{cargarClientes();},[]);
   const cargarClientes=async()=>{
     const {data}=await supabase.from('clientes').select('*').order('created_at',{ascending:false});
     if(data)setClientes(data);
   };
   const crearCliente=async()=>{
-    if(!email||!pass||!estab){setError('Completa todos los campos');return;}
+    if(!email||!pass||!estab){setError('Completa al menos establecimiento, email y contrasena');return;}
     if(pass.length<6){setError('La contrasena debe tener al menos 6 caracteres');return;}
     setCargando(true);setError('');setMsg('');
-    // Usar signUp en lugar de admin.createUser
     const {data,error:e}=await supabase.auth.signUp({email,password:pass});
     if(e){setError('Error: '+e.message);setCargando(false);return;}
     if(!data.user){setError('No se pudo crear el usuario. Puede que el email ya exista.');setCargando(false);return;}
-    await supabase.from('clientes').insert([{user_id:data.user.id,establecimiento:estab,email}]);
-    setMsg('Cliente "'+estab+'" creado correctamente. Email: '+email+' / Contrasena: '+pass);
-    setEmail('');setPass('');setEstab('');
+    await supabase.from('clientes').insert([{user_id:data.user.id,establecimiento:estab,email,domicilio,nro_habilitacion:nroHab,rubro}]);
+    setMsg('Cliente "'+estab+'" creado. Email: '+email+' / Contrasena: '+pass);
+    setEmail('');setPass('');setEstab('');setDomicilio('');setNroHab('');setRubro('');
     cargarClientes();setCargando(false);
   };
   const eliminarCliente=async(c)=>{
@@ -627,12 +683,25 @@ function GestionClientes(){
         <h2>Nuevo cliente</h2>
         {error&&<div className="alert error">{error}</div>}
         {msg&&<div className="alert success">{msg}</div>}
-        <label>Nombre del establecimiento</label>
-        <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panaderia San Martin"/>
-        <label>Email del cliente</label>
+        <div className="grid2">
+          <div>
+            <label>Nombre del establecimiento *</label>
+            <input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panaderia San Martin"/>
+          </div>
+          <div>
+            <label>Rubro / Actividad</label>
+            <input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Panaderia, Restaurante..."/>
+          </div>
+        </div>
+        <label>Domicilio del establecimiento</label>
+        <input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion completa"/>
+        <label>N de habilitacion municipal</label>
+        <input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion"/>
+        <label>Email del cliente *</label>
         <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="cliente@email.com"/>
-        <label>Contrasena inicial (minimo 6 caracteres)</label>
+        <label>Contrasena inicial (minimo 6 caracteres) *</label>
         <input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contrasena para el cliente"/>
+        <p style={{fontSize:11,color:'#999',marginBottom:8}}>Los datos del establecimiento se usaran para autocompletar nuevas auditorias.</p>
         <button className="btn btn-success" onClick={crearCliente} disabled={cargando}>
           {cargando&&<span className="spinner"></span>}{cargando?'Creando...':'Crear acceso'}
         </button>
@@ -641,10 +710,13 @@ function GestionClientes(){
         <h2>Clientes con acceso</h2>
         {clientes.length===0&&<p style={{color:'#999',fontSize:14}}>No hay clientes registrados.</p>}
         {clientes.length>0&&(
-          <table><thead><tr><th>Establecimiento</th><th>Email</th><th>Creado</th><th>Accion</th></tr></thead>
+          <table><thead><tr><th>Establecimiento</th><th>Rubro</th><th>Email</th><th>Hab.</th><th>Creado</th><th>Accion</th></tr></thead>
           <tbody>{clientes.map((c,i)=>(
             <tr key={i}>
-              <td>{c.establecimiento}</td><td>{c.email}</td>
+              <td>{c.establecimiento}</td>
+              <td>{c.rubro||<span style={{color:'#aaa'}}>—</span>}</td>
+              <td>{c.email}</td>
+              <td style={{fontSize:12}}>{c.nro_habilitacion||<span style={{color:'#aaa'}}>—</span>}</td>
               <td>{new Date(c.created_at).toLocaleDateString('es-AR')}</td>
               <td><button className="btn btn-danger" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>eliminarCliente(c)}>Eliminar</button></td>
             </tr>
@@ -656,26 +728,150 @@ function GestionClientes(){
 }
 
 function VistaCliente({session,onLogout}){
-  const {cliente}=session;const [auditorias,setAuditorias]=useState([]);const [seleccionada,setSeleccionada]=useState(null);const [cargando,setCargando]=useState(true);
-  useEffect(()=>{(async()=>{const {data}=await supabase.from('auditorias').select('*').ilike('establecimiento','%'+cliente.establecimiento+'%').order('created_at',{ascending:false});if(data)setAuditorias(data);setCargando(false);})();},[]);
+  const {cliente}=session;
+  const [auditorias,setAuditorias]=useState([]);
+  const [seleccionada,setSeleccionada]=useState(null);
+  const [cargando,setCargando]=useState(true);
+  const [tabCliente,setTabCliente]=useState('auditorias');
+  const [ncExpandida,setNcExpandida]=useState(null);
+  const [actualizando,setActualizando]=useState(false);
+  const [msgNC,setMsgNC]=useState('');
+
+  useEffect(()=>{(async()=>{
+    if(cliente.id){
+      const {data:dataId}=await supabase.from('auditorias').select('*').eq('cliente_id',cliente.id).order('created_at',{ascending:false});
+      if(dataId&&dataId.length>0){setAuditorias(dataId);setCargando(false);return;}
+    }
+    const {data}=await supabase.from('auditorias').select('*').ilike('establecimiento','%'+cliente.establecimiento+'%').order('created_at',{ascending:false});
+    if(data)setAuditorias(data);
+    setCargando(false);
+  })();},[]);
+
+  const todasLasNCs=auditorias.flatMap(a=>{
+    const ncs=a.modulos?.no_conformidades||[];
+    return ncs.filter(nc=>nc&&nc.accion_correctiva).map((nc,i)=>({...nc,auditoria_id:a.id,auditoria_fecha:a.fecha,nc_index:i}));
+  });
+
+  const marcarEnProceso=async(auditoriaId,ncIndex)=>{
+    setActualizando(true);setMsgNC('');
+    const audit=auditorias.find(a=>a.id===auditoriaId);
+    if(!audit){setActualizando(false);return;}
+    const ncs=[...(audit.modulos?.no_conformidades||[])];
+    if(ncs[ncIndex])ncs[ncIndex]={...ncs[ncIndex],estado:'En proceso'};
+    const nuevosMod={...audit.modulos,no_conformidades:ncs};
+    const {error}=await supabase.from('auditorias').update({modulos:nuevosMod}).eq('id',auditoriaId);
+    if(!error){
+      setAuditorias(prev=>prev.map(a=>a.id===auditoriaId?{...a,modulos:nuevosMod}:a));
+      setMsgNC('Estado actualizado a "En proceso".');
+    }
+    setActualizando(false);
+  };
+
+  const colorEstadoNC=(estado)=>{
+    if(estado==='Cerrada')return{bg:'#D5F5E3',color:'#1E8449'};
+    if(estado==='Verificada')return{bg:'#D6EAF8',color:'#1B4F72'};
+    if(estado==='En proceso')return{bg:'#FEF9E7',color:'#9A7D0A'};
+    return{bg:'#FADBD8',color:'#C0392B'};
+  };
+
   return(
     <div>
       <div className="header">
-        <div><h1>{cliente.establecimiento}</h1><span>Portal de evidencias - INOCUA tec</span></div>
+        <div><h1>{cliente.establecimiento}</h1><span>Portal del cliente — INOCUA tec BPM</span></div>
         <button className="btn btn-danger" style={{marginLeft:'auto'}} onClick={onLogout}>Salir</button>
       </div>
+      <div className="nav">
+        <button className={tabCliente==='auditorias'?'active':''} onClick={()=>{setTabCliente('auditorias');setSeleccionada(null);}}>📋 Mis auditorias</button>
+        <button className={tabCliente==='ncs'?'active':''} onClick={()=>{setTabCliente('ncs');setSeleccionada(null);}}>
+          ⚠️ No conformidades{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length>0&&<span style={{background:'#C0392B',color:'white',borderRadius:10,padding:'1px 6px',fontSize:11,marginLeft:6}}>{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length}</span>}
+        </button>
+      </div>
       <div className="container">
-        {!seleccionada?(
-          <div className="card"><h2>Mis auditorias</h2>
-            {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
-            {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
-            {!cargando&&auditorias.length>0&&<table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>Accion</th></tr></thead>
-            <tbody>{auditorias.map((a,i)=>(<tr key={i}><td>{a.fecha}</td><td>{a.puntaje}%</td><td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td><td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>Subir evidencia</button></td></tr>))}</tbody></table>}
-          </div>
-        ):(
+        {cargando&&<div className="card"><p style={{color:'#999',fontSize:14}}>Cargando...</p></div>}
+
+        {!cargando&&tabCliente==='auditorias'&&!seleccionada&&(
           <div className="card">
-            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>Volver</button>
-            <h2>Evidencias - {seleccionada.fecha}</h2><SubirFotos auditoriaId={seleccionada.id}/>
+            <h2>Mis auditorias</h2>
+            {auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas para este establecimiento.</p>}
+            {auditorias.length>0&&(
+              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Evidencias</th></tr></thead>
+              <tbody>{auditorias.map((a,i)=>{
+                const ncsTotal=a.modulos?.resumen?.noCumple||0;
+                const ncsPend=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.estado==='Pendiente').length;
+                return(<tr key={i}>
+                  <td>{a.fecha}</td>
+                  <td>{a.puntaje}%</td>
+                  <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
+                  <td>{ncsTotal>0?<span><span className="badge rojo">{ncsTotal} NC</span>{ncsPend>0&&<span className="badge amarillo" style={{marginLeft:4}}>{ncsPend} pend.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
+                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 10px'}} onClick={()=>setSeleccionada(a)}>Subir evidencia</button></td>
+                </tr>);
+              })}</tbody></table>
+            )}
+          </div>
+        )}
+
+        {!cargando&&tabCliente==='auditorias'&&seleccionada&&(
+          <div className="card">
+            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>← Volver</button>
+            <h2>Evidencias generales — {seleccionada.fecha}</h2>
+            <SubirFotos auditoriaId={seleccionada.id}/>
+          </div>
+        )}
+
+        {!cargando&&tabCliente==='ncs'&&(
+          <div>
+            {msgNC&&<div className="alert success">{msgNC}</div>}
+            {todasLasNCs.length===0&&(
+              <div className="card"><p style={{color:'#999',fontSize:14}}>No hay no conformidades con acciones correctivas registradas.</p></div>
+            )}
+            {todasLasNCs.length>0&&(
+              <div>
+                <div className="alert info" style={{marginBottom:16}}>
+                  Tenes <strong>{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length} NC pendientes</strong> de un total de {todasLasNCs.length}.
+                  Podes marcarlas como "En proceso" y subir evidencias por cada una.
+                </div>
+                {todasLasNCs.map((nc,idx)=>{
+                  const col=colorEstadoNC(nc.estado);
+                  const esExpandida=ncExpandida===idx;
+                  return(
+                    <div key={idx} className="nc-cliente-card" style={{borderColor:col.color+'55'}}>
+                      <h4 style={{color:col.color,display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}} onClick={()=>setNcExpandida(esExpandida?null:idx)}>
+                        <span>NC {idx+1} — {nc.modulo}</span>
+                        <span style={{fontSize:11,background:col.bg,color:col.color,border:'1px solid '+col.color,borderRadius:10,padding:'2px 8px'}}>{nc.estado||'Pendiente'}</span>
+                      </h4>
+                      <div className="nc-cliente-detalle">
+                        <strong>Item:</strong> {nc.item}<br/>
+                        <strong>Fecha auditoria:</strong> {nc.auditoria_fecha}
+                      </div>
+                      {!esExpandida&&(
+                        <button className="btn" style={{background:'#EBF5FB',color:'#1B4F72',fontSize:12,padding:'4px 10px'}} onClick={()=>setNcExpandida(idx)}>Ver detalle y acciones</button>
+                      )}
+                      {esExpandida&&(
+                        <div>
+                          <div className="nc-cliente-detalle" style={{background:'#fff',border:'1px solid #eee',borderRadius:4,padding:10,marginBottom:8}}>
+                            <p><strong>Accion correctiva:</strong><br/>{nc.accion_correctiva}</p>
+                            {nc.accion_preventiva&&<p style={{marginTop:6}}><strong>Accion preventiva:</strong><br/>{nc.accion_preventiva}</p>}
+                            <p style={{marginTop:6}}><strong>Responsable:</strong> {nc.responsable||'—'} &nbsp;|&nbsp; <strong>Plazo:</strong> {nc.plazo||'—'}</p>
+                          </div>
+                          <div className="nc-acciones-cliente">
+                            {nc.estado==='Pendiente'&&(
+                              <button className="btn btn-warning" style={{fontSize:12}} onClick={()=>marcarEnProceso(nc.auditoria_id,nc.nc_index)} disabled={actualizando}>
+                                {actualizando&&<span className="spinner"></span>}🟡 Marcar como En proceso
+                              </button>
+                            )}
+                            <button className="btn" style={{background:'#EBF5FB',color:'#1B4F72',fontSize:12}} onClick={()=>setNcExpandida(null)}>Cerrar</button>
+                          </div>
+                          <div style={{marginTop:12}}>
+                            <p style={{fontSize:12,color:'#555',marginBottom:6,fontWeight:'bold'}}>Evidencias para esta NC:</p>
+                            <SubirFotos auditoriaId={nc.auditoria_id} ncIndex={nc.nc_index}/>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -729,8 +925,8 @@ function App(){
         {tab==='dashboard'&&!auditoriaEvidencia&&<Dashboard auditorias={auditorias} cargando={cargando} onVerEvidencias={a=>setAuditoriaEvidencia(a)} onEliminar={eliminarAuditoria}/>}
         {tab==='dashboard'&&auditoriaEvidencia&&(
           <div className="card">
-            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>Volver</button>
-            <h2>Evidencias - {auditoriaEvidencia.establecimiento} ({auditoriaEvidencia.fecha})</h2>
+            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>← Volver</button>
+            <h2>Evidencias — {auditoriaEvidencia.establecimiento} ({auditoriaEvidencia.fecha})</h2>
             <SubirFotos auditoriaId={auditoriaEvidencia.id}/>
           </div>
         )}
