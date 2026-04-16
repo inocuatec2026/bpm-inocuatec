@@ -60,10 +60,12 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .login-box p{color:#666;font-size:13px;margin-bottom:24px}
 .upload-area{border:2px dashed #ddd;border-radius:8px;padding:20px;text-align:center;cursor:pointer;margin-top:8px;transition:border-color 0.2s}
 .upload-area:hover{border-color:#1B4F72;background:#f8fbff}
-.foto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-.foto-grid img{width:100%;height:100px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid #eee;transition:border-color 0.2s}
-.foto-grid img:hover{border-color:#1B4F72}
-.foto-grid a{display:flex;align-items:center;justify-content:center;height:100px;background:#f8f9fa;border-radius:4px;border:2px solid #eee;text-decoration:none;color:#C0392B;font-size:12px;font-weight:bold}
+.foto-wrap{position:relative;border-radius:6px;overflow:hidden;border:2px solid #eee;background:#f8f9fa}
+.foto-wrap:hover .foto-overlay{opacity:1}
+.foto-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transition:opacity 0.2s}
+.foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.foto-grid img{width:100%;height:110px;object-fit:cover;display:block;cursor:pointer}
+.foto-pdf{display:flex;align-items:center;justify-content:center;height:110px;color:#8E44AD;font-size:13px;font-weight:bold;flex-direction:column;gap:4px;cursor:pointer}
 .item-row{padding:12px 0;border-bottom:1px solid #f0f0f0}
 .item-row:last-child{border-bottom:none}
 .item-texto{font-size:14px;margin-bottom:8px;color:#333}
@@ -98,14 +100,13 @@ label{font-size:13px;color:#555;display:block;margin-bottom:4px}
 .nc-cliente-card h4{color:#C0392B;font-size:13px;margin-bottom:8px}
 .nc-cliente-detalle{font-size:12px;color:#555;margin-bottom:6px;line-height:1.5}
 .nc-acciones-cliente{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center}
-.detalle-auditoria{background:#f8fbff;border:1px solid #D6EAF8;border-radius:6px;padding:12px;margin-bottom:12px}
 .detalle-modulo-header{background:#1B4F72;color:white;padding:8px 12px;border-radius:4px;font-size:13px;font-weight:bold;margin-bottom:8px;display:flex;justify-content:space-between}
 .detalle-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
 .detalle-item:last-child{border-bottom:none}
-.tag-C{color:#1E8449;font-weight:bold;min-width:32px}
-.tag-NC{color:#C0392B;font-weight:bold;min-width:32px}
-.tag-NA{color:#888;font-weight:bold;min-width:32px}
-.tag-vacio{color:#ccc;font-weight:bold;min-width:32px}
+.tag-C{color:#1E8449;font-weight:bold;min-width:36px}
+.tag-NC{color:#C0392B;font-weight:bold;min-width:36px}
+.tag-NA{color:#888;font-weight:bold;min-width:36px}
+.tag-vacio{color:#ccc;font-weight:bold;min-width:36px}
 </style>
 </head>
 <body>
@@ -136,97 +137,192 @@ function cargarModulos(){
 }
 
 const SUGERENCIAS={
-  "0-0":{ac:"Proveer de inmediato indumentaria completa al personal: cofia, delantal limpio y calzado adecuado.",ap:"Incorporar control de indumentaria al inicio de cada jornada.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
-  "0-1":{ac:"Reforzar la tecnica de lavado de manos con el personal presente.",ap:"Implementar capacitacion periodica de lavado de manos.",resp:"Responsable de higiene / Encargado",plazo:"24 horas"},
-  "0-2":{ac:"Reponer jabon liquido y toallas descartables en los dispensadores.",ap:"Establecer control diario de insumos de higiene.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  "0-0":{ac:"Proveer de inmediato indumentaria completa al personal: cofia, delantal limpio y calzado adecuado. Retirar al manipulador de la linea hasta que cuente con el equipo completo.",ap:"Incorporar control de indumentaria al inicio de cada jornada. Designar un responsable de verificacion diaria.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  "0-1":{ac:"Reforzar la tecnica de lavado de manos con el personal presente. Colocar cartel ilustrativo paso a paso en el area de lavamanos.",ap:"Implementar capacitacion periodica de lavado de manos.",resp:"Responsable de higiene / Encargado",plazo:"24 horas"},
+  "0-2":{ac:"Reponer jabon liquido y toallas descartables en los dispensadores. Verificar funcionamiento del dispensador.",ap:"Establecer control diario de insumos de higiene. Mantener stock minimo de reposicion.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
   "0-3":{ac:"Colocar carteleria visible de lavado de manos en el area correspondiente.",ap:"Incluir revision de carteleria en check diario de apertura.",resp:"Encargado del establecimiento",plazo:"24 horas"},
-  "0-4":{ac:"Gestionar la renovacion del carnet sanitario del personal.",ap:"Llevar registro de vencimientos de carnets.",resp:"Titular / Encargado",plazo:"5 dias"},
-  "1-0":{ac:"Sellar grietas y fisuras en pisos con material apto.",ap:"Incluir revision de pisos en mantenimiento mensual.",resp:"Titular del establecimiento",plazo:"A convenir"},
-  "1-1":{ac:"Reparar sector con humedad o descascaramiento.",ap:"Realizar inspeccion mensual de paredes y techos.",resp:"Titular del establecimiento",plazo:"A convenir"},
-  "1-2":{ac:"Reparar o reponer luminarias deficientes.",ap:"Incluir iluminacion en check mensual.",resp:"Titular / Electricista habilitado",plazo:"48 horas"},
-  "1-3":{ac:"Habilitar ventilacion o verificar sistema mecanico.",ap:"Incorporar limpieza de filtros en mantenimiento periodico.",resp:"Encargado del establecimiento",plazo:"48 horas"},
-  "1-4":{ac:"Reemplazar o reparar mesadas en mal estado.",ap:"Realizar revision semestral de superficies.",resp:"Titular del establecimiento",plazo:"A convenir"},
-  "1-5":{ac:"Gestionar disponibilidad de agua fria y caliente.",ap:"Incluir verificacion de agua en check diario.",resp:"Titular / Plomero habilitado",plazo:"48 horas"},
-  "1-6":{ac:"Instalar o reparar tela mosquitera en aberturas.",ap:"Revisar estado de mosquiteros mensualmente.",resp:"Encargado del establecimiento",plazo:"72 horas"},
-  "1-7":{ac:"Equipar sector de banos con jabon, toallas y carteleria.",ap:"Incluir control del sector en rutina diaria.",resp:"Encargado del establecimiento",plazo:"24 horas"},
-  "1-8":{ac:"Habilitar vestuario diferenciado para el personal.",ap:"Mantener el espacio ordenado y limpio.",resp:"Titular del establecimiento",plazo:"A convenir"},
-  "2-0":{ac:"Elaborar plan de limpieza con frecuencias, productos y responsables.",ap:"Mantener el plan actualizado y disponible.",resp:"Encargado / Responsable tecnico",plazo:"5 dias"},
-  "2-1":{ac:"Capacitar al personal en uso correcto de productos.",ap:"Incorporar instructivo de uso en el plan de limpieza.",resp:"Encargado del establecimiento",plazo:"48 horas"},
-  "2-2":{ac:"Diferenciar elementos de limpieza por area con codigo de colores.",ap:"Comunicar sistema de colores al personal.",resp:"Encargado del establecimiento",plazo:"48 horas"},
-  "2-3":{ac:"Retomar el registro de frecuencia de limpieza.",ap:"Implementar planilla de registro diario.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
-  "2-4":{ac:"Reubicar productos de limpieza lejos de alimentos.",ap:"Designar area exclusiva para productos de limpieza.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
-  "3-0":{ac:"Verificar temperatura de heladera con termometro calibrado.",ap:"Implementar registro diario de temperatura.",resp:"Encargado / Responsable de deposito",plazo:"Inmediato"},
-  "3-1":{ac:"Verificar temperatura del freezer.",ap:"Registrar temperatura de congelados diariamente.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
-  "3-2":{ac:"Retomar el registro de temperaturas.",ap:"Implementar planilla de control de temperatura diario.",resp:"Encargado / Manipulador responsable",plazo:"Inmediato"},
-  "3-3":{ac:"Verificar calibracion del termometro o adquirir uno apto.",ap:"Incluir verificacion de termometros en check mensual.",resp:"Titular del establecimiento",plazo:"48 horas"},
-  "4-0":{ac:"Separar alimentos crudos de cocidos. Reorganizar heladera.",ap:"Establecer criterio de ordenamiento. Capacitar al personal.",resp:"Encargado / Manipuladores",plazo:"Inmediato"},
-  "4-1":{ac:"Rotular productos sin identificacion con denominacion y fechas.",ap:"Incorporar rotulado como paso obligatorio del proceso.",resp:"Manipuladores / Encargado",plazo:"Inmediato"},
-  "4-2":{ac:"Reorganizar deposito aplicando FIFO.",ap:"Capacitar en sistema FIFO. Reforzar en cada recepcion.",resp:"Encargado de deposito",plazo:"24 horas"},
-  "4-3":{ac:"Cubrir productos sin proteccion con film o recipiente hermetico.",ap:"Establecer norma: ningun alimento descubierto.",resp:"Manipuladores",plazo:"Inmediato"},
-  "4-4":{ac:"Reubicar alimentos en estanterias a 15 cm del piso.",ap:"Instalar estanterias suficientes.",resp:"Encargado del establecimiento",plazo:"24 horas"},
-  "4-5":{ac:"Separar productos no alimentarios en area diferenciada.",ap:"Designar espacio exclusivo para no alimentarios.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
-  "5-0":{ac:"Verificar conexion a red publica o fuente habilitada.",ap:"Mantener documentacion de fuente de agua disponible.",resp:"Titular del establecimiento",plazo:"48 horas"},
-  "5-1":{ac:"Realizar limpieza del tanque y documentar.",ap:"Programar limpieza semestral del tanque.",resp:"Titular / Empresa habilitada",plazo:"A convenir"},
-  "5-2":{ac:"Gestionar analisis bacteriologico del agua.",ap:"Programar analisis anual. Archivar resultados.",resp:"Titular del establecimiento",plazo:"5 dias"},
-  "5-3":{ac:"Gestionar analisis fisico-quimico del agua.",ap:"Programar junto al bacteriologico. Mantener vigentes.",resp:"Titular del establecimiento",plazo:"5 dias"},
-  "6-0":{ac:"Realizar inspeccion visual del establecimiento.",ap:"Contratar empresa de control de plagas habilitada.",resp:"Titular del establecimiento",plazo:"Inmediato"},
-  "6-1":{ac:"Sellar grietas e instalar mosquiteros faltantes.",ap:"Incluir revision de barreras fisicas mensualmente.",resp:"Encargado / Titular",plazo:"72 horas"},
-  "6-2":{ac:"Solicitar certificado de control de plagas.",ap:"Mantener contrato vigente con empresa habilitada.",resp:"Titular del establecimiento",plazo:"5 dias"},
-  "6-3":{ac:"Realizar desmalezamiento del perimetro exterior.",ap:"Incluir limpieza de perimetro en rutina mensual.",resp:"Encargado / Personal de limpieza",plazo:"72 horas"},
-  "7-0":{ac:"Reemplazar utensilios sucios. Lavar y desinfectar equipamiento.",ap:"Establecer rutina de lavado antes y despues de cada uso.",resp:"Manipuladores",plazo:"Inmediato"},
-  "7-1":{ac:"Corregir practica que genera contaminacion cruzada.",ap:"Capacitar en prevencion de contaminacion cruzada.",resp:"Encargado / Manipuladores",plazo:"Inmediato"},
-  "7-2":{ac:"Verificar temperatura de coccion. Continuar hasta 75 grados C.",ap:"Incorporar control de temperatura como paso obligatorio.",resp:"Cocinero / Manipulador responsable",plazo:"Inmediato"},
-  "7-3":{ac:"Corregir metodo de descongelacion. Usar heladera o agua fria.",ap:"Capacitar en tecnicas correctas de descongelacion.",resp:"Manipuladores / Encargado",plazo:"Inmediato"},
-  "7-4":{ac:"Documentar recambio de aceite con fecha y criterio.",ap:"Establecer criterio de cambio y registrar cada recambio.",resp:"Cocinero / Encargado",plazo:"24 horas"},
-  "8-0":{ac:"Reemplazar contenedores sin tapa.",ap:"Incluir estado de contenedores en check diario.",resp:"Encargado del establecimiento",plazo:"24 horas"},
-  "8-1":{ac:"Instalar contenedores con apertura no manual.",ap:"Mantener contenedores con pedal en areas de trabajo.",resp:"Titular del establecimiento",plazo:"48 horas"},
-  "8-2":{ac:"Realizar limpieza de contenedores de residuos.",ap:"Establecer frecuencia en plan de limpieza.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
-  "8-3":{ac:"Retirar residuos acumulados de inmediato.",ap:"Definir horarios de retiro de residuos.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
-  "9-0":{ac:"Gestionar renovacion de habilitacion municipal.",ap:"Llevar registro de vencimiento con alerta de 60 dias.",resp:"Titular del establecimiento",plazo:"5 dias"},
-  "9-1":{ac:"Verificar cumplimiento de ordenanzas municipales.",ap:"Mantenerse informado sobre normativa vigente.",resp:"Titular del establecimiento",plazo:"A convenir"},
-  "9-2":{ac:"Elaborar o actualizar POES del establecimiento.",ap:"Mantener POES documentados y disponibles.",resp:"Responsable tecnico / Titular",plazo:"5 dias"},
-  "9-3":{ac:"Retomar el registro de autocontrol.",ap:"Implementar planilla de autocontrol diario.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  "0-4":{ac:"Gestionar la renovacion del carnet sanitario del personal con vencimiento proximo o vencido.",ap:"Llevar registro de vencimientos de carnets y generar alerta con 30 dias de anticipacion.",resp:"Titular / Encargado",plazo:"5 dias"},
+  "1-0":{ac:"Sellar grietas y fisuras en pisos con material apto. Realizar limpieza profunda del area.",ap:"Incluir revision de estado de pisos en mantenimiento preventivo mensual.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  "1-1":{ac:"Reparar sector con humedad o descascaramiento. Aplicar pintura lavable apta para uso alimentario.",ap:"Realizar inspeccion mensual de paredes y techos.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  "1-2":{ac:"Reparar o reponer luminarias deficientes. Colocar proteccion en artefactos sin proteger.",ap:"Incluir iluminacion en check mensual de mantenimiento.",resp:"Titular / Electricista habilitado",plazo:"48 horas"},
+  "1-3":{ac:"Habilitar ventilacion natural o verificar funcionamiento del sistema mecanico.",ap:"Incorporar limpieza de filtros de ventilacion en plan de mantenimiento periodico.",resp:"Encargado del establecimiento",plazo:"48 horas"},
+  "1-4":{ac:"Reemplazar o reparar mesadas en mal estado.",ap:"Realizar revision semestral de superficies de trabajo.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  "1-5":{ac:"Gestionar la disponibilidad de agua fria y caliente en la zona de trabajo.",ap:"Incluir verificacion de agua en check diario de apertura.",resp:"Titular / Plomero habilitado",plazo:"48 horas"},
+  "1-6":{ac:"Instalar o reparar tela mosquitera en aberturas identificadas.",ap:"Revisar estado de mosquiteros mensualmente.",resp:"Encargado del establecimiento",plazo:"72 horas"},
+  "1-7":{ac:"Equipar el sector de banos con jabon, toallas descartables y carteleria.",ap:"Incluir control del sector de banos en rutina diaria de apertura.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  "1-8":{ac:"Habilitar o acondicionar vestuario diferenciado para el personal.",ap:"Mantener el espacio ordenado y limpio.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  "2-0":{ac:"Elaborar y documentar un plan de limpieza y desinfeccion con frecuencias, productos y responsables.",ap:"Mantener el plan actualizado y disponible para consulta del personal.",resp:"Encargado / Responsable tecnico",plazo:"5 dias"},
+  "2-1":{ac:"Capacitar al personal en uso correcto de productos: concentracion adecuada y tiempos de contacto.",ap:"Incorporar instructivo de uso de productos en el plan de limpieza.",resp:"Encargado del establecimiento",plazo:"48 horas"},
+  "2-2":{ac:"Diferenciar y rotular los elementos de limpieza por area o superficie. Usar codigo de colores.",ap:"Establecer y comunicar sistema de colores al personal.",resp:"Encargado del establecimiento",plazo:"48 horas"},
+  "2-3":{ac:"Retomar el registro de frecuencia de limpieza. Completar planilla con fecha, area, producto y firma.",ap:"Implementar planilla de registro diario de limpieza y desinfeccion.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
+  "2-4":{ac:"Reubicar productos de limpieza en espacio separado y correctamente identificado, lejos de alimentos.",ap:"Designar area exclusiva para almacenamiento de productos de limpieza.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  "3-0":{ac:"Verificar temperatura de heladera con termometro calibrado. Si supera 5 grados C, revisar equipo.",ap:"Implementar registro diario de temperatura con planilla.",resp:"Encargado / Responsable de deposito",plazo:"Inmediato"},
+  "3-1":{ac:"Verificar temperatura del freezer. Si supera -18 grados C, revisar equipo.",ap:"Registrar temperatura de congelados diariamente.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  "3-2":{ac:"Retomar el registro de temperaturas. Completar con fecha, hora, equipo y valor registrado.",ap:"Implementar planilla de control de temperatura de uso diario.",resp:"Encargado / Manipulador responsable",plazo:"Inmediato"},
+  "3-3":{ac:"Verificar calibracion del termometro disponible. Si no hay, adquirir uno apto.",ap:"Incluir verificacion de termometros en check mensual de equipos.",resp:"Titular del establecimiento",plazo:"48 horas"},
+  "4-0":{ac:"Separar fisicamente alimentos crudos de cocidos y listos para consumo.",ap:"Establecer criterio de ordenamiento por tipo de alimento. Capacitar al personal.",resp:"Encargado / Manipuladores",plazo:"Inmediato"},
+  "4-1":{ac:"Rotular todos los productos sin identificacion con denominacion, fecha de elaboracion y vencimiento.",ap:"Incorporar rotulado obligatorio como paso del proceso.",resp:"Manipuladores / Encargado",plazo:"Inmediato"},
+  "4-2":{ac:"Reorganizar el deposito aplicando sistema FIFO.",ap:"Capacitar al personal en sistema FIFO. Reforzar en cada recepcion.",resp:"Encargado de deposito",plazo:"24 horas"},
+  "4-3":{ac:"Cubrir o envasar los productos sin proteccion con film, tapa o recipiente hermetico.",ap:"Establecer como norma que ningun alimento quede descubierto.",resp:"Manipuladores",plazo:"Inmediato"},
+  "4-4":{ac:"Reubicar alimentos en estanterias a una altura minima de 15 cm del piso.",ap:"Instalar estanterias suficientes.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  "4-5":{ac:"Separar y almacenar productos no alimentarios en area diferenciada.",ap:"Designar espacio exclusivo para productos de limpieza.",resp:"Encargado del establecimiento",plazo:"Inmediato"},
+  "5-0":{ac:"Verificar conexion a red publica o fuente habilitada.",ap:"Mantener documentacion de la fuente de agua disponible.",resp:"Titular del establecimiento",plazo:"48 horas"},
+  "5-1":{ac:"Realizar limpieza y desinfeccion del tanque de agua y documentar.",ap:"Programar limpieza semestral del tanque.",resp:"Titular / Empresa habilitada",plazo:"A convenir"},
+  "5-2":{ac:"Gestionar analisis bacteriologico del agua ante laboratorio habilitado.",ap:"Programar analisis anual como minimo.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  "5-3":{ac:"Gestionar analisis fisico-quimico del agua ante laboratorio habilitado.",ap:"Programar junto al analisis bacteriologico.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  "6-0":{ac:"Realizar inspeccion visual inmediata del establecimiento.",ap:"Contratar empresa habilitada de control de plagas.",resp:"Titular del establecimiento",plazo:"Inmediato"},
+  "6-1":{ac:"Sellar grietas, instalar mosquiteros y corregir condiciones que favorecen el ingreso de plagas.",ap:"Incluir revision de barreras fisicas en mantenimiento mensual.",resp:"Encargado / Titular",plazo:"72 horas"},
+  "6-2":{ac:"Solicitar certificado de control de plagas a empresa habilitada.",ap:"Mantener contrato vigente con empresa habilitada.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  "6-3":{ac:"Realizar desmalezamiento y ordenamiento del perimetro exterior.",ap:"Incluir limpieza de perimetro en rutina mensual.",resp:"Encargado / Personal de limpieza",plazo:"72 horas"},
+  "7-0":{ac:"Reemplazar de inmediato utensilios sucios o en mal estado.",ap:"Establecer rutina de lavado de utensilios antes y despues de cada uso.",resp:"Manipuladores",plazo:"Inmediato"},
+  "7-1":{ac:"Corregir de inmediato la practica observada que genera contaminacion cruzada.",ap:"Capacitar al personal en prevencion de contaminacion cruzada.",resp:"Encargado / Manipuladores",plazo:"Inmediato"},
+  "7-2":{ac:"Verificar temperatura interna de coccion. Continuar hasta alcanzar minimo 75 grados C.",ap:"Incorporar control de temperatura de coccion como paso obligatorio.",resp:"Cocinero / Manipulador responsable",plazo:"Inmediato"},
+  "7-3":{ac:"Corregir el metodo de descongelacion. Usar heladera o agua fria corriente.",ap:"Capacitar al personal en tecnicas correctas de descongelacion.",resp:"Manipuladores / Encargado",plazo:"Inmediato"},
+  "7-4":{ac:"Documentar el recambio de aceite con fecha, frecuencia y criterio de cambio.",ap:"Establecer criterio de cambio de aceite y registrar cada recambio.",resp:"Cocinero / Encargado",plazo:"24 horas"},
+  "8-0":{ac:"Reemplazar o reparar contenedores sin tapa.",ap:"Incluir estado de contenedores en check diario.",resp:"Encargado del establecimiento",plazo:"24 horas"},
+  "8-1":{ac:"Instalar contenedores con apertura no manual (pedal o similar).",ap:"Mantener contenedores con pedal en todas las areas de trabajo.",resp:"Titular del establecimiento",plazo:"48 horas"},
+  "8-2":{ac:"Realizar limpieza y desinfeccion de todos los contenedores de residuos.",ap:"Establecer frecuencia de limpieza de contenedores en plan de limpieza.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
+  "8-3":{ac:"Retirar residuos acumulados de inmediato.",ap:"Definir horarios de retiro de residuos en el plan de limpieza.",resp:"Personal de limpieza / Encargado",plazo:"Inmediato"},
+  "9-0":{ac:"Gestionar la renovacion de la habilitacion municipal vencida.",ap:"Llevar registro de vencimiento de habilitacion con alerta previa de 60 dias.",resp:"Titular del establecimiento",plazo:"5 dias"},
+  "9-1":{ac:"Verificar cumplimiento de ordenanzas municipales aplicables al rubro.",ap:"Mantenerse informado sobre normativa vigente.",resp:"Titular del establecimiento",plazo:"A convenir"},
+  "9-2":{ac:"Elaborar o actualizar los POES del establecimiento.",ap:"Mantener POES documentados, actualizados y disponibles.",resp:"Responsable tecnico / Titular",plazo:"5 dias"},
+  "9-3":{ac:"Retomar el registro de autocontrol. Completar con fecha, item y resultado.",ap:"Implementar planilla de autocontrol diario.",resp:"Encargado del establecimiento",plazo:"24 horas"},
 };
 
 function getSugerencia(moduloIdx,itemIdx){
-  return SUGERENCIAS[moduloIdx+'-'+itemIdx]||{ac:"Implementar la correccion necesaria.",ap:"Establecer medidas para evitar recurrencia.",resp:"Encargado del establecimiento",plazo:"A convenir"};
+  return SUGERENCIAS[moduloIdx+'-'+itemIdx]||{ac:"Implementar la correccion necesaria segun lo observado.",ap:"Establecer medidas para evitar la recurrencia.",resp:"Encargado del establecimiento",plazo:"A convenir"};
 }
 
-// ── VISTA DETALLE DE AUDITORIA (auditor y cliente) ───────────────────────────
+// ── SUBIR Y GESTIONAR FOTOS ──────────────────────────────────────────────────
+function SubirFotos({auditoriaId,ncIndex,soloLectura}){
+  const carpeta=ncIndex!==undefined?auditoriaId+'/nc-'+ncIndex:auditoriaId+'/general';
+  const [fotos,setFotos]=useState([]);
+  const [subiendo,setSubiendo]=useState(false);
+  const [msg,setMsg]=useState('');
+  const [eliminando,setEliminando]=useState(null);
+  const inputRef=useRef();
+
+  useEffect(()=>{cargarFotos();},[carpeta]);
+
+  const cargarFotos=async()=>{
+    const {data,error}=await supabase.storage.from('evidencias').list(carpeta,{limit:100,sortBy:{column:'name',order:'asc'}});
+    if(data&&!error&&data.length>0){
+      const urls=data.map(f=>{
+        const {data:u}=supabase.storage.from('evidencias').getPublicUrl(carpeta+'/'+f.name);
+        return{name:f.name,url:u.publicUrl,path:carpeta+'/'+f.name};
+      });
+      setFotos(urls);
+    } else {
+      setFotos([]);
+    }
+  };
+
+  const subirArchivo=async(e)=>{
+    const files=Array.from(e.target.files);
+    if(!files.length)return;
+    setSubiendo(true);setMsg('');
+    for(const file of files){
+      const nombre=Date.now()+'_'+file.name;
+      await supabase.storage.from('evidencias').upload(carpeta+'/'+nombre,file,{upsert:true});
+    }
+    setSubiendo(false);
+    setMsg('OK: '+files.length+' archivo(s) subido(s)');
+    setTimeout(()=>{cargarFotos();setMsg('');},1500);
+    inputRef.current.value='';
+  };
+
+  const eliminarFoto=async(foto)=>{
+    if(!confirm('Eliminar este archivo?'))return;
+    setEliminando(foto.name);
+    const {error}=await supabase.storage.from('evidencias').remove([foto.path]);
+    if(!error){
+      setFotos(prev=>prev.filter(f=>f.name!==foto.name));
+      setMsg('Archivo eliminado.');
+      setTimeout(()=>setMsg(''),2000);
+    }
+    setEliminando(null);
+  };
+
+  const esImagen=(nombre)=>/\.(jpg|jpeg|png|gif|webp)$/i.test(nombre);
+  const esPdf=(nombre)=>/\.pdf$/i.test(nombre);
+
+  return(
+    <div>
+      {!soloLectura&&(
+        <div className="upload-area" onClick={()=>inputRef.current.click()}>
+          <div style={{fontSize:28}}>+</div>
+          <p style={{color:'#999',fontSize:13,marginTop:6}}>Clic para subir fotos o documentos (JPG, PNG, PDF)</p>
+          <input ref={inputRef} type="file" multiple accept="image/*,.pdf" style={{display:'none'}} onChange={subirArchivo}/>
+        </div>
+      )}
+      {subiendo&&<div className="alert info" style={{marginTop:8}}>Subiendo archivos...</div>}
+      {msg&&<div className="alert success" style={{marginTop:8}}>{msg}</div>}
+      {fotos.length>0&&(
+        <div className="foto-grid">
+          {fotos.map((f,i)=>(
+            <div key={i} className="foto-wrap">
+              {esImagen(f.name)
+                ?<img src={f.url} alt={f.name} style={{width:'100%',height:110,objectFit:'cover',display:'block',cursor:'pointer'}} onClick={()=>window.open(f.url,'_blank')}/>
+                :<div className="foto-pdf" onClick={()=>window.open(f.url,'_blank')}>📄<span>PDF</span></div>
+              }
+              <div className="foto-overlay">
+                <button className="btn btn-primary btn-sm" onClick={()=>window.open(f.url,'_blank')} style={{fontSize:11,padding:'4px 8px'}}>🔍 Ver</button>
+                {!soloLectura&&(
+                  <button className="btn btn-danger btn-sm" onClick={()=>eliminarFoto(f)} disabled={eliminando===f.name} style={{fontSize:11,padding:'4px 8px'}}>
+                    {eliminando===f.name?'...':'🗑 Eliminar'}
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:8}}>Sin evidencias cargadas.</p>}
+    </div>
+  );
+}
+
+// ── DETALLE AUDITORIA ────────────────────────────────────────────────────────
 function DetalleAuditoria({auditoria,onVolver,esCliente}){
   const mod=auditoria.modulos||{};
   const modulos=mod.modulos_snapshot||cargarModulos();
   const estados=mod.estados||[];
   const ncs=mod.no_conformidades||[];
   const resumen=mod.resumen||{};
+  const [tabDetalle,setTabDetalle]=useState('resumen');
+
   return(
     <div>
       <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
         <button className="btn btn-primary" onClick={onVolver}>← Volver</button>
-        <button className="btn btn-pdf" onClick={()=>generarPDF(auditoria)}>Descargar PDF</button>
+        <button className="btn btn-pdf" onClick={()=>generarPDF(auditoria)}>⬇ Descargar PDF</button>
       </div>
       <div className="card">
-        <h2>Datos del establecimiento</h2>
-        <div className="grid2">
-          <div><strong>Establecimiento:</strong> {auditoria.establecimiento||'—'}</div>
-          <div><strong>Fecha:</strong> {auditoria.fecha||'—'}</div>
+        <h2>📋 {auditoria.establecimiento} — {auditoria.fecha}</h2>
+        <div className="grid2" style={{fontSize:13,gap:8}}>
           <div><strong>Responsable:</strong> {auditoria.responsable||'—'}</div>
           <div><strong>Rubro:</strong> {mod.rubro||'—'}</div>
           <div><strong>Domicilio:</strong> {mod.domicilio||'—'}</div>
           <div><strong>N° Hab.:</strong> {mod.nroHab||'—'}</div>
         </div>
-        {mod.condiciones&&<p style={{marginTop:8,fontSize:13,color:'#555'}}><strong>Condiciones al inicio:</strong> {mod.condiciones}</p>}
+        {mod.condiciones&&<p style={{marginTop:8,fontSize:12,color:'#666',fontStyle:'italic'}}>Condiciones al inicio: {mod.condiciones}</p>}
       </div>
       <div className="card">
-        <h2>Resumen de cumplimiento</h2>
         <div className="grid4">
           <div className="stat"><div className="num" style={{color:'#1E8449'}}>{resumen.cumple||0}</div><div className="label">Cumplen</div></div>
           <div className="stat"><div className="num" style={{color:'#C0392B'}}>{resumen.noCumple||0}</div><div className="label">No cumplen</div></div>
           <div className="stat"><div className="num">{auditoria.puntaje||0}%</div><div className="label">Puntaje</div></div>
-          <div className="stat"><span className={'badge '+(auditoria.resultado==='Aprobado'?'verde':'rojo')} style={{fontSize:14,padding:'6px 12px',marginTop:8,display:'inline-block'}}>{auditoria.resultado||'—'}</span></div>
+          <div className="stat"><span className={'badge '+(auditoria.resultado==='Aprobado'?'verde':'rojo')} style={{fontSize:14,padding:'8px 14px',marginTop:6,display:'inline-block'}}>{auditoria.resultado||'—'}</span></div>
         </div>
       </div>
-      {modulos.map((modulo,mi)=>{
+      {/* Tabs internos */}
+      <div style={{display:'flex',gap:4,marginBottom:12,flexWrap:'wrap'}}>
+        {[['resumen','📊 Modulos'],['ncs','⚠️ No conformidades ('+ncs.filter(n=>n&&n.accion_correctiva).length+')'],['fotos','📷 Evidencias']].map(([k,lbl])=>(
+          <button key={k} className={'btn '+(tabDetalle===k?'btn-primary':'')} style={{fontSize:12,padding:'6px 12px',background:tabDetalle===k?'#1B4F72':'#ECF0F1',color:tabDetalle===k?'white':'#555'}} onClick={()=>setTabDetalle(k)}>{lbl}</button>
+        ))}
+      </div>
+
+      {tabDetalle==='resumen'&&modulos.map((modulo,mi)=>{
         const estMod=estados[mi]||[];
         const c=estMod.filter(e=>e==='C').length;
         const nc=estMod.filter(e=>e==='NC').length;
@@ -234,10 +330,10 @@ function DetalleAuditoria({auditoria,onVolver,esCliente}){
         const total=c+nc;
         const p=total>0?Math.round((c/total)*100):0;
         return(
-          <div key={mi} className="card" style={{padding:0,overflow:'hidden'}}>
+          <div key={mi} className="card" style={{padding:0,overflow:'hidden',marginBottom:10}}>
             <div className="detalle-modulo-header">
               <span>Modulo {mi+1} — {modulo.nombre}</span>
-              <span>C:{c} NC:{nc} NA:{na} | {p}%</span>
+              <span style={{fontSize:12}}>C:{c} NC:{nc} NA:{na} | {p}%</span>
             </div>
             <div style={{padding:'8px 12px'}}>
               {modulo.items.map((item,ii)=>{
@@ -260,18 +356,30 @@ function DetalleAuditoria({auditoria,onVolver,esCliente}){
           </div>
         );
       })}
-      {ncs.filter(nc=>nc&&nc.accion_correctiva).length>0&&(
-        <div className="card">
-          <h2>No conformidades y acciones correctivas</h2>
-          {ncs.filter(nc=>nc&&nc.accion_correctiva).map((nc,idx)=>(
-            <div key={idx} style={{background:'#FEF5F5',border:'1px solid #FADBD8',borderRadius:6,padding:12,marginBottom:10}}>
-              <p style={{color:'#C0392B',fontWeight:'bold',fontSize:13,marginBottom:6}}>NC {idx+1} — {nc.modulo}</p>
+
+      {tabDetalle==='ncs'&&(
+        <div>
+          {ncs.filter(n=>n&&n.accion_correctiva).length===0&&<div className="card"><p style={{color:'#999',fontSize:14}}>Sin no conformidades registradas.</p></div>}
+          {ncs.filter(n=>n&&n.accion_correctiva).map((nc,idx)=>(
+            <div key={idx} style={{background:'#FEF5F5',border:'1px solid #FADBD8',borderRadius:6,padding:14,marginBottom:10}}>
+              <p style={{color:'#C0392B',fontWeight:'bold',fontSize:13,marginBottom:8}}>NC {idx+1} — {nc.modulo}</p>
               <p style={{fontSize:12,color:'#555',marginBottom:4}}><strong>Item:</strong> {nc.item}</p>
               <p style={{fontSize:12,color:'#555',marginBottom:4}}><strong>Accion correctiva:</strong> {nc.accion_correctiva}</p>
               {nc.accion_preventiva&&<p style={{fontSize:12,color:'#555',marginBottom:4}}><strong>Accion preventiva:</strong> {nc.accion_preventiva}</p>}
-              <p style={{fontSize:12,color:'#555'}}><strong>Responsable:</strong> {nc.responsable||'—'} | <strong>Plazo:</strong> {nc.plazo||'—'} | <strong>Estado:</strong> {nc.estado||'Pendiente'}</p>
+              <div style={{display:'flex',gap:16,marginTop:6,fontSize:12,color:'#555',flexWrap:'wrap'}}>
+                <span><strong>Responsable:</strong> {nc.responsable||'—'}</span>
+                <span><strong>Plazo:</strong> {nc.plazo||'—'}</span>
+                <span><strong>Estado:</strong> <span className={'badge '+(nc.estado==='Cerrada'?'verde':nc.estado==='Verificada'?'azul':nc.estado==='En proceso'?'amarillo':'rojo')}>{nc.estado||'Pendiente'}</span></span>
+              </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {tabDetalle==='fotos'&&(
+        <div className="card">
+          <h2>📷 Evidencias generales</h2>
+          <SubirFotos auditoriaId={auditoria.id} soloLectura={esCliente}/>
         </div>
       )}
     </div>
@@ -474,8 +582,8 @@ function generarPDF(auditoria){
     });
   } else {
     doc.setFillColor(248,249,250);doc.rect(M,y-3,TW,7,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(0,0,0);
-    doc.text('Sin no conformidades registradas con acciones correctivas.',M+2,y+1);y+=8;
+    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(0,0,0);
+    doc.text('Sin no conformidades con acciones correctivas registradas.',M+2,y+1);y+=8;
   }
   y+=15;checkPage();
   doc.setDrawColor(100,100,100);doc.line(M,y,M+75,y);doc.line(M+105,y,W-M,y);y+=5;
@@ -515,52 +623,6 @@ function Login({onLogin}){
         {cargando&&<span className="spinner"></span>}{cargando?'Ingresando...':'Ingresar'}
       </button>
     </div></div>
-  );
-}
-
-function SubirFotos({auditoriaId,ncIndex}){
-  const carpeta=ncIndex!==undefined?auditoriaId+'/nc-'+ncIndex:auditoriaId+'/general';
-  const [fotos,setFotos]=useState([]);const [subiendo,setSubiendo]=useState(false);const [msg,setMsg]=useState('');const inputRef=useRef();
-  useEffect(()=>{cargarFotos();},[carpeta]);
-  const cargarFotos=async()=>{
-    const {data,error}=await supabase.storage.from('evidencias').list(carpeta,{limit:100,sortBy:{column:'created_at',order:'desc'}});
-    if(data&&!error){
-      const urls=await Promise.all(data.map(async f=>{
-        const {data:u}=supabase.storage.from('evidencias').getPublicUrl(carpeta+'/'+f.name);
-        return{name:f.name,url:u.publicUrl};
-      }));
-      setFotos(urls);
-    }
-  };
-  const subirArchivo=async(e)=>{
-    const files=Array.from(e.target.files);if(!files.length)return;setSubiendo(true);setMsg('');
-    for(const file of files){
-      const nombre=Date.now()+'_'+file.name;
-      await supabase.storage.from('evidencias').upload(carpeta+'/'+nombre,file,{upsert:true});
-    }
-    setSubiendo(false);setMsg('OK: '+files.length+' archivo(s) subido(s)');
-    setTimeout(()=>cargarFotos(),1000);
-    inputRef.current.value='';
-  };
-  return(
-    <div>
-      <div className="upload-area" onClick={()=>inputRef.current.click()}>
-        <div style={{fontSize:32}}>+</div>
-        <p style={{color:'#999',fontSize:13,marginTop:8}}>Clic para subir fotos o documentos (JPG, PNG, PDF)</p>
-        <input ref={inputRef} type="file" multiple accept="image/*,.pdf" style={{display:'none'}} onChange={subirArchivo}/>
-      </div>
-      {subiendo&&<div className="alert info" style={{marginTop:8}}>Subiendo archivos...</div>}
-      {msg&&<div className="alert success" style={{marginTop:8}}>{msg}</div>}
-      {fotos.length>0&&(
-        <div className="foto-grid" style={{marginTop:12}}>
-          {fotos.map((f,i)=>f.name.match(/\.pdf$/i)
-            ?<a key={i} href={f.url} target="_blank" rel="noreferrer">📄 PDF</a>
-            :<img key={i} src={f.url} alt={f.name} onClick={()=>window.open(f.url,'_blank')} title="Clic para ver en pantalla completa"/>
-          )}
-        </div>
-      )}
-      {fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:8}}>Sin evidencias cargadas.</p>}
-    </div>
   );
 }
 
@@ -651,7 +713,7 @@ function NuevaAuditoria({onGuardar,modulos}){
     <div className="card">
       <div className="alert success">Auditoria guardada correctamente.</div>
       <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
-        <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>Descargar PDF</button>
+        <button className="btn btn-pdf" onClick={()=>generarPDF(auditGuardada)}>⬇ Descargar PDF</button>
         <button className="btn btn-primary" onClick={()=>{limpiarCliente();setResp('');setCondiciones('');setEstados(modulos.map(m=>Array(m.items.length).fill(null)));setObsMod(Array(modulos.length).fill(''));setNcs(modulos.map(m=>Array(m.items.length).fill(null)));setGuardado(false);setAuditGuardada(null);}}>Nueva auditoria</button>
       </div>
       <h2 style={{color:'#1B4F72',marginBottom:12}}>Subir evidencias generales</h2>
@@ -720,7 +782,7 @@ function NuevaAuditoria({onGuardar,modulos}){
   );
 }
 
-function Dashboard({auditorias,cargando,onVerEvidencias,onEliminar,onVerDetalle}){
+function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
   const total=auditorias.length;const aprobadas=auditorias.filter(a=>a.resultado==='Aprobado').length;
   const conNC=auditorias.filter(a=>(a.modulos?.resumen?.noCumple||0)>0).length;
   const promedio=total>0?Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total):0;
@@ -737,7 +799,7 @@ function Dashboard({auditorias,cargando,onVerEvidencias,onEliminar,onVerDetalle}
         {cargando&&<p style={{color:'#999',fontSize:14}}>Cargando...</p>}
         {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
         {!cargando&&auditorias.length>0&&
-          <table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver</th><th>PDF</th><th>Evidencias</th><th>Eliminar</th></tr></thead>
+          <table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver / PDF</th><th>Eliminar</th></tr></thead>
           <tbody>{auditorias.map((a,i)=>{
             const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;
             const totalNC=a.modulos?.resumen?.noCumple||0;
@@ -746,9 +808,12 @@ function Dashboard({auditorias,cargando,onVerEvidencias,onEliminar,onVerDetalle}
               <td>{a.fecha}</td><td>{a.puntaje}%</td>
               <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
               <td>{totalNC>0?<span><span className="badge rojo">{totalNC} NC</span>{ncsCount>0&&<span className="badge azul" style={{marginLeft:4}}>{ncsCount} gest.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
-              <td><button className="btn btn-primary" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerDetalle(a)}>Ver</button></td>
-              <td><button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
-              <td><button className="btn btn-warning" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerEvidencias(a)}>Fotos</button></td>
+              <td>
+                <div style={{display:'flex',gap:4'}}>
+                  <button className="btn btn-primary" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerDetalle(a)}>Ver</button>
+                  <button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button>
+                </div>
+              </td>
               <td><button className="btn btn-danger" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onEliminar(a)}>🗑</button></td>
             </tr>);
           })}</tbody></table>}
@@ -830,8 +895,8 @@ function GestionClientes(){
 function VistaCliente({session,onLogout}){
   const {cliente}=session;
   const [auditorias,setAuditorias]=useState([]);
+  const [auditoriaDetalle,setAuditoriaDetalle]=useState(null);
   const [seleccionada,setSeleccionada]=useState(null);
-  const [verDetalle,setVerDetalle]=useState(null);
   const [cargando,setCargando]=useState(true);
   const [tabCliente,setTabCliente]=useState('auditorias');
   const [ncExpandida,setNcExpandida]=useState(null);
@@ -872,8 +937,7 @@ function VistaCliente({session,onLogout}){
     return{bg:'#FADBD8',color:'#C0392B'};
   };
 
-  // Ver detalle de auditoria como cliente
-  if(verDetalle){
+  if(auditoriaDetalle){
     return(
       <div>
         <div className="header">
@@ -881,7 +945,7 @@ function VistaCliente({session,onLogout}){
           <button className="btn btn-danger" style={{marginLeft:'auto'}} onClick={onLogout}>Salir</button>
         </div>
         <div className="container">
-          <DetalleAuditoria auditoria={verDetalle} onVolver={()=>setVerDetalle(null)} esCliente={true}/>
+          <DetalleAuditoria auditoria={auditoriaDetalle} onVolver={()=>setAuditoriaDetalle(null)} esCliente={true}/>
         </div>
       </div>
     );
@@ -907,7 +971,7 @@ function VistaCliente({session,onLogout}){
             <h2>Mis auditorias</h2>
             {auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
             {auditorias.length>0&&(
-              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver</th><th>PDF</th><th>Evidencias</th></tr></thead>
+              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver</th><th>PDF</th><th>Fotos</th></tr></thead>
               <tbody>{auditorias.map((a,i)=>{
                 const ncsTotal=a.modulos?.resumen?.noCumple||0;
                 const ncsPend=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.estado==='Pendiente').length;
@@ -916,7 +980,7 @@ function VistaCliente({session,onLogout}){
                   <td>{a.puntaje}%</td>
                   <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
                   <td>{ncsTotal>0?<span><span className="badge rojo">{ncsTotal} NC</span>{ncsPend>0&&<span className="badge amarillo" style={{marginLeft:4}}>{ncsPend} pend.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
-                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>setVerDetalle(a)}>Ver</button></td>
+                  <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>setAuditoriaDetalle(a)}>Ver</button></td>
                   <td><button className="btn btn-pdf" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
                   <td><button className="btn btn-warning" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>setSeleccionada(a)}>Fotos</button></td>
                 </tr>);
@@ -969,7 +1033,7 @@ function VistaCliente({session,onLogout}){
                             <button className="btn" style={{background:'#EBF5FB',color:'#1B4F72',fontSize:12}} onClick={()=>setNcExpandida(null)}>Cerrar</button>
                           </div>
                           <div style={{marginTop:12}}>
-                            <p style={{fontSize:12,color:'#555',marginBottom:6,fontWeight:'bold'}}>Evidencias para esta NC:</p>
+                            <p style={{fontSize:12,color:'#555',marginBottom:6,fontWeight:'bold'}}>Subir evidencias para esta NC:</p>
                             <SubirFotos auditoriaId={nc.auditoria_id} ncIndex={nc.nc_index}/>
                           </div>
                         </div>
@@ -989,7 +1053,6 @@ function VistaCliente({session,onLogout}){
 function App(){
   const [session,setSession]=useState(null);const [tab,setTab]=useState('dashboard');
   const [auditorias,setAuditorias]=useState([]);const [cargando,setCargando]=useState(true);
-  const [auditoriaEvidencia,setAuditoriaEvidencia]=useState(null);
   const [auditoriaDetalle,setAuditoriaDetalle]=useState(null);
   const [modulos,setModulos]=useState(()=>cargarModulos());
 
@@ -1013,24 +1076,23 @@ function App(){
     await supabase.from('auditorias').delete().eq('id',a.id);
     setAuditorias(prev=>prev.filter(x=>x.id!==a.id));
   };
-  const logout=async()=>{await supabase.auth.signOut();setSession(null);setAuditorias([]);setTab('dashboard');setCargando(false);};
+  const logout=async()=>{await supabase.auth.signOut();setSession(null);setAuditorias([]);setTab('dashboard');setAuditoriaDetalle(null);setCargando(false);};
 
   if(!session)return <Login onLogin={async(s)=>{setSession(s);if(s.tipo==='auditor')cargarAuditorias();else setCargando(false);}}/>;
   if(session.tipo==='cliente')return <VistaCliente session={session} onLogout={logout}/>;
 
-  // Vista detalle auditoria para el auditor
   if(auditoriaDetalle){
     return(
       <div>
         <div className="header">
-          <div><h1>INOCUA tec Servicios</h1><span>Sistema de Auditorias BPM - Panel Auditor</span></div>
+          <div><h1>INOCUA tec Servicios</h1><span>Panel Auditor</span></div>
           <button className="btn btn-danger" style={{marginLeft:'auto',fontSize:12,padding:'4px 10px'}} onClick={logout}>Salir</button>
         </div>
         <div className="nav">
-          <button onClick={()=>setAuditoriaDetalle(null)}>← Volver al dashboard</button>
+          <button onClick={()=>setAuditoriaDetalle(null)}>← Dashboard</button>
         </div>
         <div className="container">
-          <DetalleAuditoria auditoria={auditoriaDetalle} onVolver={()=>setAuditoriaDetalle(null)}/>
+          <DetalleAuditoria auditoria={auditoriaDetalle} onVolver={()=>setAuditoriaDetalle(null)} esCliente={false}/>
         </div>
       </div>
     );
@@ -1046,25 +1108,13 @@ function App(){
         </div>
       </div>
       <div className="nav">
-        <button className={tab==='dashboard'?'active':''} onClick={()=>{setTab('dashboard');setAuditoriaEvidencia(null);}}>Dashboard</button>
-        <button className={tab==='nueva'?'active':''} onClick={()=>{setTab('nueva');setAuditoriaEvidencia(null);}}>Nueva auditoria</button>
-        <button className={tab==='clientes'?'active':''} onClick={()=>{setTab('clientes');setAuditoriaEvidencia(null);}}>Clientes</button>
-        <button className={tab==='editor'?'active':''} onClick={()=>{setTab('editor');setAuditoriaEvidencia(null);}}>✏️ Editor checklist</button>
+        <button className={tab==='dashboard'?'active':''} onClick={()=>setTab('dashboard')}>Dashboard</button>
+        <button className={tab==='nueva'?'active':''} onClick={()=>setTab('nueva')}>Nueva auditoria</button>
+        <button className={tab==='clientes'?'active':''} onClick={()=>setTab('clientes')}>Clientes</button>
+        <button className={tab==='editor'?'active':''} onClick={()=>setTab('editor')}>✏️ Editor checklist</button>
       </div>
       <div className="container">
-        {tab==='dashboard'&&!auditoriaEvidencia&&(
-          <Dashboard auditorias={auditorias} cargando={cargando}
-            onVerEvidencias={a=>setAuditoriaEvidencia(a)}
-            onEliminar={eliminarAuditoria}
-            onVerDetalle={a=>setAuditoriaDetalle(a)}/>
-        )}
-        {tab==='dashboard'&&auditoriaEvidencia&&(
-          <div className="card">
-            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setAuditoriaEvidencia(null)}>← Volver</button>
-            <h2>Evidencias — {auditoriaEvidencia.establecimiento} ({auditoriaEvidencia.fecha})</h2>
-            <SubirFotos auditoriaId={auditoriaEvidencia.id}/>
-          </div>
-        )}
+        {tab==='dashboard'&&<Dashboard auditorias={auditorias} cargando={cargando} onEliminar={eliminarAuditoria} onVerDetalle={a=>setAuditoriaDetalle(a)}/>}
         {tab==='nueva'&&<NuevaAuditoria onGuardar={a=>{setAuditorias(p=>[a,...p]);}} modulos={modulos}/>}
         {tab==='clientes'&&<GestionClientes/>}
         {tab==='editor'&&(
