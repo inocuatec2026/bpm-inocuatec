@@ -351,27 +351,28 @@ function HistorialComparativo({auditorias}){
 
 // ── EXPORTAR EXCEL ───────────────────────────────────────────────────────────
 function exportarExcel(auditorias){
-  if(!window.XLSX){alert('Error: libreria Excel no disponible');return;}
-  const XLSX=window.XLSX;
-  const datos=auditorias.map(a=>({
-    'Establecimiento':a.establecimiento||'',
-    'Fecha':a.fecha||'',
-    'Responsable':a.responsable||'',
-    'Rubro':a.modulos?.rubro||'',
-    'Domicilio':a.modulos?.domicilio||'',
-    'N Habilitacion':a.modulos?.nroHab||'',
-    'Puntaje (%)':a.puntaje||0,
-    'Resultado':a.resultado||'',
-    'Cumplen':a.modulos?.resumen?.cumple||0,
-    'No cumplen':a.modulos?.resumen?.noCumple||0,
-    'N/A':a.modulos?.resumen?.na||0,
-    'NCs gestionadas':(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length,
-  }));
-  const ws=XLSX.utils.json_to_sheet(datos);
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,'Auditorias',ws);
-  ws['!cols']=[{wch:25},{wch:12},{wch:20},{wch:15},{wch:25},{wch:15},{wch:10},{wch:12},{wch:10},{wch:12},{wch:6},{wch:15}];
-  XLSX.writeFile(wb,'INOCUA_Auditorias_'+new Date().toISOString().split('T')[0]+'.xlsx');
+  const headers=['Establecimiento','Fecha','Responsable','Rubro','Domicilio','N Habilitacion','Puntaje (%)','Resultado','Cumplen','No cumplen','N/A','NCs gestionadas'];
+  const rows=auditorias.map(a=>[
+    a.establecimiento||'',
+    a.fecha||'',
+    a.responsable||'',
+    a.modulos?.rubro||'',
+    a.modulos?.domicilio||'',
+    a.modulos?.nroHab||'',
+    a.puntaje||0,
+    a.resultado||'',
+    a.modulos?.resumen?.cumple||0,
+    a.modulos?.resumen?.noCumple||0,
+    a.modulos?.resumen?.na||0,
+    (a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length,
+  ]);
+  const csvContent=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const BOM='\uFEFF';
+  const blob=new Blob([BOM+csvContent],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='INOCUA_Auditorias_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();URL.revokeObjectURL(url);
 }
 
 // ── SUBIR Y GESTIONAR FOTOS ──────────────────────────────────────────────────
