@@ -304,7 +304,6 @@ function HistorialComparativo({auditorias}){
       {audsEstab.length===0&&<p style={{color:'#999',fontSize:14}}>Sin auditorias para este establecimiento.</p>}
       {audsEstab.length>0&&(
         <div>
-          {/* Grafico de puntaje */}
           <p style={{fontSize:13,color:'#555',marginBottom:12,fontWeight:'bold'}}>Evolucion de puntaje general:</p>
           {audsEstab.map((a,i)=>(
             <div key={i} className="historial-barra-wrap">
@@ -314,7 +313,6 @@ function HistorialComparativo({auditorias}){
               <span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')} style={{fontSize:11}}>{a.resultado}</span>
             </div>
           ))}
-          {/* Tabla comparativa por modulo */}
           {audsEstab.length>1&&(
             <div style={{marginTop:20,overflowX:'auto'}}>
               <p style={{fontSize:13,color:'#555',marginBottom:8,fontWeight:'bold'}}>Comparativo por modulo:</p>
@@ -755,7 +753,6 @@ function generarPDF(auditoria,firmaDataUrl){
   doc.text('Cesar Orlando Alvarez Aguilar',M,y);doc.text('Firma y aclaracion del responsable',M+105,y);y+=4;
   doc.text('Tec. Higiene y Seguridad Alimentaria',M,y);doc.text('Establecimiento: '+(auditoria.establecimiento||''),M+105,y);y+=4;
   doc.text('INOCUA tec Servicios - Auditoria BPM Modalidad A',M,y);
-  // Insertar firma si existe
   const firmaUrl=firmaDataUrl||mod.firma;
   if(firmaUrl){
     try{checkPage();doc.addImage(firmaUrl,'PNG',M+100,y-14,60,18);}catch(e){}
@@ -777,7 +774,7 @@ function Login({onLogin}){
     setCargando(true);setError('');
     const {data,error:e}=await supabase.auth.signInWithPassword({email,password:pass});
     if(e){setError('Email o contrasena incorrectos');setCargando(false);return;}
-    const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',data.user.id).maybeSingle();
+    const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',data.user.id).maybySingle();
     setCargando(false);
     if(cliente)onLogin({tipo:'cliente',user:data.user,cliente});
     else onLogin({tipo:'auditor',user:data.user});
@@ -981,20 +978,17 @@ function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
         <div className="stat"><div className="num">{conNC}</div><div className="label">Con no conformidades</div></div>
         <div className="stat"><div className="num">{promedio}%</div><div className="label">Puntaje promedio</div></div>
       </div>
-
       {conAlerta>0&&(
         <div className="alert warning" style={{marginBottom:12}}>
           ⚠️ <strong>{conAlerta} establecimiento(s)</strong> requieren atencion por tiempo sin auditar.
         </div>
       )}
-
       <div style={{display:'flex',gap:4,marginBottom:12,flexWrap:'wrap',alignItems:'center'}}>
         {[['lista','📋 Auditorias'],['alertas','🔔 Vencimientos'],['historial','📊 Historial']].map(([k,lbl])=>(
           <button key={k} className="btn" style={{fontSize:12,padding:'6px 12px',background:tabDash===k?'#1B4F72':'#ECF0F1',color:tabDash===k?'white':'#555'}} onClick={()=>setTabDash(k)}>{lbl}</button>
         ))}
         <button className="btn btn-excel" style={{fontSize:12,padding:'6px 12px',marginLeft:'auto'}} onClick={()=>exportarExcel(auditorias)}>⬇ Excel</button>
       </div>
-
       {tabDash==='lista'&&(
         <div className="card">
           <h2>Ultimas auditorias</h2>
@@ -1008,24 +1002,20 @@ function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
               const alerta=getAlerta(a.fecha);
               return(<tr key={i}>
                 <td>{a.establecimiento}{a.cliente_id&&<span style={{marginLeft:4,fontSize:10,background:'#D5F5E3',color:'#1E8449',borderRadius:3,padding:'1px 5px'}}>vinc.</span>}</td>
-                <td>{a.fecha}</td>
-                <td>{a.puntaje}%</td>
+                <td>{a.fecha}</td><td>{a.puntaje}%</td>
                 <td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td>
                 <td>{totalNC>0?<span><span className="badge rojo">{totalNC} NC</span>{ncsCount>0&&<span className="badge azul" style={{marginLeft:4}}>{ncsCount} gest.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
                 <td><span title={alerta.label} style={{fontSize:16}}>{alerta.icono}</span></td>
-                <td>
-                  <div style={{display:'flex',gap:4}}>
-                    <button className="btn btn-primary" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerDetalle(a)}>Ver</button>
-                    <button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button>
-                  </div>
-                </td>
+                <td><div style={{display:'flex',gap:4}}>
+                  <button className="btn btn-primary" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onVerDetalle(a)}>Ver</button>
+                  <button className="btn btn-pdf" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>generarPDF(a)}>PDF</button>
+                </div></td>
                 <td><button className="btn btn-danger" style={{fontSize:11,padding:'3px 8px'}} onClick={()=>onEliminar(a)}>🗑</button></td>
               </tr>);
             })}</tbody></table>
           )}
         </div>
       )}
-
       {tabDash==='alertas'&&(
         <div className="card">
           <h2>🔔 Estado de vencimientos por establecimiento</h2>
@@ -1042,20 +1032,14 @@ function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
               {alertas.sort((a,b)=>b.alerta.nivel-a.alerta.nivel).map((a,i)=>(
                 <tr key={i}>
                   <td><strong>{a.establecimiento}</strong></td>
-                  <td>{a.fecha||'—'}</td>
-                  <td>{a.puntaje?a.puntaje+'%':'—'}</td>
-                  <td>
-                    <span style={{background:a.alerta.bg,color:a.alerta.color,padding:'3px 10px',borderRadius:12,fontSize:12,fontWeight:'bold'}}>
-                      {a.alerta.icono} {a.alerta.label}
-                    </span>
-                  </td>
+                  <td>{a.fecha||'—'}</td><td>{a.puntaje?a.puntaje+'%':'—'}</td>
+                  <td><span style={{background:a.alerta.bg,color:a.alerta.color,padding:'3px 10px',borderRadius:12,fontSize:12,fontWeight:'bold'}}>{a.alerta.icono} {a.alerta.label}</span></td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
-
       {tabDash==='historial'&&<HistorialComparativo auditorias={auditorias}/>}
     </div>
   );
@@ -1360,8 +1344,8 @@ function App(){
     </div>
   );
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-  // ── KEEP-ALIVE SUPABASE (evita pausa por inactividad) ────────────────────────
+
+// ── KEEP-ALIVE SUPABASE (evita pausa por inactividad) ────────────────────────
 (async function keepAlive(){
   try{
     const last=localStorage.getItem('supa_ping');
@@ -1374,6 +1358,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
     }
   }catch(e){console.log('Keep-alive error:',e);}
 })();
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
