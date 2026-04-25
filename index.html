@@ -1361,6 +1361,19 @@ function App(){
   );
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  // ── KEEP-ALIVE SUPABASE (evita pausa por inactividad) ────────────────────────
+(async function keepAlive(){
+  try{
+    const last=localStorage.getItem('supa_ping');
+    const ahora=Date.now();
+    const CINCO_DIAS=5*24*60*60*1000;
+    if(!last||(ahora-parseInt(last))>CINCO_DIAS){
+      await supabase.from('clientes').select('id').limit(1);
+      localStorage.setItem('supa_ping',ahora.toString());
+      console.log('Keep-alive OK:',new Date().toLocaleString('es-AR'));
+    }
+  }catch(e){console.log('Keep-alive error:',e);}
+})();
 </script>
 </body>
 </html>
