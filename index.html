@@ -302,6 +302,17 @@ function exportarExcel(auditorias){
   a.click();URL.revokeObjectURL(url);
 }
 
+function abrirUrl(url,nombre){
+  const a=document.createElement('a');
+  a.href=url;
+  a.target='_blank';
+  a.rel='noopener noreferrer';
+  if(nombre)a.download=nombre;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 function SubirFotos({auditoriaId,ncIndex,soloLectura}){
   const carpeta=ncIndex!==undefined?auditoriaId+'/nc-'+ncIndex:auditoriaId+'/general';
   const [fotos,setFotos]=useState([]);
@@ -349,11 +360,11 @@ function SubirFotos({auditoriaId,ncIndex,soloLectura}){
           {fotos.map((f,i)=>(
             <div key={i} className="foto-wrap">
               {/\.(jpg|jpeg|png|gif|webp)$/i.test(f.name)
-                ?<img src={f.url} alt={f.name} style={{width:'100%',height:110,objectFit:'cover',display:'block',cursor:'pointer'}} onClick={()=>window.open(f.url,'_blank')}/>
-                :<div className="foto-pdf" onClick={()=>window.open(f.url,'_blank')}>📄<span>PDF</span></div>
+                ?<img src={f.url} alt={f.name} style={{width:'100%',height:110,objectFit:'cover',display:'block',cursor:'pointer'}} onClick={()=>abrirUrl(f.url)}/>
+                :<div className="foto-pdf" onClick={()=>abrirUrl(f.url,f.name)}>📄<span>{f.name.substring(0,12)}...</span><span style={{fontSize:10}}>Clic para abrir</span></div>
               }
               <div className="foto-overlay">
-                <button className="btn btn-primary btn-sm" onClick={()=>window.open(f.url,'_blank')} style={{fontSize:11,padding:'4px 8px'}}>🔍 Ver</button>
+                <button className="btn btn-primary btn-sm" onClick={()=>abrirUrl(f.url)} style={{fontSize:11,padding:'4px 8px'}}>🔍 Ver</button>
                 {!soloLectura&&<button className="btn btn-danger btn-sm" onClick={()=>eliminarFoto(f)} disabled={eliminando===f.name} style={{fontSize:11,padding:'4px 8px'}}>{eliminando===f.name?'...':'🗑 Eliminar'}</button>}
               </div>
             </div>
@@ -1020,7 +1031,6 @@ function VistaCliente({session,onLogout}){
   const [cargando,setCargando]=useState(true);
   const [tabCliente,setTabCliente]=useState('auditorias');
   const [ncExpandida,setNcExpandida]=useState(null);
-
   useEffect(()=>{(async()=>{
     if(cliente.id){
       const {data:dataId}=await supabase.from('auditorias').select('*').eq('cliente_id',cliente.id).order('created_at',{ascending:false});
@@ -1030,19 +1040,16 @@ function VistaCliente({session,onLogout}){
     if(data)setAuditorias(data);
     setCargando(false);
   })();},[]);
-
   const todasLasNCs=auditorias.flatMap(a=>{
     const ncs=a.modulos?.no_conformidades||[];
     return ncs.filter(nc=>nc&&nc.accion_correctiva).map((nc,i)=>({...nc,auditoria_id:a.id,auditoria_fecha:a.fecha,nc_index:i}));
   });
-
   const colorEstadoNC=(estado)=>{
     if(estado==='Cerrada')return{bg:'#D5F5E3',color:'#1E8449'};
     if(estado==='Verificada')return{bg:'#D6EAF8',color:'#1B4F72'};
     if(estado==='En proceso')return{bg:'#FEF9E7',color:'#9A7D0A'};
     return{bg:'#FADBD8',color:'#C0392B'};
   };
-
   if(auditoriaDetalle){
     return(
       <div>
@@ -1056,7 +1063,6 @@ function VistaCliente({session,onLogout}){
       </div>
     );
   }
-
   return(
     <div>
       <div className="header">
@@ -1139,7 +1145,6 @@ function App(){
   const [auditorias,setAuditorias]=useState([]);const [cargando,setCargando]=useState(true);
   const [auditoriaDetalle,setAuditoriaDetalle]=useState(null);
   const [modulos,setModulos]=useState(()=>cargarModulos());
-
   useEffect(()=>{
     supabase.auth.getSession().then(async({data})=>{
       if(data.session){
@@ -1150,7 +1155,6 @@ function App(){
       } else setCargando(false);
     });
   },[]);
-
   const cargarAuditorias=async()=>{
     setCargando(true);const {data}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});
     if(data)setAuditorias(data);setCargando(false);
@@ -1161,10 +1165,8 @@ function App(){
     setAuditorias(prev=>prev.filter(x=>x.id!==a.id));
   };
   const logout=async()=>{await supabase.auth.signOut();setSession(null);setAuditorias([]);setTab('dashboard');setAuditoriaDetalle(null);setCargando(false);};
-
   if(!session)return <Login onLogin={async(s)=>{setSession(s);if(s.tipo==='auditor')cargarAuditorias();else setCargando(false);}}/>;
   if(session.tipo==='cliente')return <VistaCliente session={session} onLogout={logout}/>;
-
   if(auditoriaDetalle){
     return(
       <div>
@@ -1179,7 +1181,6 @@ function App(){
       </div>
     );
   }
-
   return(
     <div>
       <div className="header">
