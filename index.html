@@ -196,7 +196,6 @@ function getSugerencia(moduloIdx,itemIdx){
   return SUGERENCIAS[moduloIdx+'-'+itemIdx]||{ac:"Implementar la correccion necesaria segun lo observado.",ap:"Establecer medidas para evitar la recurrencia.",resp:"Encargado del establecimiento",plazo:"A convenir"};
 }
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
 function getAlerta(fecha){
   if(!fecha)return{color:'#C0392B',bg:'#FADBD8',label:'Sin auditar',icono:'🚨',nivel:4};
   const dias=Math.floor((new Date()-new Date(fecha))/(1000*60*60*24));
@@ -206,73 +205,27 @@ function getAlerta(fecha){
   return{color:'#C0392B',bg:'#FADBD8',label:'Vencido ('+dias+'d)',icono:'🚨',nivel:4};
 }
 
-// ── FIRMA TACTIL ─────────────────────────────────────────────────────────────
 function FirmaTactil({onFirma,firmaGuardada}){
   const canvasRef=useRef();
   const dibujando=useRef(false);
   const [tieneFirma,setTieneFirma]=useState(!!firmaGuardada);
-
   useEffect(()=>{
     if(firmaGuardada&&canvasRef.current){
       const img=new Image();
-      img.onload=()=>{
-        const ctx=canvasRef.current.getContext('2d');
-        ctx.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);
-        ctx.drawImage(img,0,0);
-      };
+      img.onload=()=>{const ctx=canvasRef.current.getContext('2d');ctx.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);ctx.drawImage(img,0,0);};
       img.src=firmaGuardada;
     }
   },[firmaGuardada]);
-
-  const getPos=(e,canvas)=>{
-    const rect=canvas.getBoundingClientRect();
-    const scaleX=canvas.width/rect.width;
-    const scaleY=canvas.height/rect.height;
-    const clientX=e.touches?e.touches[0].clientX:e.clientX;
-    const clientY=e.touches?e.touches[0].clientY:e.clientY;
-    return{x:(clientX-rect.left)*scaleX,y:(clientY-rect.top)*scaleY};
-  };
-
-  const iniciar=(e)=>{
-    e.preventDefault();
-    dibujando.current=true;
-    const canvas=canvasRef.current;
-    const ctx=canvas.getContext('2d');
-    const pos=getPos(e,canvas);
-    ctx.beginPath();ctx.moveTo(pos.x,pos.y);
-  };
-  const dibujar=(e)=>{
-    e.preventDefault();
-    if(!dibujando.current)return;
-    const canvas=canvasRef.current;
-    const ctx=canvas.getContext('2d');
-    ctx.lineWidth=2;ctx.lineCap='round';ctx.strokeStyle='#1B4F72';
-    const pos=getPos(e,canvas);
-    ctx.lineTo(pos.x,pos.y);ctx.stroke();
-    setTieneFirma(true);
-  };
-  const terminar=(e)=>{
-    e.preventDefault();
-    dibujando.current=false;
-    if(tieneFirma&&onFirma){
-      onFirma(canvasRef.current.toDataURL());
-    }
-  };
-  const limpiar=()=>{
-    const canvas=canvasRef.current;
-    const ctx=canvas.getContext('2d');
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    setTieneFirma(false);
-    if(onFirma)onFirma(null);
-  };
-
+  const getPos=(e,canvas)=>{const rect=canvas.getBoundingClientRect();const scaleX=canvas.width/rect.width;const scaleY=canvas.height/rect.height;const clientX=e.touches?e.touches[0].clientX:e.clientX;const clientY=e.touches?e.touches[0].clientY:e.clientY;return{x:(clientX-rect.left)*scaleX,y:(clientY-rect.top)*scaleY};};
+  const iniciar=(e)=>{e.preventDefault();dibujando.current=true;const canvas=canvasRef.current;const ctx=canvas.getContext('2d');const pos=getPos(e,canvas);ctx.beginPath();ctx.moveTo(pos.x,pos.y);};
+  const dibujar=(e)=>{e.preventDefault();if(!dibujando.current)return;const canvas=canvasRef.current;const ctx=canvas.getContext('2d');ctx.lineWidth=2;ctx.lineCap='round';ctx.strokeStyle='#1B4F72';const pos=getPos(e,canvas);ctx.lineTo(pos.x,pos.y);ctx.stroke();setTieneFirma(true);};
+  const terminar=(e)=>{e.preventDefault();dibujando.current=false;if(tieneFirma&&onFirma){onFirma(canvasRef.current.toDataURL());}};
+  const limpiar=()=>{const canvas=canvasRef.current;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);setTieneFirma(false);if(onFirma)onFirma(null);};
   return(
     <div>
-      <canvas ref={canvasRef} width={400} height={120} className="firma-canvas"
-        style={{width:'100%',maxWidth:400}}
+      <canvas ref={canvasRef} width={400} height={120} className="firma-canvas" style={{width:'100%',maxWidth:400}}
         onMouseDown={iniciar} onMouseMove={dibujar} onMouseUp={terminar} onMouseLeave={terminar}
-        onTouchStart={iniciar} onTouchMove={dibujar} onTouchEnd={terminar}
-      />
+        onTouchStart={iniciar} onTouchMove={dibujar} onTouchEnd={terminar}/>
       <div style={{display:'flex',gap:8,marginTop:8}}>
         <button className="btn btn-sm" style={{background:'#ECF0F1',color:'#555'}} onClick={limpiar}>Limpiar firma</button>
         {tieneFirma&&<span style={{fontSize:12,color:'#1E8449',paddingTop:6}}>✓ Firma registrada</span>}
@@ -281,17 +234,12 @@ function FirmaTactil({onFirma,firmaGuardada}){
   );
 }
 
-// ── HISTORIAL COMPARATIVO ────────────────────────────────────────────────────
 function HistorialComparativo({auditorias}){
   const [estabSel,setEstabSel]=useState('');
   const establecimientos=[...new Set(auditorias.map(a=>a.establecimiento))].sort();
-
   useEffect(()=>{if(establecimientos.length>0&&!estabSel)setEstabSel(establecimientos[0]);},[auditorias]);
-
   const audsEstab=auditorias.filter(a=>a.establecimiento===estabSel).sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
-
   if(auditorias.length===0)return<div className="card"><p style={{color:'#999',fontSize:14}}>No hay auditorias para comparar.</p></div>;
-
   return(
     <div className="card">
       <h2>📊 Historial comparativo</h2>
@@ -317,12 +265,7 @@ function HistorialComparativo({auditorias}){
             <div style={{marginTop:20,overflowX:'auto'}}>
               <p style={{fontSize:13,color:'#555',marginBottom:8,fontWeight:'bold'}}>Comparativo por modulo:</p>
               <table style={{fontSize:12}}>
-                <thead>
-                  <tr>
-                    <th>Modulo</th>
-                    {audsEstab.map((a,i)=><th key={i}>{a.fecha}</th>)}
-                  </tr>
-                </thead>
+                <thead><tr><th>Modulo</th>{audsEstab.map((a,i)=><th key={i}>{a.fecha}</th>)}</tr></thead>
                 <tbody>
                   {(audsEstab[0].modulos?.modulos_snapshot||cargarModulos()).map((mod,mi)=>(
                     <tr key={mi}>
@@ -347,23 +290,9 @@ function HistorialComparativo({auditorias}){
   );
 }
 
-// ── EXPORTAR EXCEL ───────────────────────────────────────────────────────────
 function exportarExcel(auditorias){
   const headers=['Establecimiento','Fecha','Responsable','Rubro','Domicilio','N Habilitacion','Puntaje (%)','Resultado','Cumplen','No cumplen','N/A','NCs gestionadas'];
-  const rows=auditorias.map(a=>[
-    a.establecimiento||'',
-    a.fecha||'',
-    a.responsable||'',
-    a.modulos?.rubro||'',
-    a.modulos?.domicilio||'',
-    a.modulos?.nroHab||'',
-    a.puntaje||0,
-    a.resultado||'',
-    a.modulos?.resumen?.cumple||0,
-    a.modulos?.resumen?.noCumple||0,
-    a.modulos?.resumen?.na||0,
-    (a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length,
-  ]);
+  const rows=auditorias.map(a=>[a.establecimiento||'',a.fecha||'',a.responsable||'',a.modulos?.rubro||'',a.modulos?.domicilio||'',a.modulos?.nroHab||'',a.puntaje||0,a.resultado||'',a.modulos?.resumen?.cumple||0,a.modulos?.resumen?.noCumple||0,a.modulos?.resumen?.na||0,(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length]);
   const csvContent=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const BOM='\uFEFF';
   const blob=new Blob([BOM+csvContent],{type:'text/csv;charset=utf-8'});
@@ -373,7 +302,6 @@ function exportarExcel(auditorias){
   a.click();URL.revokeObjectURL(url);
 }
 
-// ── SUBIR Y GESTIONAR FOTOS ──────────────────────────────────────────────────
 function SubirFotos({auditoriaId,ncIndex,soloLectura}){
   const carpeta=ncIndex!==undefined?auditoriaId+'/nc-'+ncIndex:auditoriaId+'/general';
   const [fotos,setFotos]=useState([]);
@@ -381,34 +309,23 @@ function SubirFotos({auditoriaId,ncIndex,soloLectura}){
   const [msg,setMsg]=useState('');
   const [eliminando,setEliminando]=useState(null);
   const inputRef=useRef();
-
   useEffect(()=>{cargarFotos();},[carpeta]);
-
   const cargarFotos=async()=>{
     const {data,error}=await supabase.storage.from('evidencias').list(carpeta,{limit:100,sortBy:{column:'name',order:'asc'}});
     if(data&&!error&&data.length>0){
-      const urls=data.map(f=>{
-        const {data:u}=supabase.storage.from('evidencias').getPublicUrl(carpeta+'/'+f.name);
-        return{name:f.name,url:u.publicUrl,path:carpeta+'/'+f.name};
-      });
+      const urls=data.map(f=>{const {data:u}=supabase.storage.from('evidencias').getPublicUrl(carpeta+'/'+f.name);return{name:f.name,url:u.publicUrl,path:carpeta+'/'+f.name};});
       setFotos(urls);
     } else setFotos([]);
   };
-
   const subirArchivo=async(e)=>{
     const files=Array.from(e.target.files);
     if(!files.length)return;
     setSubiendo(true);setMsg('');
-    for(const file of files){
-      const nombre=Date.now()+'_'+file.name;
-      await supabase.storage.from('evidencias').upload(carpeta+'/'+nombre,file,{upsert:true});
-    }
-    setSubiendo(false);
-    setMsg('OK: '+files.length+' archivo(s) subido(s)');
+    for(const file of files){const nombre=Date.now()+'_'+file.name;await supabase.storage.from('evidencias').upload(carpeta+'/'+nombre,file,{upsert:true});}
+    setSubiendo(false);setMsg('OK: '+files.length+' archivo(s) subido(s)');
     setTimeout(()=>{cargarFotos();setMsg('');},1500);
     inputRef.current.value='';
   };
-
   const eliminarFoto=async(foto)=>{
     if(!confirm('Eliminar este archivo?'))return;
     setEliminando(foto.name);
@@ -416,7 +333,6 @@ function SubirFotos({auditoriaId,ncIndex,soloLectura}){
     if(!error){setFotos(prev=>prev.filter(f=>f.name!==foto.name));setMsg('Archivo eliminado.');setTimeout(()=>setMsg(''),2000);}
     setEliminando(null);
   };
-
   return(
     <div>
       {!soloLectura&&(
@@ -449,7 +365,6 @@ function SubirFotos({auditoriaId,ncIndex,soloLectura}){
   );
 }
 
-// ── DETALLE AUDITORIA ────────────────────────────────────────────────────────
 function DetalleAuditoria({auditoria,onVolver,esCliente}){
   const mod=auditoria.modulos||{};
   const modulos=mod.modulos_snapshot||cargarModulos();
@@ -457,13 +372,13 @@ function DetalleAuditoria({auditoria,onVolver,esCliente}){
   const ncs=mod.no_conformidades||[];
   const resumen=mod.resumen||{};
   const [tabDetalle,setTabDetalle]=useState('resumen');
-
   return(
     <div>
       <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
         <button className="btn btn-primary" onClick={onVolver}>← Volver</button>
         <button className="btn btn-pdf" onClick={()=>generarPDF(auditoria)}>⬇ Descargar PDF</button>
       </div>
+      {esCliente&&<div className="alert info" style={{marginBottom:12}}>📋 Vista de solo lectura — Esta es tu auditoria BPM. No podes modificar los datos.</div>}
       <div className="card">
         <h2>📋 {auditoria.establecimiento} — {auditoria.fecha}</h2>
         <div className="grid2" style={{fontSize:13,gap:8}}>
@@ -493,12 +408,9 @@ function DetalleAuditoria({auditoria,onVolver,esCliente}){
           <button key={k} className="btn" style={{fontSize:12,padding:'6px 12px',background:tabDetalle===k?'#1B4F72':'#ECF0F1',color:tabDetalle===k?'white':'#555'}} onClick={()=>setTabDetalle(k)}>{lbl}</button>
         ))}
       </div>
-
       {tabDetalle==='resumen'&&modulos.map((modulo,mi)=>{
         const estMod=estados[mi]||[];
-        const c=estMod.filter(e=>e==='C').length;
-        const nc=estMod.filter(e=>e==='NC').length;
-        const na=estMod.filter(e=>e==='NA').length;
+        const c=estMod.filter(e=>e==='C').length;const nc=estMod.filter(e=>e==='NC').length;const na=estMod.filter(e=>e==='NA').length;
         const total=c+nc;const p=total>0?Math.round((c/total)*100):0;
         return(
           <div key={mi} className="card" style={{padding:0,overflow:'hidden',marginBottom:10}}>
@@ -525,7 +437,6 @@ function DetalleAuditoria({auditoria,onVolver,esCliente}){
           </div>
         );
       })}
-
       {tabDetalle==='ncs'&&(
         <div>
           {ncs.filter(n=>n&&n.accion_correctiva).length===0&&<div className="card"><p style={{color:'#999',fontSize:14}}>Sin no conformidades registradas.</p></div>}
@@ -544,11 +455,10 @@ function DetalleAuditoria({auditoria,onVolver,esCliente}){
           ))}
         </div>
       )}
-
       {tabDetalle==='fotos'&&(
         <div className="card">
           <h2>📷 Evidencias generales</h2>
-          <SubirFotos auditoriaId={auditoria.id} soloLectura={esCliente}/>
+          <SubirFotos auditoriaId={auditoria.id} soloLectura={true}/>
         </div>
       )}
     </div>
@@ -754,9 +664,7 @@ function generarPDF(auditoria,firmaDataUrl){
   doc.text('Tec. Higiene y Seguridad Alimentaria',M,y);doc.text('Establecimiento: '+(auditoria.establecimiento||''),M+105,y);y+=4;
   doc.text('INOCUA tec Servicios - Auditoria BPM Modalidad A',M,y);
   const firmaUrl=firmaDataUrl||mod.firma;
-  if(firmaUrl){
-    try{checkPage();doc.addImage(firmaUrl,'PNG',M+100,y-14,60,18);}catch(e){}
-  }
+  if(firmaUrl){try{checkPage();doc.addImage(firmaUrl,'PNG',M+100,y-14,60,18);}catch(e){}}
   const totalPags=doc.getNumberOfPages();
   for(let i=1;i<=totalPags;i++){
     doc.setPage(i);doc.setFontSize(7);doc.setTextColor(150,150,150);
@@ -774,7 +682,7 @@ function Login({onLogin}){
     setCargando(true);setError('');
     const {data,error:e}=await supabase.auth.signInWithPassword({email,password:pass});
     if(e){setError('Email o contrasena incorrectos');setCargando(false);return;}
-    const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',data.user.id).maybySingle();
+    const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',data.user.id).maybeSingle();
     setCargando(false);
     if(cliente)onLogin({tipo:'cliente',user:data.user,cliente});
     else onLogin({tipo:'auditor',user:data.user});
@@ -833,7 +741,6 @@ function NuevaAuditoria({onGuardar,modulos}){
   const [guardando,setGuardando]=useState(false);const [guardado,setGuardado]=useState(false);
   const [error,setError]=useState('');const [auditGuardada,setAuditGuardada]=useState(null);
   const [cargandoClientes,setCargandoClientes]=useState(true);
-
   useEffect(()=>{
     (async()=>{
       const {data}=await supabase.from('clientes').select('*').order('establecimiento',{ascending:true});
@@ -841,7 +748,6 @@ function NuevaAuditoria({onGuardar,modulos}){
       setCargandoClientes(false);
     })();
   },[]);
-
   const seleccionarCliente=(c)=>{setClienteSelId(c.id);setEstab(c.establecimiento||'');setDomicilio(c.domicilio||'');setNroHab(c.nro_habilitacion||'');setRubro(c.rubro||'');};
   const limpiarCliente=()=>{setClienteSelId(null);setEstab('');setDomicilio('');setNroHab('');setRubro('');};
   const setEstado=(modId,itemIdx,val)=>{
@@ -875,7 +781,6 @@ function NuevaAuditoria({onGuardar,modulos}){
   };
   const ncTotal=aplanarNCs().filter(nc=>nc.accion_correctiva).length;
   const ncSinGestionar=estados.flat().filter(e=>e==='NC').length-ncTotal;
-
   if(guardado)return(
     <div className="card">
       <div className="alert success">Auditoria guardada correctamente.</div>
@@ -887,7 +792,6 @@ function NuevaAuditoria({onGuardar,modulos}){
       {auditGuardada&&<SubirFotos auditoriaId={auditGuardada.id}/>}
     </div>
   );
-
   const {puntaje,cumple,noCumple}=calcular();
   return(
     <div>
@@ -960,7 +864,6 @@ function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
   const conNC=auditorias.filter(a=>(a.modulos?.resumen?.noCumple||0)>0).length;
   const promedio=total>0?Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total):0;
   const [tabDash,setTabDash]=useState('lista');
-
   const ultimasPorEstab={};
   auditorias.forEach(a=>{
     if(!ultimasPorEstab[a.establecimiento]||new Date(a.fecha)>new Date(ultimasPorEstab[a.establecimiento].fecha)){
@@ -969,7 +872,6 @@ function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
   });
   const alertas=Object.values(ultimasPorEstab).map(a=>({...a,alerta:getAlerta(a.fecha)}));
   const conAlerta=alertas.filter(a=>a.alerta.nivel>=2).length;
-
   return(
     <div>
       <div className="grid4" style={{marginBottom:16}}>
@@ -978,11 +880,7 @@ function Dashboard({auditorias,cargando,onEliminar,onVerDetalle}){
         <div className="stat"><div className="num">{conNC}</div><div className="label">Con no conformidades</div></div>
         <div className="stat"><div className="num">{promedio}%</div><div className="label">Puntaje promedio</div></div>
       </div>
-      {conAlerta>0&&(
-        <div className="alert warning" style={{marginBottom:12}}>
-          ⚠️ <strong>{conAlerta} establecimiento(s)</strong> requieren atencion por tiempo sin auditar.
-        </div>
-      )}
+      {conAlerta>0&&<div className="alert warning" style={{marginBottom:12}}>⚠️ <strong>{conAlerta} establecimiento(s)</strong> requieren atencion por tiempo sin auditar.</div>}
       <div style={{display:'flex',gap:4,marginBottom:12,flexWrap:'wrap',alignItems:'center'}}>
         {[['lista','📋 Auditorias'],['alertas','🔔 Vencimientos'],['historial','📊 Historial']].map(([k,lbl])=>(
           <button key={k} className="btn" style={{fontSize:12,padding:'6px 12px',background:tabDash===k?'#1B4F72':'#ECF0F1',color:tabDash===k?'white':'#555'}} onClick={()=>setTabDash(k)}>{lbl}</button>
@@ -1119,12 +1017,9 @@ function VistaCliente({session,onLogout}){
   const {cliente}=session;
   const [auditorias,setAuditorias]=useState([]);
   const [auditoriaDetalle,setAuditoriaDetalle]=useState(null);
-  const [seleccionada,setSeleccionada]=useState(null);
   const [cargando,setCargando]=useState(true);
   const [tabCliente,setTabCliente]=useState('auditorias');
   const [ncExpandida,setNcExpandida]=useState(null);
-  const [actualizando,setActualizando]=useState(false);
-  const [msgNC,setMsgNC]=useState('');
 
   useEffect(()=>{(async()=>{
     if(cliente.id){
@@ -1140,18 +1035,6 @@ function VistaCliente({session,onLogout}){
     const ncs=a.modulos?.no_conformidades||[];
     return ncs.filter(nc=>nc&&nc.accion_correctiva).map((nc,i)=>({...nc,auditoria_id:a.id,auditoria_fecha:a.fecha,nc_index:i}));
   });
-
-  const marcarEnProceso=async(auditoriaId,ncIndex)=>{
-    setActualizando(true);setMsgNC('');
-    const audit=auditorias.find(a=>a.id===auditoriaId);
-    if(!audit){setActualizando(false);return;}
-    const ncs=[...(audit.modulos?.no_conformidades||[])];
-    if(ncs[ncIndex])ncs[ncIndex]={...ncs[ncIndex],estado:'En proceso'};
-    const nuevosMod={...audit.modulos,no_conformidades:ncs};
-    const {error}=await supabase.from('auditorias').update({modulos:nuevosMod}).eq('id',auditoriaId);
-    if(!error){setAuditorias(prev=>prev.map(a=>a.id===auditoriaId?{...a,modulos:nuevosMod}:a));setMsgNC('Estado actualizado a "En proceso".');}
-    setActualizando(false);
-  };
 
   const colorEstadoNC=(estado)=>{
     if(estado==='Cerrada')return{bg:'#D5F5E3',color:'#1E8449'};
@@ -1181,19 +1064,19 @@ function VistaCliente({session,onLogout}){
         <button className="btn btn-danger" style={{marginLeft:'auto'}} onClick={onLogout}>Salir</button>
       </div>
       <div className="nav">
-        <button className={tabCliente==='auditorias'?'active':''} onClick={()=>{setTabCliente('auditorias');setSeleccionada(null);}}>📋 Mis auditorias</button>
-        <button className={tabCliente==='ncs'?'active':''} onClick={()=>{setTabCliente('ncs');setSeleccionada(null);}}>
+        <button className={tabCliente==='auditorias'?'active':''} onClick={()=>setTabCliente('auditorias')}>📋 Mis auditorias</button>
+        <button className={tabCliente==='ncs'?'active':''} onClick={()=>setTabCliente('ncs')}>
           ⚠️ No conformidades{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length>0&&<span style={{background:'#C0392B',color:'white',borderRadius:10,padding:'1px 6px',fontSize:11,marginLeft:6}}>{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length}</span>}
         </button>
       </div>
       <div className="container">
         {cargando&&<div className="card"><p style={{color:'#999',fontSize:14}}>Cargando...</p></div>}
-        {!cargando&&tabCliente==='auditorias'&&!seleccionada&&(
+        {!cargando&&tabCliente==='auditorias'&&(
           <div className="card">
             <h2>Mis auditorias</h2>
             {auditorias.length===0&&<p style={{color:'#999',fontSize:14}}>No hay auditorias registradas.</p>}
             {auditorias.length>0&&(
-              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver</th><th>PDF</th><th>Fotos</th></tr></thead>
+              <table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver detalle</th><th>PDF</th></tr></thead>
               <tbody>{auditorias.map((a,i)=>{
                 const ncsTotal=a.modulos?.resumen?.noCumple||0;
                 const ncsPend=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.estado==='Pendiente').length;
@@ -1203,22 +1086,13 @@ function VistaCliente({session,onLogout}){
                   <td>{ncsTotal>0?<span><span className="badge rojo">{ncsTotal} NC</span>{ncsPend>0&&<span className="badge amarillo" style={{marginLeft:4}}>{ncsPend} pend.</span>}</span>:<span style={{color:'#aaa',fontSize:12}}>—</span>}</td>
                   <td><button className="btn btn-primary" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>setAuditoriaDetalle(a)}>Ver</button></td>
                   <td><button className="btn btn-pdf" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>generarPDF(a)}>PDF</button></td>
-                  <td><button className="btn btn-warning" style={{fontSize:12,padding:'4px 8px'}} onClick={()=>setSeleccionada(a)}>Fotos</button></td>
                 </tr>);
               })}</tbody></table>
             )}
           </div>
         )}
-        {!cargando&&tabCliente==='auditorias'&&seleccionada&&(
-          <div className="card">
-            <button className="btn btn-primary" style={{marginBottom:16,fontSize:12}} onClick={()=>setSeleccionada(null)}>← Volver</button>
-            <h2>Evidencias — {seleccionada.fecha}</h2>
-            <SubirFotos auditoriaId={seleccionada.id}/>
-          </div>
-        )}
         {!cargando&&tabCliente==='ncs'&&(
           <div>
-            {msgNC&&<div className="alert success">{msgNC}</div>}
             {todasLasNCs.length===0&&<div className="card"><p style={{color:'#999',fontSize:14}}>No hay no conformidades registradas.</p></div>}
             {todasLasNCs.length>0&&(
               <div>
@@ -1244,16 +1118,7 @@ function VistaCliente({session,onLogout}){
                             <p style={{marginTop:6}}><strong>Responsable:</strong> {nc.responsable||'—'} | <strong>Plazo:</strong> {nc.plazo||'—'}</p>
                           </div>
                           <div className="nc-acciones-cliente">
-                            {nc.estado==='Pendiente'&&(
-                              <button className="btn btn-warning" style={{fontSize:12}} onClick={()=>marcarEnProceso(nc.auditoria_id,nc.nc_index)} disabled={actualizando}>
-                                {actualizando&&<span className="spinner"></span>}🟡 Marcar En proceso
-                              </button>
-                            )}
                             <button className="btn" style={{background:'#EBF5FB',color:'#1B4F72',fontSize:12}} onClick={()=>setNcExpandida(null)}>Cerrar</button>
-                          </div>
-                          <div style={{marginTop:12}}>
-                            <p style={{fontSize:12,color:'#555',marginBottom:6,fontWeight:'bold'}}>Subir evidencias para esta NC:</p>
-                            <SubirFotos auditoriaId={nc.auditoria_id} ncIndex={nc.nc_index}/>
                           </div>
                         </div>
                       )}
@@ -1345,7 +1210,6 @@ function App(){
   );
 }
 
-// ── KEEP-ALIVE SUPABASE (evita pausa por inactividad) ────────────────────────
 (async function keepAlive(){
   try{
     const last=localStorage.getItem('supa_ping');
