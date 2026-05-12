@@ -12,20 +12,10 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-:root{
-  --sidebar-bg:#0B1F35;--sidebar-text:rgba(255,255,255,0.55);
-  --sidebar-active:#fff;--sidebar-active-bg:#1B4F72;
-  --topbar-bg:#ffffff;--topbar-border:#e2e8f0;
-  --bg:#f0f4f8;--bg2:#f8fafc;--card:#ffffff;
-  --card-border:#e2e8f0;--text:#1a2940;--text-muted:#64748b;
-  --accent:#1B4F72;--accent2:#1E8449;
-  --input-bg:#ffffff;--input-border:#cbd5e1;
-  --table-head:#1B4F72;--table-row-hover:#f8fafc;
-  --sidebar-w:210px;
-}
+body{font-family:'DM Sans',Arial,sans-serif;background:#f0f4f8;color:#1a2940;min-height:100vh}
+:root{--sidebar-bg:#0B1F35;--bg:#f0f4f8;--card:#ffffff;--card-border:#e2e8f0;--text:#1a2940;--text-muted:#64748b;--accent:#1B4F72;--accent2:#1E8449;--topbar-bg:#ffffff;--topbar-border:#e2e8f0;--table-head:#1B4F72;--table-row-hover:#f8fafc;--input-bg:#ffffff;--input-border:#cbd5e1;--sidebar-w:210px}
 .app-wrap{display:flex;min-height:100vh}
-.sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;box-shadow:4px 0 20px rgba(0,0,0,0.15)}
+.sidebar{width:var(--sidebar-w);background:#0B1F35;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;box-shadow:4px 0 20px rgba(0,0,0,0.15)}
 .logo-area{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
 .logo-name{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:#fff;line-height:1}
 .logo-name span{color:#4fc3f7}
@@ -38,21 +28,19 @@ body{font-family:'DM Sans',Arial,sans-serif;background:var(--bg);color:var(--tex
 .nav-icon{width:16px;height:16px;flex-shrink:0}
 .nav-badge{margin-left:auto;background:#E74C3C;color:#fff;font-size:0.56rem;font-weight:700;padding:2px 5px;border-radius:10px}
 .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--topbar-bg);border-bottom:1px solid var(--topbar-border);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
-.topbar-left h1{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#0B1F35}
-.topbar-left p{font-size:0.7rem;color:var(--text-muted);margin-top:1px}
+.topbar{background:#ffffff;border-bottom:1px solid #e2e8f0;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.topbar-left h1{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:#0B1F35}
+.topbar-left p{font-size:0.7rem;color:#64748b;margin-top:1px}
 .topbar-right{display:flex;align-items:center;gap:10px}
-.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--card-border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;position:relative}
-.icon-btn:hover{background:var(--card-border)}
+.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid #e2e8f0;background:#f0f4f8;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;position:relative}
+.icon-btn:hover{background:#e2e8f0}
 .icon-btn .dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:#E74C3C;border:1.5px solid #fff}
-.user-chip{display:flex;align-items:center;gap:7px;padding:4px 10px 4px 4px;border-radius:20px;border:1px solid var(--card-border);background:var(--bg);cursor:pointer}
+.user-chip{display:flex;align-items:center;gap:7px;padding:4px 10px 4px 4px;border-radius:20px;border:1px solid #e2e8f0;background:#f0f4f8;cursor:pointer}
 .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1B4F72,#1E8449);display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;color:#fff}
-.user-chip span{font-size:0.74rem;font-weight:500;color:var(--text)}
+.user-chip span{font-size:0.74rem;font-weight:500;color:#1a2940}
 .content{padding:20px 24px 32px;flex:1}
-
-/* MÓDULOS GRID */
 .modules-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:20px}
-.mod-card{background:#fff;border:1px solid var(--card-border);border-radius:12px;padding:18px 10px 14px;text-align:center;cursor:pointer;transition:all 0.22s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.mod-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 10px 14px;text-align:center;cursor:pointer;transition:all 0.22s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
 .mod-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--mod-color);transform:scaleX(0);transition:transform 0.2s}
 .mod-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.1);border-color:var(--mod-color)}
 .mod-card:hover::after,.mod-card.active-mod::after{transform:scaleX(1)}
@@ -60,97 +48,70 @@ body{font-family:'DM Sans',Arial,sans-serif;background:var(--bg);color:var(--tex
 .mod-icon-circle{width:56px;height:56px;border-radius:50%;background:var(--mod-color);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 10px rgba(0,0,0,0.15)}
 .mod-icon-circle svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .mod-name{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#1a2940;margin-bottom:5px;line-height:1.3}
-.mod-desc{font-size:0.6rem;color:var(--text-muted);line-height:1.4}
-
-/* CARDS */
-.card{background:#fff;border:1px solid var(--card-border);border-radius:12px;padding:18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.mod-desc{font-size:0.6rem;color:#64748b;line-height:1.4}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
 .card h2{font-family:'Syne',sans-serif;color:#0B1F35;margin-bottom:14px;font-size:0.88rem;border-bottom:2px solid #D6EAF8;padding-bottom:7px;display:flex;align-items:center;gap:6px}
-
-/* RESUMEN */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.bottom-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .resumen-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
 .resumen-item{display:flex;align-items:center;gap:10px;padding:10px}
 .resumen-num{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;line-height:1}
-.resumen-label{font-size:0.65rem;color:var(--text-muted);margin-top:2px}
+.resumen-label{font-size:0.65rem;color:#64748b;margin-top:2px}
 .resumen-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .resumen-icon svg{width:16px;height:16px}
-
-/* GRIDS */
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
-.bottom-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-
-/* DONUT */
 .donut-wrap{display:flex;align-items:center;gap:16px}
 .legend-item{display:flex;align-items:center;gap:7px;margin-bottom:7px;font-size:0.7rem}
 .legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.legend-name{color:var(--text);font-weight:500;flex:1}
-.legend-pct{color:var(--text-muted);font-size:0.62rem;min-width:32px}
+.legend-name{color:#1a2940;font-weight:500;flex:1}
+.legend-pct{color:#64748b;font-size:0.62rem;min-width:32px}
 .legend-count{font-weight:700;min-width:16px;text-align:right}
-
-/* BARRAS */
 .bar-chart{display:flex;align-items:flex-end;gap:10px;height:80px}
 .bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
 .bar{width:100%;border-radius:5px 5px 0 0;transition:opacity 0.2s}
 .bar:hover{opacity:0.8}
 .bar-val{font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;color:#1a2940}
-.bar-x{display:flex;gap:10px;padding-top:5px;border-top:1px solid var(--card-border)}
-
-/* ACTIVIDAD */
-.act-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--card-border);cursor:pointer;transition:all 0.15s}
+.bar-x{display:flex;gap:10px;padding-top:5px;border-top:1px solid #e2e8f0}
+.act-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #e2e8f0;cursor:pointer;transition:all 0.15s}
 .act-item:last-child{border-bottom:none}
 .act-item:hover{background:#f8fafc;margin:0 -8px;padding:9px 8px;border-radius:8px}
 .act-icon-s{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .act-icon-s svg{width:14px;height:14px}
-.act-name{font-size:0.73rem;font-weight:600;color:var(--text)}
-.act-time{font-size:0.62rem;color:var(--text-muted);margin-top:1px}
-.act-badge{font-size:0.6rem;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
-
-/* MEJORAS */
+.act-name{font-size:0.73rem;font-weight:600;color:#1a2940}
+.act-time{font-size:0.62rem;color:#64748b;margin-top:1px}
 .mejora-item{margin-bottom:12px}
 .mejora-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.mejora-name{font-size:0.72rem;font-weight:500;flex:1;color:var(--text)}
+.mejora-name{font-size:0.72rem;font-weight:500;flex:1;color:#1a2940}
 .mejora-pct{font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;color:#1B4F72}
 .progress-bar{height:6px;background:#e2e8f0;border-radius:10px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#1B4F72,#17a2b8);border-radius:10px}
-.ver-todas{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--card-border);font-size:0.7rem;font-weight:600;color:#1B4F72;cursor:pointer}
-
-/* BADGES */
+.ver-todas{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0;font-size:0.7rem;font-weight:600;color:#1B4F72;cursor:pointer}
 .badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:bold}
 .badge.verde{background:#D5F5E3;color:#1E8449}
 .badge.rojo{background:#FADBD8;color:#C0392B}
 .badge.amarillo{background:#FEF9E7;color:#9A7D0A}
 .badge.azul{background:#D6EAF8;color:#1B4F72}
 .badge.gris{background:#F2F3F4;color:#888}
-
-/* BOTONES */
 .btn{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.15s;font-family:'DM Sans',sans-serif}
 .btn-primary{background:#1B4F72;color:white}.btn-primary:hover{background:#154360}
 .btn-success{background:#1E8449;color:white}.btn-success:hover{background:#196F3D}
 .btn-danger{background:#C0392B;color:white}.btn-danger:hover{background:#A93226}
 .btn-pdf{background:#6C3483;color:white}.btn-pdf:hover{background:#8E44AD}
 .btn-excel{background:#1E8449;color:white}
-.btn-ia{background:#E67E22;color:white;font-size:12px;padding:4px 9px}
+.btn-ia{background:#E67E22;color:white;font-size:12px;padding:4px 9px}.btn-ia:hover{background:#D35400}
 .btn-sm{padding:3px 9px;font-size:12px}
-.btn-ghost{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
-.btn-ghost:hover{background:#e2e8f0}
-
-/* FORMS */
-input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--input-border);border-radius:6px;font-size:13px;margin-bottom:10px;background:var(--input-bg);color:var(--text);font-family:'DM Sans',sans-serif}
+.btn-ghost{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.btn-ghost:hover{background:#e2e8f0}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:13px;margin-bottom:10px;background:#ffffff;color:#1a2940;font-family:'DM Sans',sans-serif}
 input:focus,select:focus,textarea:focus{outline:none;border-color:#1B4F72}
-label{font-size:12px;color:var(--text-muted);display:block;margin-bottom:3px}
-
-/* TABLAS */
+label{font-size:12px;color:#64748b;display:block;margin-bottom:3px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{background:#1B4F72;color:#fff;padding:9px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
-td{padding:9px 10px;border-bottom:1px solid var(--card-border);color:var(--text)}
+td{padding:9px 10px;border-bottom:1px solid #e2e8f0;color:#1a2940}
 tr:hover td{background:#f8fafc}
-
-/* ALERTS */
 .alert{padding:10px 14px;border-radius:6px;margin-bottom:10px;font-size:13px}
 .alert.info{background:#D6EAF8;color:#1B4F72;border-left:3px solid #1B4F72}
 .alert.error{background:#FADBD8;color:#C0392B;border-left:3px solid #C0392B}
 .alert.success{background:#D5F5E3;color:#1E8449;border-left:3px solid #1E8449}
 .alert.warning{background:#FEF9E7;color:#9A7D0A;border-left:3px solid #D4AC0D}
-
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -158,18 +119,14 @@ tr:hover td{background:#f8fafc}
 .stat{text-align:center;padding:12px;background:#D6EAF8;border-radius:8px}
 .stat .num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:#1B4F72}
 .stat .label{font-size:11px;color:#666;margin-top:3px}
-
-/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f0f4f8}
 .login-box{background:#fff;border-radius:14px;padding:36px;width:100%;max-width:380px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}
 .login-box h2{font-family:'Syne',sans-serif;color:#0B1F35;margin-bottom:4px;font-size:1.5rem}
 .login-box h2 span{color:#4fc3f7}
-.login-box p{color:var(--text-muted);font-size:12px;margin-bottom:22px}
-
-/* CHECKLIST */
-.item-row{padding:10px 0;border-bottom:1px solid var(--card-border)}
+.login-box p{color:#64748b;font-size:12px;margin-bottom:22px}
+.item-row{padding:10px 0;border-bottom:1px solid #e2e8f0}
 .item-row:last-child{border-bottom:none}
-.item-texto{font-size:13px;margin-bottom:7px;color:var(--text)}
+.item-texto{font-size:13px;margin-bottom:7px;color:#1a2940}
 .estado-btns{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .estado-btn{padding:5px 11px;border:2px solid #ddd;border-radius:4px;cursor:pointer;font-size:11px;font-weight:bold;background:white;color:#666;transition:all 0.15s}
 .estado-btn:hover{border-color:#1B4F72}
@@ -218,26 +175,44 @@ tr:hover td{background:#f8fafc}
 .foto-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;opacity:0;transition:opacity 0.2s}
 .foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
 .foto-pdf{display:flex;align-items:center;justify-content:center;height:100px;color:#8E44AD;font-size:12px;font-weight:bold;flex-direction:column;gap:3px;cursor:pointer}
-
-/* PERSONALIZADOR */
-.theme-panel{position:fixed;top:0;right:0;bottom:0;width:290px;background:rgba(8,22,40,0.97);backdrop-filter:blur(20px);border-left:1px solid #e2e8f0;z-index:500;overflow-y:auto;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+/* PERSONALIZADOR — panel lateral derecho, NO afecta layout */
+.theme-panel{position:fixed;top:0;right:0;bottom:0;width:280px;background:#0B1F35;border-left:1px solid rgba(255,255,255,0.1);z-index:500;overflow-y:auto;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 20px rgba(0,0,0,0.3)}
 .theme-panel.open{transform:translateX(0)}
-.theme-panel-header{padding:16px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(8,22,40,0.98)}
-.theme-panel-header h3{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:#fff}
-.theme-panel-body{padding:16px}
+.theme-panel-header{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0B1F35;z-index:1}
+.theme-panel-header h3{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:#fff}
+.theme-panel-body{padding:16px 18px}
 .theme-section{margin-bottom:18px}
-.theme-section-title{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:9px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.theme-section-title{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.35);margin-bottom:9px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,0.08)}
 .theme-presets{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .preset-btn{padding:9px 7px;border-radius:7px;border:1.5px solid rgba(255,255,255,0.1);cursor:pointer;text-align:center;transition:all 0.2s;font-size:11px;font-weight:600;color:#fff}
 .preset-btn:hover,.preset-btn.active-preset{border-color:#4fc3f7;box-shadow:0 0 0 2px rgba(79,195,247,0.2)}
 .color-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.color-row label{font-size:11px;color:rgba(255,255,255,0.5);flex:1;margin-bottom:0}
+.color-row label{font-size:11px;color:rgba(255,255,255,0.45);flex:1;margin-bottom:0}
 .color-row input[type=color]{width:34px;height:26px;padding:2px;border-radius:5px;cursor:pointer;border:1px solid rgba(255,255,255,0.2);background:transparent;margin-bottom:0}
-.theme-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:499;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.theme-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:499;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .theme-overlay.open{opacity:1;pointer-events:all}
-.dash-footer{text-align:center;padding:14px;font-size:0.65rem;color:#999;border-top:1px solid var(--card-border);background:#fff}
+.dash-footer{text-align:center;padding:14px;font-size:0.65rem;color:#999;border-top:1px solid #e2e8f0;background:#fff}
 .dash-footer strong{color:#1B4F72}
-
+/* MEJORAS — tabla */
+.mejora-tabla-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid #e2e8f0;font-size:13px}
+.mejora-tabla-row:last-child{border-bottom:none}
+.mejora-tabla-header{background:#1B4F72;color:#fff;border-radius:6px 6px 0 0}
+.mejora-tabla-header div{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px}
+.trend-up{color:#1E8449;font-weight:700}
+.trend-down{color:#C0392B;font-weight:700}
+.trend-equal{color:#888;font-weight:700}
+/* CHECKLIST IMPRESION */
+.checklist-auditoria{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:16px;overflow:hidden}
+.checklist-header{background:#1B4F72;color:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.checklist-header h3{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700}
+.checklist-body{padding:14px 16px}
+.checklist-modulo{margin-bottom:12px}
+.checklist-modulo-title{font-size:0.78rem;font-weight:700;color:#1B4F72;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #D6EAF8}
+.checklist-item-row{display:flex;gap:8px;padding:3px 0;font-size:12px;align-items:flex-start}
+.checklist-tag-C{color:#1E8449;font-weight:700;min-width:30px;font-size:11px}
+.checklist-tag-NC{color:#C0392B;font-weight:700;min-width:30px;font-size:11px}
+.checklist-tag-NA{color:#888;font-weight:700;min-width:30px;font-size:11px}
+.checklist-tag-vacio{color:#ccc;font-weight:700;min-width:30px;font-size:11px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .mod-card{animation:fadeUp 0.3s ease both}
 .mod-card:nth-child(1){animation-delay:0.03s}.mod-card:nth-child(2){animation-delay:0.06s}
@@ -262,13 +237,16 @@ const PLAZOS=['Inmediato','24 horas','48 horas','72 horas','5 dias','A convenir'
 
 /* ── TEMAS ── */
 const TEMAS={
-  clasico:{label:'Clásico',emoji:'🏛️',vars:{'--sidebar-bg':'#0B1F35','--bg':'#f0f4f8','--card':'#ffffff','--card-border':'#e2e8f0','--text':'#1a2940','--text-muted':'#64748b','--accent':'#1B4F72','--accent2':'#1E8449','--topbar-bg':'#ffffff','--topbar-border':'#e2e8f0','--table-head':'#1B4F72','--table-row-hover':'#f8fafc','--input-bg':'#ffffff','--input-border':'#cbd5e1'}},
-  darkNavy:{label:'Dark Navy',emoji:'🌑',vars:{'--sidebar-bg':'#0B1F35','--bg':'#081628','--card':'rgba(255,255,255,0.05)','--card-border':'rgba(255,255,255,0.08)','--text':'#e8f0f8','--text-muted':'#7a9bbf','--accent':'#1B4F72','--accent2':'#1E8449','--topbar-bg':'rgba(11,31,53,0.92)','--topbar-border':'rgba(79,195,247,0.1)','--table-head':'#0d2540','--table-row-hover':'rgba(255,255,255,0.04)','--input-bg':'rgba(255,255,255,0.06)','--input-border':'rgba(255,255,255,0.12)'}},
-  gradiente:{label:'Gradiente',emoji:'🌊',vars:{'--sidebar-bg':'#061422','--bg':'#061422','--card':'rgba(255,255,255,0.05)','--card-border':'rgba(255,255,255,0.07)','--text':'#e8f2fb','--text-muted':'#8ab4d4','--accent':'#1B4F72','--accent2':'#1E8449','--topbar-bg':'rgba(6,20,34,0.9)','--topbar-border':'rgba(105,240,174,0.1)','--table-head':'#081e30','--table-row-hover':'rgba(255,255,255,0.03)','--input-bg':'rgba(255,255,255,0.05)','--input-border':'rgba(255,255,255,0.1)'}},
-  midnight:{label:'Midnight',emoji:'🌙',vars:{'--sidebar-bg':'#111827','--bg':'#0f172a','--card':'rgba(255,255,255,0.04)','--card-border':'rgba(255,255,255,0.07)','--text':'#e2e8f0','--text-muted':'#64748b','--accent':'#4338ca','--accent2':'#059669','--topbar-bg':'rgba(17,24,39,0.95)','--topbar-border':'rgba(167,139,250,0.1)','--table-head':'#1e293b','--table-row-hover':'rgba(255,255,255,0.03)','--input-bg':'rgba(255,255,255,0.05)','--input-border':'rgba(255,255,255,0.1)'}},
+  clasico:{label:'Clásico',emoji:'🏛️',vars:{'--bg':'#f0f4f8','--card':'#ffffff','--card-border':'#e2e8f0','--text':'#1a2940','--text-muted':'#64748b','--accent':'#1B4F72','--accent2':'#1E8449'}},
+  darkNavy:{label:'Dark Navy',emoji:'🌑',vars:{'--bg':'#081628','--card':'rgba(255,255,255,0.05)','--card-border':'rgba(255,255,255,0.08)','--text':'#e8f0f8','--text-muted':'#7a9bbf','--accent':'#1B4F72','--accent2':'#1E8449'}},
+  gradiente:{label:'Gradiente',emoji:'🌊',vars:{'--bg':'#061422','--card':'rgba(255,255,255,0.05)','--card-border':'rgba(255,255,255,0.07)','--text':'#e8f2fb','--text-muted':'#8ab4d4','--accent':'#1B4F72','--accent2':'#1E8449'}},
+  midnight:{label:'Midnight',emoji:'🌙',vars:{'--bg':'#0f172a','--card':'rgba(255,255,255,0.04)','--card-border':'rgba(255,255,255,0.07)','--text':'#e2e8f0','--text-muted':'#64748b','--accent':'#4338ca','--accent2':'#059669'}},
 };
 function aplicarTema(vars){Object.entries(vars).forEach(([k,v])=>document.documentElement.style.setProperty(k,v));}
-function cargarTemaGuardado(){try{const t=localStorage.getItem('inocuatec_tema');if(t){const p=JSON.parse(t);aplicarTema(p);return p;}}catch(e){}aplicarTema(TEMAS.clasico.vars);return TEMAS.clasico.vars;}
+function cargarTemaGuardado(){
+  try{const t=localStorage.getItem('inocuatec_tema');if(t){const p=JSON.parse(t);aplicarTema(p);return p;}}catch(e){}
+  aplicarTema(TEMAS.clasico.vars);return TEMAS.clasico.vars;
+}
 
 function Personalizador({open,onClose}){
   const [temaActual,setTemaActual]=useState(()=>{try{return JSON.parse(localStorage.getItem('inocuatec_tema')||'null')||TEMAS.clasico.vars;}catch(e){return TEMAS.clasico.vars;}});
@@ -277,20 +255,35 @@ function Personalizador({open,onClose}){
   const cambiarColor=(variable,valor)=>{const nuevo={...temaActual,[variable]:valor};setTemaActual(nuevo);setPresetActivo('custom');aplicarTema(nuevo);};
   const guardar=()=>{localStorage.setItem('inocuatec_tema',JSON.stringify(temaActual));onClose();};
   const restaurar=()=>{aplicarPreset('clasico');localStorage.setItem('inocuatec_tema',JSON.stringify(TEMAS.clasico.vars));};
-  const coloresEditables=[{label:'Fondo principal',variable:'--bg'},{label:'Sidebar',variable:'--sidebar-bg'},{label:'Acento principal',variable:'--accent'},{label:'Acento secundario',variable:'--accent2'}];
+  const coloresEditables=[{label:'Fondo principal',variable:'--bg'},{label:'Acento principal',variable:'--accent'},{label:'Acento secundario',variable:'--accent2'}];
   const getHex=(val)=>{if(!val)return'#1B4F72';if(val.startsWith('#'))return val;return'#1B4F72';};
   return(<>
     <div className={'theme-overlay'+(open?' open':'')} onClick={onClose}/>
     <div className={'theme-panel'+(open?' open':'')}>
-      <div className="theme-panel-header"><h3>🎨 Personalizar tema</h3><button onClick={onClose} style={{background:'rgba(255,255,255,0.1)',border:'none',color:'#fff',borderRadius:5,padding:'3px 8px',cursor:'pointer',fontSize:12}}>✕</button></div>
+      <div className="theme-panel-header">
+        <h3>🎨 Personalizar tema</h3>
+        <button onClick={onClose} style={{background:'rgba(255,255,255,0.1)',border:'none',color:'#fff',borderRadius:5,padding:'3px 8px',cursor:'pointer',fontSize:12}}>✕</button>
+      </div>
       <div className="theme-panel-body">
         <div className="theme-section">
           <div className="theme-section-title">Temas predefinidos</div>
-          <div className="theme-presets">{Object.entries(TEMAS).map(([key,tema])=>(<button key={key} className={'preset-btn'+(presetActivo===key?' active-preset':'')} style={{background:tema.vars['--sidebar-bg']}} onClick={()=>aplicarPreset(key)}><div style={{fontSize:16,marginBottom:2}}>{tema.emoji}</div><div>{tema.label}</div></button>))}</div>
+          <div className="theme-presets">
+            {Object.entries(TEMAS).map(([key,tema])=>(
+              <button key={key} className={'preset-btn'+(presetActivo===key?' active-preset':'')} style={{background:tema.vars['--bg']||'#0B1F35'}} onClick={()=>aplicarPreset(key)}>
+                <div style={{fontSize:16,marginBottom:2}}>{tema.emoji}</div>
+                <div>{tema.label}</div>
+              </button>
+            ))}
+          </div>
         </div>
         <div className="theme-section">
-          <div className="theme-section-title">Personalización manual</div>
-          {coloresEditables.map(({label,variable})=>(<div className="color-row" key={variable}><label>{label}</label><input type="color" value={getHex(temaActual[variable])} onChange={e=>cambiarColor(variable,e.target.value)}/></div>))}
+          <div className="theme-section-title">Colores manuales</div>
+          {coloresEditables.map(({label,variable})=>(
+            <div className="color-row" key={variable}>
+              <label>{label}</label>
+              <input type="color" value={getHex(temaActual[variable])} onChange={e=>cambiarColor(variable,e.target.value)}/>
+            </div>
+          ))}
         </div>
         <div className="theme-section">
           <div className="theme-section-title">Acciones</div>
@@ -304,7 +297,7 @@ function Personalizador({open,onClose}){
   </>);
 }
 
-/* ── MÓDULOS ── */
+/* ── MÓDULOS BPM ── */
 const MODULOS_DEFAULT=[
   {id:0,nombre:"Higiene del personal",items:["Uso de indumentaria adecuada (cofia, delantal, calzado)","Tecnica de lavado de manos correcta","Dispensadores de jabon y toallas descartables operativos","Carteleria de lavado de manos visible","Carnet sanitario / libreta sanitaria vigente"]},
   {id:1,nombre:"Instalaciones",items:["Pisos sin grietas, limpios y de facil limpieza","Paredes y techos en buen estado, sin humedad ni descascaramiento","Iluminacion suficiente y protegida","Ventilacion adecuada (natural o mecanica)","Mesadas aptas para uso alimentario y en buen estado","Agua fria y caliente disponible en zona de trabajo","Tela mosquitera en aberturas (ventanas, rejillas)","Sector de banos con carteleria y elementos de higiene","Vestuario diferenciado (si aplica)"]},
@@ -319,46 +312,26 @@ const MODULOS_DEFAULT=[
 ];
 function cargarModulos(){try{const g=localStorage.getItem('inocuatec_modulos');if(g)return JSON.parse(g);}catch(e){}return MODULOS_DEFAULT;}
 
-const SUGERENCIAS={"0-0":{ac:"Proveer de inmediato indumentaria completa al personal.",ap:"Incorporar control de indumentaria al inicio de cada jornada.",resp:"Encargado del establecimiento",plazo:"Inmediato"},"0-1":{ac:"Reforzar la tecnica de lavado de manos.",ap:"Implementar capacitacion periodica.",resp:"Responsable de higiene",plazo:"24 horas"},"0-2":{ac:"Reponer jabon liquido y toallas descartables.",ap:"Establecer control diario de insumos.",resp:"Encargado",plazo:"Inmediato"},"0-3":{ac:"Colocar carteleria de lavado de manos.",ap:"Incluir revision en check diario.",resp:"Encargado",plazo:"24 horas"},"0-4":{ac:"Gestionar renovacion del carnet sanitario.",ap:"Llevar registro de vencimientos.",resp:"Titular",plazo:"5 dias"},"1-0":{ac:"Sellar grietas en pisos.",ap:"Incluir revision en mantenimiento mensual.",resp:"Titular",plazo:"A convenir"},"1-1":{ac:"Reparar sector con humedad.",ap:"Inspeccion mensual de paredes y techos.",resp:"Titular",plazo:"A convenir"},"1-2":{ac:"Reparar luminarias deficientes.",ap:"Incluir iluminacion en check mensual.",resp:"Titular / Electricista",plazo:"48 horas"},"1-3":{ac:"Habilitar ventilacion.",ap:"Incorporar limpieza de filtros en mantenimiento.",resp:"Encargado",plazo:"48 horas"},"1-4":{ac:"Reemplazar mesadas en mal estado.",ap:"Revision semestral de superficies.",resp:"Titular",plazo:"A convenir"},"1-5":{ac:"Gestionar agua fria y caliente.",ap:"Verificacion diaria.",resp:"Titular",plazo:"48 horas"},"1-6":{ac:"Instalar tela mosquitera.",ap:"Revisar mensualmente.",resp:"Encargado",plazo:"72 horas"},"1-7":{ac:"Equipar banos con elementos de higiene.",ap:"Control diario.",resp:"Encargado",plazo:"24 horas"},"1-8":{ac:"Habilitar vestuario diferenciado.",ap:"Mantener ordenado.",resp:"Titular",plazo:"A convenir"},"2-0":{ac:"Elaborar plan de limpieza y desinfeccion.",ap:"Mantener actualizado.",resp:"Encargado",plazo:"5 dias"},"2-1":{ac:"Capacitar en uso correcto de productos.",ap:"Incorporar instructivo.",resp:"Encargado",plazo:"48 horas"},"2-2":{ac:"Diferenciar elementos de limpieza.",ap:"Comunicar sistema de colores.",resp:"Encargado",plazo:"48 horas"},"2-3":{ac:"Retomar registro de limpieza.",ap:"Planilla diaria.",resp:"Personal de limpieza",plazo:"Inmediato"},"2-4":{ac:"Reubicar productos de limpieza.",ap:"Designar area exclusiva.",resp:"Encargado",plazo:"Inmediato"},"3-0":{ac:"Verificar temperatura de heladera.",ap:"Registro diario.",resp:"Encargado",plazo:"Inmediato"},"3-1":{ac:"Verificar temperatura del freezer.",ap:"Registro diario.",resp:"Encargado",plazo:"Inmediato"},"3-2":{ac:"Retomar registro de temperaturas.",ap:"Planilla de control.",resp:"Encargado",plazo:"Inmediato"},"3-3":{ac:"Verificar calibracion del termometro.",ap:"Check mensual.",resp:"Titular",plazo:"48 horas"},"4-0":{ac:"Separar alimentos crudos de cocidos.",ap:"Capacitar al personal.",resp:"Encargado",plazo:"Inmediato"},"4-1":{ac:"Rotular todos los productos.",ap:"Rotulado obligatorio.",resp:"Manipuladores",plazo:"Inmediato"},"4-2":{ac:"Aplicar sistema FIFO.",ap:"Capacitar en FIFO.",resp:"Encargado",plazo:"24 horas"},"4-3":{ac:"Cubrir productos sin proteccion.",ap:"Norma de cubrimiento.",resp:"Manipuladores",plazo:"Inmediato"},"4-4":{ac:"Reubicar alimentos en estanterias.",ap:"Instalar estanterias.",resp:"Encargado",plazo:"24 horas"},"4-5":{ac:"Separar productos no alimentarios.",ap:"Designar espacio exclusivo.",resp:"Encargado",plazo:"Inmediato"},"5-0":{ac:"Verificar conexion a red publica.",ap:"Documentar fuente de agua.",resp:"Titular",plazo:"48 horas"},"5-1":{ac:"Limpiar y desinfectar tanque de agua.",ap:"Limpieza semestral.",resp:"Titular",plazo:"A convenir"},"5-2":{ac:"Gestionar analisis bacteriologico.",ap:"Analisis anual.",resp:"Titular",plazo:"5 dias"},"5-3":{ac:"Gestionar analisis fisico-quimico.",ap:"Junto al bacteriologico.",resp:"Titular",plazo:"5 dias"},"6-0":{ac:"Inspeccion visual inmediata.",ap:"Contratar empresa habilitada.",resp:"Titular",plazo:"Inmediato"},"6-1":{ac:"Sellar grietas e instalar mosquiteros.",ap:"Revision mensual.",resp:"Encargado",plazo:"72 horas"},"6-2":{ac:"Solicitar certificado de control de plagas.",ap:"Mantener contrato vigente.",resp:"Titular",plazo:"5 dias"},"6-3":{ac:"Desmalezamiento del perimetro.",ap:"Rutina mensual.",resp:"Encargado",plazo:"72 horas"},"7-0":{ac:"Reemplazar utensilios sucios.",ap:"Rutina de lavado.",resp:"Manipuladores",plazo:"Inmediato"},"7-1":{ac:"Corregir practica de contaminacion cruzada.",ap:"Capacitar al personal.",resp:"Encargado",plazo:"Inmediato"},"7-2":{ac:"Verificar temperatura de coccion.",ap:"Control obligatorio.",resp:"Cocinero",plazo:"Inmediato"},"7-3":{ac:"Corregir metodo de descongelacion.",ap:"Capacitar al personal.",resp:"Manipuladores",plazo:"Inmediato"},"7-4":{ac:"Documentar recambio de aceite.",ap:"Criterio de cambio.",resp:"Cocinero",plazo:"24 horas"},"8-0":{ac:"Reemplazar contenedores sin tapa.",ap:"Check diario.",resp:"Encargado",plazo:"24 horas"},"8-1":{ac:"Instalar contenedores con pedal.",ap:"Mantener en todas las areas.",resp:"Titular",plazo:"48 horas"},"8-2":{ac:"Limpiar y desinfectar contenedores.",ap:"Frecuencia en plan de limpieza.",resp:"Personal de limpieza",plazo:"Inmediato"},"8-3":{ac:"Retirar residuos acumulados.",ap:"Horarios de retiro.",resp:"Personal de limpieza",plazo:"Inmediato"},"9-0":{ac:"Gestionar renovacion de habilitacion.",ap:"Alerta 60 dias antes.",resp:"Titular",plazo:"5 dias"},"9-1":{ac:"Verificar ordenanzas municipales.",ap:"Informarse de normativa.",resp:"Titular",plazo:"A convenir"},"9-2":{ac:"Elaborar o actualizar POES.",ap:"Mantener actualizados.",resp:"Responsable tecnico",plazo:"5 dias"},"9-3":{ac:"Retomar registro de autocontrol.",ap:"Planilla diaria.",resp:"Encargado",plazo:"24 horas"}};
+const SUGERENCIAS={"0-0":{ac:"Proveer de inmediato indumentaria completa al personal.",ap:"Incorporar control de indumentaria al inicio de cada jornada.",resp:"Encargado del establecimiento",plazo:"Inmediato"},"0-1":{ac:"Reforzar la tecnica de lavado de manos.",ap:"Implementar capacitacion periodica.",resp:"Responsable de higiene",plazo:"24 horas"},"0-2":{ac:"Reponer jabon liquido y toallas descartables.",ap:"Establecer control diario de insumos.",resp:"Encargado",plazo:"Inmediato"},"0-3":{ac:"Colocar carteleria de lavado de manos.",ap:"Incluir revision en check diario.",resp:"Encargado",plazo:"24 horas"},"0-4":{ac:"Gestionar renovacion del carnet sanitario.",ap:"Llevar registro de vencimientos.",resp:"Titular",plazo:"5 dias"},"1-0":{ac:"Sellar grietas en pisos.",ap:"Incluir revision en mantenimiento mensual.",resp:"Titular",plazo:"A convenir"},"1-1":{ac:"Reparar sector con humedad.",ap:"Inspeccion mensual de paredes y techos.",resp:"Titular",plazo:"A convenir"},"1-2":{ac:"Reparar luminarias deficientes.",ap:"Incluir iluminacion en check mensual.",resp:"Titular",plazo:"48 horas"},"1-3":{ac:"Habilitar ventilacion.",ap:"Limpieza de filtros en mantenimiento.",resp:"Encargado",plazo:"48 horas"},"1-4":{ac:"Reemplazar mesadas en mal estado.",ap:"Revision semestral de superficies.",resp:"Titular",plazo:"A convenir"},"1-5":{ac:"Gestionar agua fria y caliente.",ap:"Verificacion diaria.",resp:"Titular",plazo:"48 horas"},"1-6":{ac:"Instalar tela mosquitera.",ap:"Revisar mensualmente.",resp:"Encargado",plazo:"72 horas"},"1-7":{ac:"Equipar banos con elementos de higiene.",ap:"Control diario.",resp:"Encargado",plazo:"24 horas"},"1-8":{ac:"Habilitar vestuario diferenciado.",ap:"Mantener ordenado.",resp:"Titular",plazo:"A convenir"},"2-0":{ac:"Elaborar plan de limpieza y desinfeccion.",ap:"Mantener actualizado.",resp:"Encargado",plazo:"5 dias"},"2-1":{ac:"Capacitar en uso correcto de productos.",ap:"Incorporar instructivo.",resp:"Encargado",plazo:"48 horas"},"2-2":{ac:"Diferenciar elementos de limpieza.",ap:"Comunicar sistema de colores.",resp:"Encargado",plazo:"48 horas"},"2-3":{ac:"Retomar registro de limpieza.",ap:"Planilla diaria.",resp:"Personal de limpieza",plazo:"Inmediato"},"2-4":{ac:"Reubicar productos de limpieza.",ap:"Designar area exclusiva.",resp:"Encargado",plazo:"Inmediato"},"3-0":{ac:"Verificar temperatura de heladera.",ap:"Registro diario.",resp:"Encargado",plazo:"Inmediato"},"3-1":{ac:"Verificar temperatura del freezer.",ap:"Registro diario.",resp:"Encargado",plazo:"Inmediato"},"3-2":{ac:"Retomar registro de temperaturas.",ap:"Planilla de control.",resp:"Encargado",plazo:"Inmediato"},"3-3":{ac:"Verificar calibracion del termometro.",ap:"Check mensual.",resp:"Titular",plazo:"48 horas"},"4-0":{ac:"Separar alimentos crudos de cocidos.",ap:"Capacitar al personal.",resp:"Encargado",plazo:"Inmediato"},"4-1":{ac:"Rotular todos los productos.",ap:"Rotulado obligatorio.",resp:"Manipuladores",plazo:"Inmediato"},"4-2":{ac:"Aplicar sistema FIFO.",ap:"Capacitar en FIFO.",resp:"Encargado",plazo:"24 horas"},"4-3":{ac:"Cubrir productos sin proteccion.",ap:"Norma de cubrimiento.",resp:"Manipuladores",plazo:"Inmediato"},"4-4":{ac:"Reubicar alimentos en estanterias.",ap:"Instalar estanterias.",resp:"Encargado",plazo:"24 horas"},"4-5":{ac:"Separar productos no alimentarios.",ap:"Designar espacio exclusivo.",resp:"Encargado",plazo:"Inmediato"},"5-0":{ac:"Verificar conexion a red publica.",ap:"Documentar fuente de agua.",resp:"Titular",plazo:"48 horas"},"5-1":{ac:"Limpiar y desinfectar tanque de agua.",ap:"Limpieza semestral.",resp:"Titular",plazo:"A convenir"},"5-2":{ac:"Gestionar analisis bacteriologico.",ap:"Analisis anual.",resp:"Titular",plazo:"5 dias"},"5-3":{ac:"Gestionar analisis fisico-quimico.",ap:"Junto al bacteriologico.",resp:"Titular",plazo:"5 dias"},"6-0":{ac:"Inspeccion visual inmediata.",ap:"Contratar empresa habilitada.",resp:"Titular",plazo:"Inmediato"},"6-1":{ac:"Sellar grietas e instalar mosquiteros.",ap:"Revision mensual.",resp:"Encargado",plazo:"72 horas"},"6-2":{ac:"Solicitar certificado de control de plagas.",ap:"Mantener contrato vigente.",resp:"Titular",plazo:"5 dias"},"6-3":{ac:"Desmalezamiento del perimetro.",ap:"Rutina mensual.",resp:"Encargado",plazo:"72 horas"},"7-0":{ac:"Reemplazar utensilios sucios.",ap:"Rutina de lavado.",resp:"Manipuladores",plazo:"Inmediato"},"7-1":{ac:"Corregir practica de contaminacion cruzada.",ap:"Capacitar al personal.",resp:"Encargado",plazo:"Inmediato"},"7-2":{ac:"Verificar temperatura de coccion.",ap:"Control obligatorio.",resp:"Cocinero",plazo:"Inmediato"},"7-3":{ac:"Corregir metodo de descongelacion.",ap:"Capacitar al personal.",resp:"Manipuladores",plazo:"Inmediato"},"7-4":{ac:"Documentar recambio de aceite.",ap:"Criterio de cambio.",resp:"Cocinero",plazo:"24 horas"},"8-0":{ac:"Reemplazar contenedores sin tapa.",ap:"Check diario.",resp:"Encargado",plazo:"24 horas"},"8-1":{ac:"Instalar contenedores con pedal.",ap:"Mantener en todas las areas.",resp:"Titular",plazo:"48 horas"},"8-2":{ac:"Limpiar y desinfectar contenedores.",ap:"Frecuencia en plan de limpieza.",resp:"Personal de limpieza",plazo:"Inmediato"},"8-3":{ac:"Retirar residuos acumulados.",ap:"Horarios de retiro.",resp:"Personal de limpieza",plazo:"Inmediato"},"9-0":{ac:"Gestionar renovacion de habilitacion.",ap:"Alerta 60 dias antes.",resp:"Titular",plazo:"5 dias"},"9-1":{ac:"Verificar ordenanzas municipales.",ap:"Informarse de normativa.",resp:"Titular",plazo:"A convenir"},"9-2":{ac:"Elaborar o actualizar POES.",ap:"Mantener actualizados.",resp:"Responsable tecnico",plazo:"5 dias"},"9-3":{ac:"Retomar registro de autocontrol.",ap:"Planilla diaria.",resp:"Encargado",plazo:"24 horas"}};
 function getSugerencia(mi,ii){return SUGERENCIAS[mi+'-'+ii]||{ac:"Implementar la correccion necesaria.",ap:"Establecer medidas preventivas.",resp:"Encargado del establecimiento",plazo:"A convenir"};}
 function getAlerta(fecha){if(!fecha)return{color:'#C0392B',bg:'#FADBD8',label:'Sin auditar',icono:'🚨',nivel:4};const dias=Math.floor((new Date()-new Date(fecha))/(1000*60*60*24));if(dias<=30)return{color:'#1E8449',bg:'#D5F5E3',label:'Al dia ('+dias+'d)',icono:'🟢',nivel:1};if(dias<=180)return{color:'#D4AC0D',bg:'#FEF9E7',label:'Revisar ('+dias+'d)',icono:'🟡',nivel:2};if(dias<=365)return{color:'#E67E22',bg:'#FDEBD0',label:'Urgente ('+dias+'d)',icono:'🟠',nivel:3};return{color:'#C0392B',bg:'#FADBD8',label:'Vencido ('+dias+'d)',icono:'🚨',nivel:4};}
 
-/* ── ÍCONOS SVG ── */
-const SVG_PATHS={
-  inicio:'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
-  iniciob:'M9 22V12h6v10',
-  auditorias:'M9 11l3 3L22 4',
-  auditoriasb:'M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11',
-  checklist:'M9 11h6M9 14h6M9 17h4',
-  checklistb:'M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
-  nc:'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z',
-  ncb:'M12 9v4M12 17h.01',
-  clientes:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2',
-  clientesb:'M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8',
-  clientesc:'M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75',
-  mejoras:'M22 7 13.5 15.5 8.5 10.5 2 17',
-  mejorasb:'M16 7h6v6',
-  correctivas:'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z',
-  correctivasb:'M12 8v4M12 16h.01',
-  editor:'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7',
-  editorb:'M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z',
-};
-
+/* ── ÍCONOS ── */
 function Icono({tipo,size=16,stroke='currentColor',sw=2}){
   const paths={
-    inicio:[SVG_PATHS.inicio,SVG_PATHS.iniciob],
-    auditorias:[SVG_PATHS.auditorias,SVG_PATHS.auditoriasb],
-    checklist:[SVG_PATHS.checklistb,SVG_PATHS.checklist],
-    nc:[SVG_PATHS.nc,SVG_PATHS.ncb],
-    clientes:[SVG_PATHS.clientes,SVG_PATHS.clientesb,SVG_PATHS.clientesc],
-    mejoras:[SVG_PATHS.mejoras,SVG_PATHS.mejorasb],
-    correctivas:[SVG_PATHS.correctivas,SVG_PATHS.correctivasb],
-    editor:[SVG_PATHS.editor,SVG_PATHS.editorb],
+    inicio:[['M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],['M9 22V12h6v10']],
+    auditorias:[['M9 11l3 3L22 4'],['M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11']],
+    checklist:[['M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],['M9 9h6M9 12h6M9 15h4']],
+    nc:[['M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'],['M12 9v4M12 17h.01']],
+    clientes:[['M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'],['M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8'],['M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75']],
+    mejoras:[['M22 7 13.5 15.5 8.5 10.5 2 17'],['M16 7h6v6']],
+    correctivas:[['M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z'],['M12 8v4M12 16h.01']],
+    editor:[['M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'],['M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z']],
   };
-  return <svg viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" width={size} height={size}>{(paths[tipo]||[]).map((d,i)=><path key={i} d={d}/>)}</svg>;
+  const ps=paths[tipo]||[];
+  return <svg viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" width={size} height={size}>{ps.map((p,i)=><path key={i} d={p[0]}/>)}</svg>;
 }
 
-/* ── DEFINICIÓN SIDEBAR + MÓDULOS SUPERIORES ── */
 const NAV_ITEMS=[
   {key:'dashboard',label:'Inicio',tipo:'inicio'},
   {key:'nueva',label:'Nueva Auditoría',tipo:'auditorias'},
@@ -372,14 +345,14 @@ const NAV_ITEMS=[
 const MODULOS_DASH=[
   {key:'dashboard',label:'Inicios',desc:'Vista general del sistema y actividad reciente.',color:'#1B4F72',tipo:'inicio'},
   {key:'nueva',label:'Auditorías',desc:'Gestiona y da seguimiento a tus auditorías.',color:'#17a2b8',tipo:'auditorias'},
-  {key:'checklist',label:'Check List',desc:'Crea, ejecuta y controla tus listas de verificación.',color:'#1E8449',tipo:'checklist'},
+  {key:'checklist',label:'Check List',desc:'Checklists de auditorías realizadas para imprimir.',color:'#1E8449',tipo:'checklist'},
   {key:'noconformidades',label:'No Conformidades',desc:'Registra y da seguimiento a no conformidades.',color:'#E67E22',tipo:'nc'},
   {key:'clientes',label:'Clientes',desc:'Administra la información y relación con tus clientes.',color:'#8E44AD',tipo:'clientes'},
-  {key:'mejoras',label:'Mejoras Continuas',desc:'Gestiona iniciativas de mejora continua.',color:'#17a2b8',tipo:'mejoras'},
-  {key:'editor',label:'Medidas Correctivas',desc:'Define, implementa y da seguimiento a acciones correctivas.',color:'#1B4F72',tipo:'correctivas'},
+  {key:'mejoras',label:'Mejoras Continuas',desc:'Seguimiento automático de mejoras por establecimiento.',color:'#17a2b8',tipo:'mejoras'},
+  {key:'editor',label:'Medidas Correctivas',desc:'Acciones correctivas registradas por auditoría.',color:'#1B4F72',tipo:'correctivas'},
 ];
 
-/* ── COMPONENTES AUXILIARES ── */
+/* ── FIRMA TÁCTIL ── */
 function FirmaTactil({onFirma,firmaGuardada}){
   const canvasRef=useRef();const dibujando=useRef(false);const [tieneFirma,setTieneFirma]=useState(!!firmaGuardada);
   useEffect(()=>{if(firmaGuardada&&canvasRef.current){const img=new Image();img.onload=()=>{const ctx=canvasRef.current.getContext('2d');ctx.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);ctx.drawImage(img,0,0);};img.src=firmaGuardada;}},[firmaGuardada]);
@@ -391,17 +364,19 @@ function FirmaTactil({onFirma,firmaGuardada}){
   return(<div><canvas ref={canvasRef} width={400} height={100} className="firma-canvas" style={{width:'100%',maxWidth:400}} onMouseDown={iniciar} onMouseMove={dibujar} onMouseUp={terminar} onMouseLeave={terminar} onTouchStart={iniciar} onTouchMove={dibujar} onTouchEnd={terminar}/><div style={{display:'flex',gap:8,marginTop:6}}><button className="btn btn-sm btn-ghost" onClick={limpiar}>Limpiar</button>{tieneFirma&&<span style={{fontSize:11,color:'#1E8449',paddingTop:5}}>✓ Firma registrada</span>}</div></div>);
 }
 
-function SubirFotos({auditoriaId,ncIndex,soloLectura}){
-  const carpeta=ncIndex!==undefined?auditoriaId+'/nc-'+ncIndex:auditoriaId+'/general';
+/* ── SUBIR FOTOS ── */
+function SubirFotos({auditoriaId,soloLectura}){
+  const carpeta=auditoriaId+'/general';
   const [fotos,setFotos]=useState([]);const [subiendo,setSubiendo]=useState(false);const [msg,setMsg]=useState('');const [eliminando,setEliminando]=useState(null);const inputRef=useRef();
   useEffect(()=>{cargarFotos();},[carpeta]);
   const cargarFotos=async()=>{const {data,error}=await supabase.storage.from('evidencias').list(carpeta,{limit:100,sortBy:{column:'name',order:'asc'}});if(data&&!error&&data.length>0){const urls=data.map(f=>{const {data:u}=supabase.storage.from('evidencias').getPublicUrl(carpeta+'/'+f.name);return{name:f.name,url:u.publicUrl,path:carpeta+'/'+f.name};});setFotos(urls);}else setFotos([]);};
   const subirArchivo=async(e)=>{const files=Array.from(e.target.files);if(!files.length)return;setSubiendo(true);setMsg('');for(const file of files){const nombre=Date.now()+'_'+file.name;await supabase.storage.from('evidencias').upload(carpeta+'/'+nombre,file,{upsert:true});}setSubiendo(false);setMsg('OK: '+files.length+' archivo(s) subido(s)');setTimeout(()=>{cargarFotos();setMsg('');},1500);inputRef.current.value='';};
-  const eliminarFoto=async(foto)=>{if(!confirm('Eliminar este archivo?'))return;setEliminando(foto.name);const {error}=await supabase.storage.from('evidencias').remove([foto.path]);if(!error){setFotos(prev=>prev.filter(f=>f.name!==foto.name));setMsg('Archivo eliminado.');setTimeout(()=>setMsg(''),2000);}setEliminando(null);};
-  const abrirUrl=(url,nombre)=>{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';if(nombre)a.download=nombre;document.body.appendChild(a);a.click();document.body.removeChild(a);};
-  return(<div>{!soloLectura&&(<div className="upload-area" onClick={()=>inputRef.current.click()}><div style={{fontSize:24,color:'#999'}}>+</div><p style={{color:'#999',fontSize:12,marginTop:4}}>Clic para subir fotos o documentos</p><input ref={inputRef} type="file" multiple accept="image/*,.pdf" style={{display:'none'}} onChange={subirArchivo}/></div>)}{subiendo&&<div className="alert info" style={{marginTop:6}}>Subiendo archivos...</div>}{msg&&<div className="alert success" style={{marginTop:6}}>{msg}</div>}{fotos.length>0&&(<div className="foto-grid">{fotos.map((f,i)=>(<div key={i} className="foto-wrap"><div style={{height:90,background:'#f8fafc',cursor:'pointer'}} onClick={()=>abrirUrl(f.url)}>{/\.(jpg|jpeg|png|gif|webp)$/i.test(f.name)?<img src={f.url} alt={f.name} style={{width:'100%',height:90,objectFit:'cover',display:'block'}}/>:<div className="foto-pdf">📄<span style={{fontSize:10}}>{f.name.substring(0,10)}...</span></div>}</div><div className="foto-overlay"><button className="btn btn-primary btn-sm" onClick={()=>abrirUrl(f.url)} style={{fontSize:10}}>Ver</button>{!soloLectura&&<button className="btn btn-danger btn-sm" onClick={()=>eliminarFoto(f)} disabled={eliminando===f.name} style={{fontSize:10}}>{eliminando===f.name?'...':'Elim.'}</button>}</div></div>))}</div>)}{fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:7}}>Sin evidencias cargadas.</p>}</div>);
+  const eliminarFoto=async(foto)=>{if(!confirm('Eliminar este archivo?'))return;setEliminando(foto.name);const {error}=await supabase.storage.from('evidencias').remove([foto.path]);if(!error){setFotos(prev=>prev.filter(f=>f.name!==foto.name));setMsg('Eliminado.');setTimeout(()=>setMsg(''),2000);}setEliminando(null);};
+  const abrirUrl=(url)=>{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();document.body.removeChild(a);};
+  return(<div>{!soloLectura&&(<div className="upload-area" onClick={()=>inputRef.current.click()}><div style={{fontSize:24,color:'#999'}}>+</div><p style={{color:'#999',fontSize:12,marginTop:4}}>Clic para subir fotos o documentos</p><input ref={inputRef} type="file" multiple accept="image/*,.pdf" style={{display:'none'}} onChange={subirArchivo}/></div>)}{subiendo&&<div className="alert info" style={{marginTop:6}}>Subiendo...</div>}{msg&&<div className="alert success" style={{marginTop:6}}>{msg}</div>}{fotos.length>0&&(<div className="foto-grid">{fotos.map((f,i)=>(<div key={i} className="foto-wrap"><div style={{height:90,background:'#f8fafc',cursor:'pointer'}} onClick={()=>abrirUrl(f.url)}>{/\.(jpg|jpeg|png|gif|webp)$/i.test(f.name)?<img src={f.url} alt={f.name} style={{width:'100%',height:90,objectFit:'cover',display:'block'}}/>:<div className="foto-pdf">📄<span style={{fontSize:10}}>{f.name.substring(0,10)}...</span></div>}</div><div className="foto-overlay"><button className="btn btn-primary btn-sm" onClick={()=>abrirUrl(f.url)} style={{fontSize:10}}>Ver</button>{!soloLectura&&<button className="btn btn-danger btn-sm" onClick={()=>eliminarFoto(f)} disabled={eliminando===f.name} style={{fontSize:10}}>{eliminando===f.name?'...':'Elim.'}</button>}</div></div>))}</div>)}{fotos.length===0&&!subiendo&&<p style={{fontSize:12,color:'#999',marginTop:7}}>Sin evidencias cargadas.</p>}</div>);
 }
 
+/* ── GENERAR PDF ── */
 function generarPDF(auditoria,firmaDataUrl){
   const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});const W=210,M=15,TW=W-M*2;let y=15;
   const checkPage=()=>{if(y>270){doc.addPage();y=20;}};
@@ -430,8 +405,8 @@ function generarPDF(auditoria,firmaDataUrl){
 }
 
 function exportarExcel(auditorias){
-  const headers=['Establecimiento','Fecha','Responsable','Rubro','Domicilio','N Habilitacion','Puntaje (%)','Resultado','Cumplen','No cumplen','N/A','NCs gestionadas'];
-  const rows=auditorias.map(a=>[a.establecimiento||'',a.fecha||'',a.responsable||'',a.modulos?.rubro||'',a.modulos?.domicilio||'',a.modulos?.nroHab||'',a.puntaje||0,a.resultado||'',a.modulos?.resumen?.cumple||0,a.modulos?.resumen?.noCumple||0,a.modulos?.resumen?.na||0,(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length]);
+  const headers=['Establecimiento','Fecha','Responsable','Rubro','Puntaje (%)','Resultado','Cumplen','No cumplen','NCs gestionadas'];
+  const rows=auditorias.map(a=>[a.establecimiento||'',a.fecha||'',a.responsable||'',a.modulos?.rubro||'',a.puntaje||0,a.resultado||'',a.modulos?.resumen?.cumple||0,a.modulos?.resumen?.noCumple||0,(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length]);
   const csvContent=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csvContent],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='INOCUA_Auditorias_'+new Date().toISOString().split('T')[0]+'.csv';a.click();URL.revokeObjectURL(url);
@@ -469,7 +444,7 @@ function HistorialComparativo({auditorias}){
   useEffect(()=>{if(establecimientos.length>0&&!estabSel)setEstabSel(establecimientos[0]);},[auditorias]);
   const audsEstab=auditorias.filter(a=>a.establecimiento===estabSel).sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
   if(auditorias.length===0)return<div className="card"><p style={{color:'#999',fontSize:13}}>No hay auditorias para comparar.</p></div>;
-  return(<div className="card"><h2>📊 Historial comparativo</h2><div style={{marginBottom:12}}><label>Establecimiento</label><select value={estabSel} onChange={e=>setEstabSel(e.target.value)} style={{marginBottom:0}}>{establecimientos.map(e=><option key={e} value={e}>{e}</option>)}</select></div>{audsEstab.length===0&&<p style={{color:'#999',fontSize:13}}>Sin auditorias para este establecimiento.</p>}{audsEstab.length>0&&(<div><p style={{fontSize:12,color:'#666',marginBottom:9,fontWeight:'bold'}}>Evolucion de puntaje general:</p>{audsEstab.map((a,i)=>(<div key={i} className="historial-barra-wrap"><span style={{fontSize:11,color:'#999',minWidth:90}}>{a.fecha}</span><div className="historial-barra" style={{width:(a.puntaje||0)+'%',background:a.puntaje>=80?'#1E8449':a.puntaje>=60?'#D4AC0D':'#C0392B',maxWidth:'55%'}}></div><span style={{fontSize:11,fontWeight:'bold',color:a.puntaje>=80?'#1E8449':a.puntaje>=60?'#D4AC0D':'#C0392B'}}>{a.puntaje}%</span><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')} style={{fontSize:10}}>{a.resultado}</span></div>))}</div>)}</div>);
+  return(<div className="card"><h2>📊 Historial comparativo</h2><div style={{marginBottom:12}}><label>Establecimiento</label><select value={estabSel} onChange={e=>setEstabSel(e.target.value)} style={{marginBottom:0}}>{establecimientos.map(e=><option key={e} value={e}>{e}</option>)}</select></div>{audsEstab.length===0&&<p style={{color:'#999',fontSize:13}}>Sin auditorias.</p>}{audsEstab.length>0&&(<div><p style={{fontSize:12,color:'#666',marginBottom:9,fontWeight:'bold'}}>Evolucion de puntaje:</p>{audsEstab.map((a,i)=>(<div key={i} className="historial-barra-wrap"><span style={{fontSize:11,color:'#999',minWidth:90}}>{a.fecha}</span><div className="historial-barra" style={{width:(a.puntaje||0)+'%',background:a.puntaje>=80?'#1E8449':a.puntaje>=60?'#D4AC0D':'#C0392B',maxWidth:'55%'}}></div><span style={{fontSize:11,fontWeight:'bold',color:a.puntaje>=80?'#1E8449':a.puntaje>=60?'#D4AC0D':'#C0392B'}}>{a.puntaje}%</span><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')} style={{fontSize:10}}>{a.resultado}</span></div>))}</div>)}</div>);
 }
 
 function DetalleAuditoria({auditoria,onVolver,esCliente}){
@@ -504,6 +479,223 @@ function GestionClientes(){
   return(<div><div className="card"><h2>Nuevo cliente</h2>{error&&<div className="alert error">{error}</div>}{msg&&<div className="alert success">{msg}</div>}<div className="grid2"><div><label>Nombre del establecimiento *</label><input value={estab} onChange={e=>setEstab(e.target.value)} placeholder="Ej: Panaderia San Martin"/></div><div><label>Rubro / Actividad</label><input value={rubro} onChange={e=>setRubro(e.target.value)} placeholder="Ej: Restaurante..."/></div></div><label>Domicilio del establecimiento</label><input value={domicilio} onChange={e=>setDomicilio(e.target.value)} placeholder="Direccion completa"/><label>N de habilitacion municipal</label><input value={nroHab} onChange={e=>setNroHab(e.target.value)} placeholder="Numero de habilitacion"/><label>Email del cliente *</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="cliente@email.com"/><label>Contrasena inicial (minimo 6 caracteres) *</label><input value={pass} onChange={e=>setPass(e.target.value)} placeholder="Contrasena para el cliente"/><button className="btn btn-success" onClick={crearCliente} disabled={cargando}>{cargando&&<span className="spinner"></span>}{cargando?'Creando...':'Crear acceso'}</button></div><div className="card"><h2>Clientes con acceso</h2>{clientes.length===0&&<p style={{color:'#999',fontSize:13}}>No hay clientes registrados.</p>}{clientes.length>0&&(<table><thead><tr><th>Establecimiento</th><th>Rubro</th><th>Email</th><th>Hab.</th><th>Creado</th><th>Accion</th></tr></thead><tbody>{clientes.map((c,i)=>(<tr key={i}><td>{c.establecimiento}</td><td>{c.rubro||'—'}</td><td>{c.email}</td><td style={{fontSize:11}}>{c.nro_habilitacion||'—'}</td><td>{new Date(c.created_at).toLocaleDateString('es-AR')}</td><td><button className="btn btn-danger btn-sm" onClick={()=>eliminarCliente(c)}>Eliminar</button></td></tr>))}</tbody></table>)}</div></div>);
 }
 
+/* ── VISTA CHECK LIST — auditorías guardadas para imprimir ── */
+function VistaCheckList({auditorias,onVerDetalle}){
+  const [filtro,setFiltro]=useState('');const [expandida,setExpandida]=useState(null);
+  const audsFiltradas=auditorias.filter(a=>!filtro||a.establecimiento.toLowerCase().includes(filtro.toLowerCase())||a.fecha.includes(filtro));
+  return(<div>
+    <div className="card" style={{marginBottom:14}}>
+      <h2>✅ Check List — Auditorías Realizadas</h2>
+      <p style={{fontSize:12,color:'#64748b',marginBottom:12}}>Seleccioná una auditoría para ver su checklist completo e imprimirlo en PDF.</p>
+      <input value={filtro} onChange={e=>setFiltro(e.target.value)} placeholder="🔍 Buscar por establecimiento o fecha..." style={{marginBottom:0}}/>
+    </div>
+    {audsFiltradas.length===0&&<div className="card"><p style={{color:'#999',fontSize:13}}>No hay auditorias registradas{filtro?' con ese filtro':''}.</p></div>}
+    {audsFiltradas.map((a,i)=>{
+      const mod=a.modulos||{};const modulos=mod.modulos_snapshot||cargarModulos();const estados=mod.estados||[];const resumen=mod.resumen||{};const alerta=getAlerta(a.fecha);const isExpandida=expandida===a.id;
+      return(<div key={i} className="checklist-auditoria">
+        <div className="checklist-header">
+          <div>
+            <h3>📋 {a.establecimiento}</h3>
+            <div style={{fontSize:11,opacity:0.8,marginTop:2}}>
+              {a.fecha} · {mod.rubro||'Sin rubro'} · {a.responsable||'Sin responsable'}
+            </div>
+          </div>
+          <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+            <span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span>
+            <span style={{background:'rgba(255,255,255,0.15)',color:'#fff',padding:'2px 8px',borderRadius:8,fontSize:11,fontWeight:700}}>{a.puntaje}%</span>
+            <span style={{fontSize:14}}>{alerta.icono}</span>
+            <button className="btn btn-sm" style={{background:'rgba(255,255,255,0.2)',color:'#fff',border:'1px solid rgba(255,255,255,0.3)'}} onClick={()=>setExpandida(isExpandida?null:a.id)}>{isExpandida?'▲ Cerrar':'▼ Ver checklist'}</button>
+            <button className="btn btn-sm" style={{background:'#6C3483',color:'#fff'}} onClick={()=>generarPDF(a)}>⬇ PDF</button>
+          </div>
+        </div>
+        {/* Resumen rápido siempre visible */}
+        <div style={{background:'#f8fafc',padding:'10px 16px',display:'flex',gap:20,fontSize:12,borderBottom:isExpandida?'1px solid #e2e8f0':'none'}}>
+          <span style={{color:'#1E8449',fontWeight:700}}>✓ {resumen.cumple||0} cumplen</span>
+          <span style={{color:'#C0392B',fontWeight:700}}>✗ {resumen.noCumple||0} no cumplen</span>
+          <span style={{color:'#888',fontWeight:700}}>— {resumen.na||0} N/A</span>
+          {(mod.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length>0&&<span style={{color:'#E67E22',fontWeight:700}}>⚠ {(mod.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length} NCs</span>}
+        </div>
+        {/* Checklist expandido */}
+        {isExpandida&&(
+          <div className="checklist-body">
+            {modulos.map((modulo,mi)=>{
+              const estMod=estados[mi]||[];const c=estMod.filter(e=>e==='C').length;const nc=estMod.filter(e=>e==='NC').length;const na=estMod.filter(e=>e==='NA').length;const tot=c+nc;const p=tot>0?Math.round((c/tot)*100):0;
+              return(<div className="checklist-modulo" key={mi}>
+                <div className="checklist-modulo-title">
+                  Módulo {mi+1} — {modulo.nombre}
+                  <span style={{float:'right',fontSize:11,fontWeight:'normal',color:'#64748b'}}>C:{c} NC:{nc} NA:{na} | {p}%</span>
+                </div>
+                {modulo.items.map((item,ii)=>{
+                  const est=estMod[ii];
+                  return(<div className="checklist-item-row" key={ii}>
+                    <span className={est==='C'?'checklist-tag-C':est==='NC'?'checklist-tag-NC':est==='NA'?'checklist-tag-NA':'checklist-tag-vacio'}>{est==='C'?'[C]':est==='NC'?'[NC]':est==='NA'?'[NA]':'[—]'}</span>
+                    <span style={{flex:1,color:est==='NC'?'#C0392B':est==='C'?'#333':'#888'}}>{item}</span>
+                  </div>);
+                })}
+                {mod.observaciones_modulos&&mod.observaciones_modulos[mi]&&(
+                  <div style={{marginTop:5,padding:'5px 8px',background:'#FFFDE7',borderRadius:4,fontSize:11,color:'#7D6608'}}>
+                    <strong>Obs:</strong> {mod.observaciones_modulos[mi]}
+                  </div>
+                )}
+              </div>);
+            })}
+            <div style={{marginTop:14,display:'flex',gap:8,flexWrap:'wrap'}}>
+              <button className="btn btn-pdf" onClick={()=>generarPDF(a)}>⬇ Descargar PDF completo</button>
+              <button className="btn btn-primary" onClick={()=>onVerDetalle(a)}>Ver detalle completo</button>
+            </div>
+          </div>
+        )}
+      </div>);
+    })}
+  </div>);
+}
+
+/* ── VISTA NO CONFORMIDADES ── */
+function VistaNoConformidades({auditorias,onVerDetalle}){
+  const [filtroEstado,setFiltroEstado]=useState('todos');
+  const todasNCs=auditorias.flatMap(a=>(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).map(nc=>({...nc,establecimiento:a.establecimiento,fecha:a.fecha,auditoria:a})));
+  const ncsFiltradas=filtroEstado==='todos'?todasNCs:todasNCs.filter(nc=>(nc.estado||'Pendiente')===filtroEstado);
+  const pendientes=todasNCs.filter(nc=>(nc.estado||'Pendiente')==='Pendiente').length;
+  const enProceso=todasNCs.filter(nc=>nc.estado==='En proceso').length;
+  const verificadas=todasNCs.filter(nc=>nc.estado==='Verificada').length;
+  const cerradas=todasNCs.filter(nc=>nc.estado==='Cerrada').length;
+  return(<div>
+    <div className="grid4" style={{marginBottom:14}}>
+      <div className="stat" style={{cursor:'pointer',outline:filtroEstado==='Pendiente'?'2px solid #C0392B':'none'}} onClick={()=>setFiltroEstado(filtroEstado==='Pendiente'?'todos':'Pendiente')}><div className="num" style={{color:'#C0392B'}}>{pendientes}</div><div className="label">Pendientes</div></div>
+      <div className="stat" style={{cursor:'pointer',outline:filtroEstado==='En proceso'?'2px solid #E67E22':'none'}} onClick={()=>setFiltroEstado(filtroEstado==='En proceso'?'todos':'En proceso')}><div className="num" style={{color:'#E67E22'}}>{enProceso}</div><div className="label">En proceso</div></div>
+      <div className="stat" style={{cursor:'pointer',outline:filtroEstado==='Verificada'?'2px solid #1B4F72':'none'}} onClick={()=>setFiltroEstado(filtroEstado==='Verificada'?'todos':'Verificada')}><div className="num" style={{color:'#1B4F72'}}>{verificadas}</div><div className="label">Verificadas</div></div>
+      <div className="stat" style={{cursor:'pointer',outline:filtroEstado==='Cerrada'?'2px solid #1E8449':'none'}} onClick={()=>setFiltroEstado(filtroEstado==='Cerrada'?'todos':'Cerrada')}><div className="num" style={{color:'#1E8449'}}>{cerradas}</div><div className="label">Cerradas</div></div>
+    </div>
+    <div className="card">
+      <h2>⚠️ No Conformidades {filtroEstado!=='todos'&&<span className="badge azul" style={{fontSize:11}}>{filtroEstado}</span>}</h2>
+      {ncsFiltradas.length===0&&<p style={{color:'#999',fontSize:13}}>No hay no conformidades{filtroEstado!=='todos'?' en este estado':''}.</p>}
+      {ncsFiltradas.length>0&&(<div style={{overflowX:'auto'}}><table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Módulo</th><th>Item</th><th>Responsable</th><th>Plazo</th><th>Estado</th><th>Acción</th></tr></thead><tbody>{ncsFiltradas.map((nc,i)=>(<tr key={i}><td><strong>{nc.establecimiento}</strong></td><td style={{fontSize:12}}>{nc.fecha}</td><td style={{fontSize:11}}>{nc.modulo}</td><td style={{fontSize:11,maxWidth:180}}>{nc.item?.substring(0,45)}...</td><td style={{fontSize:12}}>{nc.responsable||'—'}</td><td style={{fontSize:12}}>{nc.plazo||'—'}</td><td><span className={'badge '+(nc.estado==='Cerrada'?'verde':nc.estado==='Verificada'?'azul':nc.estado==='En proceso'?'amarillo':'rojo')}>{nc.estado||'Pendiente'}</span></td><td><button className="btn btn-primary btn-sm" onClick={()=>onVerDetalle(nc.auditoria)}>Ver</button></td></tr>))}</tbody></table></div>)}
+    </div>
+  </div>);
+}
+
+/* ── VISTA MEJORAS CONTINUAS — automática con métricas ── */
+function VistaMejoras({auditorias}){
+  const ultimasPorEstab={};const historialPorEstab={};
+  auditorias.forEach(a=>{
+    if(!historialPorEstab[a.establecimiento])historialPorEstab[a.establecimiento]=[];
+    historialPorEstab[a.establecimiento].push(a);
+    if(!ultimasPorEstab[a.establecimiento]||new Date(a.fecha)>new Date(ultimasPorEstab[a.establecimiento].fecha))ultimasPorEstab[a.establecimiento]=a;
+  });
+  const establecimientos=Object.values(ultimasPorEstab).map(a=>{
+    const hist=historialPorEstab[a.establecimiento].sort((x,y)=>new Date(x.fecha)-new Date(y.fecha));
+    const anterior=hist.length>=2?hist[hist.length-2]:null;
+    const tendencia=anterior?a.puntaje-anterior.puntaje:0;
+    const ncsAbiertas=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&(nc.estado==='Pendiente'||nc.estado==='En proceso')).length;
+    const ncsCerradas=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.estado==='Cerrada').length;
+    const totalNCs=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;
+    const alerta=getAlerta(a.fecha);
+    return{...a,tendencia,ncsAbiertas,ncsCerradas,totalNCs,cantAuditorias:hist.length,alerta,hist};
+  }).sort((a,b)=>b.puntaje-a.puntaje);
+
+  return(<div>
+    {/* KPIs generales */}
+    <div className="grid4" style={{marginBottom:14}}>
+      <div className="stat"><div className="num" style={{color:'#1B4F72'}}>{establecimientos.length}</div><div className="label">Establecimientos</div></div>
+      <div className="stat"><div className="num" style={{color:'#1E8449'}}>{establecimientos.filter(e=>e.puntaje>=80).length}</div><div className="label">Con cumplimiento alto</div></div>
+      <div className="stat"><div className="num" style={{color:'#E67E22'}}>{establecimientos.reduce((s,e)=>s+e.ncsAbiertas,0)}</div><div className="label">NCs abiertas total</div></div>
+      <div className="stat"><div className="num" style={{color:'#8E44AD'}}>{Math.round(establecimientos.reduce((s,e)=>s+e.puntaje,0)/(establecimientos.length||1))}%</div><div className="label">Promedio general</div></div>
+    </div>
+
+    {/* Tabla de mejoras automática */}
+    <div className="card">
+      <h2>📈 Mejoras Continuas en Proceso — Seguimiento Automático</h2>
+      <p style={{fontSize:12,color:'#64748b',marginBottom:14}}>Los datos se actualizan automáticamente con cada auditoría realizada. La tendencia compara el último puntaje con la auditoría anterior.</p>
+      {establecimientos.length===0&&<p style={{color:'#999',fontSize:13}}>No hay auditorias registradas.</p>}
+      {establecimientos.length>0&&(
+        <div style={{overflowX:'auto'}}>
+          <div style={{minWidth:700}}>
+            {/* Header */}
+            <div className="mejora-tabla-row mejora-tabla-header" style={{background:'#1B4F72',color:'#fff',borderRadius:'6px 6px 0 0',padding:'10px 12px'}}>
+              <div>Establecimiento</div>
+              <div style={{textAlign:'center'}}>Puntaje</div>
+              <div style={{textAlign:'center'}}>Tendencia</div>
+              <div style={{textAlign:'center'}}>NCs abiertas</div>
+              <div style={{textAlign:'center'}}>Auditorías</div>
+              <div style={{textAlign:'center'}}>Estado</div>
+            </div>
+            {/* Filas */}
+            {establecimientos.map((e,i)=>(
+              <div key={i} className="mejora-tabla-row" style={{background:i%2===0?'#fff':'#f8fafc',borderLeft:'1px solid #e2e8f0',borderRight:'1px solid #e2e8f0',borderBottom:'1px solid #e2e8f0',borderRadius:i===establecimientos.length-1?'0 0 6px 6px':'0'}}>
+                <div>
+                  <div style={{fontWeight:700,fontSize:13,color:'#1a2940'}}>{e.establecimiento}</div>
+                  <div style={{fontSize:11,color:'#64748b',marginTop:2}}>{e.fecha} · {e.modulos?.rubro||'Sin rubro'}</div>
+                  {/* Barra de progreso */}
+                  <div style={{marginTop:6,height:6,background:'#e2e8f0',borderRadius:10,overflow:'hidden'}}>
+                    <div style={{height:'100%',width:e.puntaje+'%',background:e.puntaje>=80?'linear-gradient(90deg,#1E8449,#27AE60)':e.puntaje>=60?'linear-gradient(90deg,#E67E22,#F39C12)':'linear-gradient(90deg,#C0392B,#E74C3C)',borderRadius:10,transition:'width 0.5s'}}></div>
+                  </div>
+                </div>
+                <div style={{textAlign:'center'}}>
+                  <span style={{fontFamily:'Syne,sans-serif',fontSize:18,fontWeight:800,color:e.puntaje>=80?'#1E8449':e.puntaje>=60?'#E67E22':'#C0392B'}}>{e.puntaje}%</span>
+                </div>
+                <div style={{textAlign:'center'}}>
+                  {e.tendencia>0&&<span className="trend-up">▲ +{e.tendencia}%</span>}
+                  {e.tendencia<0&&<span className="trend-down">▼ {e.tendencia}%</span>}
+                  {e.tendencia===0&&<span className="trend-equal">{e.cantAuditorias===1?'Primera auditoría':'= Sin cambio'}</span>}
+                </div>
+                <div style={{textAlign:'center'}}>
+                  {e.ncsAbiertas>0
+                    ?<span className="badge rojo">{e.ncsAbiertas} abiertas</span>
+                    :<span className="badge verde">Sin NCs</span>}
+                </div>
+                <div style={{textAlign:'center'}}>
+                  <span style={{fontWeight:600,fontSize:13}}>{e.cantAuditorias}</span>
+                  <span style={{fontSize:11,color:'#64748b',display:'block'}}>auditorias</span>
+                </div>
+                <div style={{textAlign:'center'}}>
+                  <span style={{background:e.alerta.bg,color:e.alerta.color,padding:'3px 8px',borderRadius:8,fontSize:11,fontWeight:700}}>{e.alerta.icono} {e.alerta.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* Historial comparativo */}
+    {establecimientos.length>0&&<HistorialComparativo auditorias={auditorias}/>}
+  </div>);
+}
+
+/* ── VISTA MEDIDAS CORRECTIVAS ── */
+function VistaMedidasCorrectivas({auditorias,onVerDetalle}){
+  const [filtroEstado,setFiltroEstado]=useState('todos');
+  const todasNCs=auditorias.flatMap(a=>(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).map(nc=>({...nc,establecimiento:a.establecimiento,fecha:a.fecha,auditoria:a})));
+  const ncsFiltradas=filtroEstado==='todos'?todasNCs:todasNCs.filter(nc=>(nc.estado||'Pendiente')===filtroEstado);
+  return(<div>
+    <div className="grid4" style={{marginBottom:14}}>
+      {[['todos','Total',todasNCs.length,'#1B4F72'],['Pendiente','Pendientes',todasNCs.filter(nc=>(nc.estado||'Pendiente')==='Pendiente').length,'#C0392B'],['En proceso','En proceso',todasNCs.filter(nc=>nc.estado==='En proceso').length,'#E67E22'],['Cerrada','Cerradas',todasNCs.filter(nc=>nc.estado==='Cerrada').length,'#1E8449']].map(([est,lbl,cnt,col])=>(
+        <div key={est} className="stat" style={{cursor:'pointer',outline:filtroEstado===est?'2px solid '+col:'none'}} onClick={()=>setFiltroEstado(est)}>
+          <div className="num" style={{color:col}}>{cnt}</div>
+          <div className="label">{lbl}</div>
+        </div>
+      ))}
+    </div>
+    <div className="card">
+      <h2>🎯 Medidas Correctivas Registradas</h2>
+      {ncsFiltradas.length===0&&<p style={{color:'#999',fontSize:13}}>No hay medidas correctivas registradas.</p>}
+      {ncsFiltradas.length>0&&(<div style={{overflowX:'auto'}}><table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Módulo / Item</th><th>Acción correctiva</th><th>Responsable</th><th>Plazo</th><th>Estado</th><th>Ver</th></tr></thead><tbody>{ncsFiltradas.map((nc,i)=>(
+        <tr key={i}>
+          <td><strong style={{fontSize:12}}>{nc.establecimiento}</strong></td>
+          <td style={{fontSize:11}}>{nc.fecha}</td>
+          <td style={{fontSize:11}}><div style={{fontWeight:600,color:'#1B4F72'}}>{nc.modulo}</div><div style={{color:'#64748b'}}>{nc.item?.substring(0,40)}...</div></td>
+          <td style={{fontSize:11,maxWidth:200}}>{nc.accion_correctiva?.substring(0,60)}...</td>
+          <td style={{fontSize:11}}>{nc.responsable||'—'}</td>
+          <td style={{fontSize:11}}>{nc.plazo||'—'}</td>
+          <td><span className={'badge '+(nc.estado==='Cerrada'?'verde':nc.estado==='Verificada'?'azul':nc.estado==='En proceso'?'amarillo':'rojo')}>{nc.estado||'Pendiente'}</span></td>
+          <td><button className="btn btn-primary btn-sm" onClick={()=>onVerDetalle(nc.auditoria)}>Ver</button></td>
+        </tr>
+      ))}</tbody></table></div>)}
+    </div>
+  </div>);
+}
+
+/* ── VISTA CLIENTE ── */
 function VistaCliente({session,onLogout}){
   const {cliente}=session;const [auditorias,setAuditorias]=useState([]);const [auditoriaDetalle,setAuditoriaDetalle]=useState(null);const [cargando,setCargando]=useState(true);const [tabCliente,setTabCliente]=useState('auditorias');const [ncExpandida,setNcExpandida]=useState(null);
   useEffect(()=>{(async()=>{if(cliente.id){const {data:dataId}=await supabase.from('auditorias').select('*').eq('cliente_id',cliente.id).order('created_at',{ascending:false});if(dataId&&dataId.length>0){setAuditorias(dataId);setCargando(false);return;}}const {data}=await supabase.from('auditorias').select('*').ilike('establecimiento','%'+cliente.establecimiento+'%').order('created_at',{ascending:false});if(data)setAuditorias(data);setCargando(false);})();},[]);
@@ -514,56 +706,6 @@ function VistaCliente({session,onLogout}){
   return(<div>{hdr}<div style={{background:'#1B4F72',display:'flex',gap:2,padding:'5px 16px'}}><button style={{background:tabCliente==='auditorias'?'rgba(255,255,255,0.2)':'transparent',color:'white',border:'none',padding:'6px 12px',borderRadius:4,cursor:'pointer',fontSize:12,fontWeight:600}} onClick={()=>setTabCliente('auditorias')}>📋 Mis auditorias</button><button style={{background:tabCliente==='ncs'?'rgba(255,255,255,0.2)':'transparent',color:'white',border:'none',padding:'6px 12px',borderRadius:4,cursor:'pointer',fontSize:12,fontWeight:600}} onClick={()=>setTabCliente('ncs')}>⚠️ No conformidades{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length>0&&<span style={{background:'#E74C3C',color:'white',borderRadius:10,padding:'1px 5px',fontSize:10,marginLeft:5}}>{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length}</span>}</button></div><div style={{maxWidth:900,margin:'20px auto',padding:'0 16px'}}>{cargando&&<div className="card"><p style={{color:'#999',fontSize:13}}>Cargando...</p></div>}{!cargando&&tabCliente==='auditorias'&&(<div className="card"><h2>Mis auditorias</h2>{auditorias.length===0&&<p style={{color:'#999',fontSize:13}}>No hay auditorias registradas.</p>}{auditorias.length>0&&(<table><thead><tr><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Ver</th><th>PDF</th></tr></thead><tbody>{auditorias.map((a,i)=>{const ncsTotal=a.modulos?.resumen?.noCumple||0;const ncsPend=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.estado==='Pendiente').length;return(<tr key={i}><td>{a.fecha}</td><td>{a.puntaje}%</td><td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td><td>{ncsTotal>0?<span><span className="badge rojo">{ncsTotal} NC</span>{ncsPend>0&&<span className="badge amarillo" style={{marginLeft:3}}>{ncsPend} pend.</span>}</span>:<span style={{color:'#aaa',fontSize:11}}>—</span>}</td><td><button className="btn btn-primary btn-sm" onClick={()=>setAuditoriaDetalle(a)}>Ver</button></td><td><button className="btn btn-pdf btn-sm" onClick={()=>generarPDF(a)}>PDF</button></td></tr>);})}</tbody></table>)}</div>)}{!cargando&&tabCliente==='ncs'&&(<div>{todasLasNCs.length===0&&<div className="card"><p style={{color:'#999',fontSize:13}}>No hay no conformidades.</p></div>}{todasLasNCs.length>0&&(<div><div className="alert info" style={{marginBottom:12}}>Tenes <strong>{todasLasNCs.filter(nc=>nc.estado==='Pendiente').length} NC pendientes</strong> de un total de {todasLasNCs.length}.</div>{todasLasNCs.map((nc,idx)=>{const col=colorEstadoNC(nc.estado);const esExpandida=ncExpandida===idx;return(<div key={idx} className="nc-cliente-card" style={{borderColor:col.color+'55'}}><h4 style={{color:col.color,display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}} onClick={()=>setNcExpandida(esExpandida?null:idx)}><span>NC {idx+1} — {nc.modulo}</span><span style={{fontSize:10,background:col.bg,color:col.color,border:'1px solid '+col.color,borderRadius:10,padding:'2px 7px'}}>{nc.estado||'Pendiente'}</span></h4><div className="nc-cliente-detalle"><strong>Item:</strong> {nc.item}<br/><strong>Fecha:</strong> {nc.auditoria_fecha}</div>{!esExpandida&&<button className="btn btn-ghost btn-sm" onClick={()=>setNcExpandida(idx)}>Ver detalle</button>}{esExpandida&&(<div><div className="nc-cliente-detalle" style={{background:'#f8fafc',border:'1px solid #eee',borderRadius:4,padding:9,marginBottom:7}}><p><strong>Accion correctiva:</strong><br/>{nc.accion_correctiva}</p>{nc.accion_preventiva&&<p style={{marginTop:5}}><strong>Accion preventiva:</strong><br/>{nc.accion_preventiva}</p>}<p style={{marginTop:5}}><strong>Responsable:</strong> {nc.responsable||'—'} | <strong>Plazo:</strong> {nc.plazo||'—'}</p></div><div className="nc-acciones-cliente"><button className="btn btn-ghost btn-sm" onClick={()=>setNcExpandida(null)}>Cerrar</button></div></div>)}</div>);})}</div>)}</div>)}</div></div>);
 }
 
-/* ── VISTAS PLACEHOLDER para módulos sin pantalla propia ── */
-function VistaChecklist(){
-  return(<div className="card"><h2>✅ Check List</h2><div className="alert info">El check list se ejecuta dentro de <strong>Nueva Auditoría</strong>. Ingresá desde el sidebar para iniciar una auditoria BPM completa con los 10 módulos de evaluación.</div></div>);
-}
-function VistaNoConformidades({auditorias,onVerDetalle}){
-  const todasNCs=auditorias.flatMap(a=>(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).map(nc=>({...nc,establecimiento:a.establecimiento,fecha:a.fecha,auditoria:a})));
-  const pendientes=todasNCs.filter(nc=>nc.estado==='Pendiente').length;
-  const enProceso=todasNCs.filter(nc=>nc.estado==='En proceso').length;
-  const cerradas=todasNCs.filter(nc=>nc.estado==='Cerrada').length;
-  return(<div>
-    <div className="grid4" style={{marginBottom:16}}>
-      <div className="stat"><div className="num" style={{color:'#C0392B'}}>{pendientes}</div><div className="label">Pendientes</div></div>
-      <div className="stat"><div className="num" style={{color:'#E67E22'}}>{enProceso}</div><div className="label">En proceso</div></div>
-      <div className="stat"><div className="num" style={{color:'#1B4F72'}}>{todasNCs.filter(nc=>nc.estado==='Verificada').length}</div><div className="label">Verificadas</div></div>
-      <div className="stat"><div className="num" style={{color:'#1E8449'}}>{cerradas}</div><div className="label">Cerradas</div></div>
-    </div>
-    <div className="card">
-      <h2>⚠️ Todas las No Conformidades</h2>
-      {todasNCs.length===0&&<p style={{color:'#999',fontSize:13}}>No hay no conformidades registradas.</p>}
-      {todasNCs.length>0&&(<div style={{overflowX:'auto'}}><table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Modulo</th><th>Item</th><th>Plazo</th><th>Estado</th><th>Accion</th></tr></thead><tbody>{todasNCs.map((nc,i)=>(<tr key={i}><td><strong>{nc.establecimiento}</strong></td><td style={{fontSize:12}}>{nc.fecha}</td><td style={{fontSize:11}}>{nc.modulo}</td><td style={{fontSize:11,maxWidth:200}}>{nc.item?.substring(0,50)}...</td><td style={{fontSize:12}}>{nc.plazo||'—'}</td><td><span className={'badge '+(nc.estado==='Cerrada'?'verde':nc.estado==='Verificada'?'azul':nc.estado==='En proceso'?'amarillo':'rojo')}>{nc.estado||'Pendiente'}</span></td><td><button className="btn btn-primary btn-sm" onClick={()=>onVerDetalle(nc.auditoria)}>Ver auditoría</button></td></tr>))}</tbody></table></div>)}
-    </div>
-  </div>);
-}
-function VistaMejoras({auditorias}){
-  const ultimasPorEstab={};auditorias.forEach(a=>{if(!ultimasPorEstab[a.establecimiento]||new Date(a.fecha)>new Date(ultimasPorEstab[a.establecimiento].fecha))ultimasPorEstab[a.establecimiento]=a;});
-  const establecimientos=Object.values(ultimasPorEstab);
-  return(<div>
-    <div className="card">
-      <h2>📈 Mejoras Continuas en Proceso</h2>
-      {establecimientos.length===0&&<p style={{color:'#999',fontSize:13}}>No hay establecimientos con auditorias.</p>}
-      {establecimientos.map((a,i)=>{const alerta=getAlerta(a.fecha);return(<div key={i} style={{marginBottom:16,paddingBottom:16,borderBottom:'1px solid var(--card-border)'}}>
-        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
-          <span style={{fontSize:16}}>{alerta.icono}</span>
-          <strong style={{fontSize:13}}>{a.establecimiento}</strong>
-          <span style={{fontSize:11,color:'#888',marginLeft:'auto'}}>{a.fecha}</span>
-          <span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:5}}>
-          <span style={{fontSize:12,color:'#555',flex:1}}>Cumplimiento BPM</span>
-          <span style={{fontFamily:'Syne,sans-serif',fontSize:13,fontWeight:800,color:a.puntaje>=80?'#1E8449':a.puntaje>=60?'#E67E22':'#C0392B'}}>{a.puntaje||0}%</span>
-        </div>
-        <div style={{height:8,background:'#e2e8f0',borderRadius:10,overflow:'hidden'}}>
-          <div style={{height:'100%',width:(a.puntaje||0)+'%',background:a.puntaje>=80?'linear-gradient(90deg,#1E8449,#27AE60)':a.puntaje>=60?'linear-gradient(90deg,#E67E22,#F39C12)':'linear-gradient(90deg,#C0392B,#E74C3C)',borderRadius:10}}></div>
-        </div>
-        <p style={{fontSize:11,color:'#888',marginTop:5}}>{alerta.label}</p>
-      </div>);})}
-    </div>
-  </div>);
-}
-
 /* ── DASHBOARD HOME ── */
 function DashboardHome({auditorias,cargando,onEliminar,onVerDetalle,onNavegar}){
   const total=auditorias.length;const aprobadas=auditorias.filter(a=>a.resultado==='Aprobado').length;const conNC=auditorias.filter(a=>(a.modulos?.resumen?.noCumple||0)>0).length;const promedio=total>0?Math.round(auditorias.reduce((s,a)=>s+(a.puntaje||0),0)/total):0;
@@ -572,149 +714,71 @@ function DashboardHome({auditorias,cargando,onEliminar,onVerDetalle,onNavegar}){
   const alertas=Object.values(ultimasPorEstab).map(a=>({...a,alerta:getAlerta(a.fecha)}));const conAlerta=alertas.filter(a=>a.alerta.nivel>=2).length;
   const [tabDash,setTabDash]=useState('lista');const ultimasActividades=auditorias.slice(0,4);
   const enProceso=auditorias.filter(a=>a.resultado!=='Aprobado').length||0;const porCerrar=alertas.filter(a=>a.alerta.nivel===2).length||0;const maxBar=Math.max(aprobadas,enProceso,porCerrar,conAlerta,1);const H=75;
-
   return(<div>
-    {/* ── 7 MÓDULOS SUPERIORES ── */}
+    {/* 7 MÓDULOS */}
     <div className="modules-grid">
       {MODULOS_DASH.map((m,i)=>(
-        <div key={i} className={'mod-card'+(tabDash==='lista'&&i===0?' active-mod':'')} style={{'--mod-color':m.color}} onClick={()=>onNavegar(m.key)}>
-          <div className="mod-icon-circle" style={{background:m.color}}>
-            <Icono tipo={m.tipo} size={26} stroke="#fff" sw={2}/>
-          </div>
+        <div key={i} className="mod-card" style={{'--mod-color':m.color}} onClick={()=>onNavegar(m.key)}>
+          <div className="mod-icon-circle" style={{background:m.color}}><Icono tipo={m.tipo} size={26} stroke="#fff" sw={2}/></div>
           <div className="mod-name">{m.label}</div>
           <div className="mod-desc">{m.desc}</div>
         </div>
       ))}
     </div>
-
     {conAlerta>0&&<div className="alert warning" style={{marginBottom:14}}>⚠️ <strong>{conAlerta} establecimiento(s)</strong> requieren atención por tiempo sin auditar.</div>}
-
-    {/* TABS */}
     <div style={{display:'flex',gap:4,marginBottom:14,flexWrap:'wrap',alignItems:'center'}}>
       {[['lista','📋 Auditorias'],['alertas','🔔 Vencimientos'],['historial','📊 Historial']].map(([k,lbl])=>(<button key={k} className={'btn btn-sm '+(tabDash===k?'btn-primary':'btn-ghost')} onClick={()=>setTabDash(k)}>{lbl}</button>))}
       <button className="btn btn-excel btn-sm" style={{marginLeft:'auto'}} onClick={()=>exportarExcel(auditorias)}>⬇ CSV</button>
     </div>
-
     {tabDash==='lista'&&(<>
       <div className="bottom-grid">
-        {/* Resumen */}
-        <div className="card">
-          <h2>📊 Resumen General</h2>
+        <div className="card"><h2>📊 Resumen General</h2>
           <div className="resumen-grid">
-            <div className="resumen-item" style={{borderBottom:'1px solid #f0f4f8',borderRight:'1px solid #f0f4f8'}}>
-              <div className="resumen-icon" style={{background:'#D6EAF8'}}><Icono tipo="auditorias" size={16} stroke="#1B4F72"/></div>
-              <div><div className="resumen-num" style={{color:'#1B4F72'}}>{total}</div><div className="resumen-label">Auditorias</div></div>
-            </div>
-            <div className="resumen-item" style={{borderBottom:'1px solid #f0f4f8'}}>
-              <div className="resumen-icon" style={{background:'#D5F5E3'}}><Icono tipo="checklist" size={16} stroke="#1E8449"/></div>
-              <div><div className="resumen-num" style={{color:'#1E8449'}}>{aprobadas}</div><div className="resumen-label">Aprobadas</div></div>
-            </div>
-            <div className="resumen-item" style={{borderRight:'1px solid #f0f4f8'}}>
-              <div className="resumen-icon" style={{background:'#FDEBD0'}}><Icono tipo="nc" size={16} stroke="#E67E22"/></div>
-              <div><div className="resumen-num" style={{color:'#E67E22'}}>{ncAbiertas}</div><div className="resumen-label">NCs abiertas</div></div>
-            </div>
-            <div className="resumen-item">
-              <div className="resumen-icon" style={{background:'#E8DAEF'}}><Icono tipo="clientes" size={16} stroke="#8E44AD"/></div>
-              <div><div className="resumen-num" style={{color:'#8E44AD'}}>{Object.keys(ultimasPorEstab).length}</div><div className="resumen-label">Clientes activos</div></div>
-            </div>
+            <div className="resumen-item" style={{borderBottom:'1px solid #f0f4f8',borderRight:'1px solid #f0f4f8'}}><div className="resumen-icon" style={{background:'#D6EAF8'}}><Icono tipo="auditorias" size={16} stroke="#1B4F72"/></div><div><div className="resumen-num" style={{color:'#1B4F72'}}>{total}</div><div className="resumen-label">Auditorias</div></div></div>
+            <div className="resumen-item" style={{borderBottom:'1px solid #f0f4f8'}}><div className="resumen-icon" style={{background:'#D5F5E3'}}><Icono tipo="checklist" size={16} stroke="#1E8449"/></div><div><div className="resumen-num" style={{color:'#1E8449'}}>{aprobadas}</div><div className="resumen-label">Aprobadas</div></div></div>
+            <div className="resumen-item" style={{borderRight:'1px solid #f0f4f8'}}><div className="resumen-icon" style={{background:'#FDEBD0'}}><Icono tipo="nc" size={16} stroke="#E67E22"/></div><div><div className="resumen-num" style={{color:'#E67E22'}}>{ncAbiertas}</div><div className="resumen-label">NCs abiertas</div></div></div>
+            <div className="resumen-item"><div className="resumen-icon" style={{background:'#E8DAEF'}}><Icono tipo="clientes" size={16} stroke="#8E44AD"/></div><div><div className="resumen-num" style={{color:'#8E44AD'}}>{Object.keys(ultimasPorEstab).length}</div><div className="resumen-label">Clientes activos</div></div></div>
           </div>
           <div style={{marginTop:10,padding:'10px 12px',background:'#EBF5FB',borderRadius:8,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
             <span style={{fontSize:12,color:'#1B4F72',fontWeight:600}}>Puntaje promedio</span>
-            <span style={{fontFamily:'Syne,sans-serif',fontSize:1.4+'rem',fontWeight:800,color:promedio>=80?'#1E8449':promedio>=60?'#E67E22':'#C0392B'}}>{promedio}%</span>
+            <span style={{fontFamily:'Syne,sans-serif',fontSize:'1.4rem',fontWeight:800,color:promedio>=80?'#1E8449':promedio>=60?'#E67E22':'#C0392B'}}>{promedio}%</span>
           </div>
         </div>
-
-        {/* Donut */}
-        <div className="card">
-          <h2>Estado de No Conformidades</h2>
+        <div className="card"><h2>Estado de No Conformidades</h2>
           {ncTotal2===0?<p style={{color:'#999',fontSize:12,marginTop:8}}>Sin NCs registradas.</p>:(
             <div className="donut-wrap">
               <svg width="110" height="110" viewBox="0 0 110 110" style={{flexShrink:0}}>
-                {(()=>{const data=[{v:ncAbiertas,c:'#E74C3C'},{v:ncEnProceso,c:'#F39C12'},{v:ncVerificadas,c:'#1B4F72'},{v:ncCerradas,c:'#1E8449'}];const r=42;const circ=2*Math.PI*r;let offset=0;return data.map((d,i)=>{const pct=ncTotal2>0?d.v/ncTotal2:0;const dash=pct*circ;const el=<circle key={i} cx="55" cy="55" r={r} fill="none" stroke={d.c} strokeWidth="15" strokeDasharray={dash+' '+(circ-dash)} strokeDashoffset={-offset} transform="rotate(-90 55 55)"/>;offset+=dash;return el;})})()}
+                {(()=>{const data=[{v:ncAbiertas,c:'#E74C3C'},{v:ncEnProceso,c:'#F39C12'},{v:ncVerificadas,c:'#1B4F72'},{v:ncCerradas,c:'#1E8449'}];const r=42;const circ=2*Math.PI*r;let offset=0;return data.map((d,i)=>{const pct=ncTotal2>0?d.v/ncTotal2:0;const dash=pct*circ;const el=<circle key={i} cx="55" cy="55" r={r} fill="none" stroke={d.c} strokeWidth="15" strokeDasharray={dash+' '+(circ-dash)} strokeDashoffset={-offset} transform="rotate(-90 55 55)"/>;offset+=dash;return el;});})()}
                 <text x="55" y="50" textAnchor="middle" fontFamily="Syne,sans-serif" fontSize="14" fontWeight="800" fill="#1a2940">{ncTotal2}</text>
                 <text x="55" y="63" textAnchor="middle" fontFamily="DM Sans,sans-serif" fontSize="8" fill="#64748b">Total</text>
               </svg>
-              <div style={{flex:1}}>
-                {[{v:ncAbiertas,c:'#E74C3C',l:'Abiertas'},{v:ncEnProceso,c:'#F39C12',l:'En Análisis'},{v:ncVerificadas,c:'#1B4F72',l:'En Proceso'},{v:ncCerradas,c:'#1E8449',l:'Cerradas'}].map((d,i)=>(
-                  <div className="legend-item" key={i}>
-                    <div className="legend-dot" style={{background:d.c}}></div>
-                    <span className="legend-name">{d.l}</span>
-                    <span className="legend-pct">{ncTotal2>0?Math.round(d.v/ncTotal2*100):0}%</span>
-                    <span className="legend-count">{d.v}</span>
-                  </div>
-                ))}
-              </div>
+              <div style={{flex:1}}>{[{v:ncAbiertas,c:'#E74C3C',l:'Abiertas'},{v:ncEnProceso,c:'#F39C12',l:'En Análisis'},{v:ncVerificadas,c:'#1B4F72',l:'En Proceso'},{v:ncCerradas,c:'#1E8449',l:'Cerradas'}].map((d,i)=>(<div className="legend-item" key={i}><div className="legend-dot" style={{background:d.c}}></div><span className="legend-name">{d.l}</span><span className="legend-pct">{ncTotal2>0?Math.round(d.v/ncTotal2*100):0}%</span><span className="legend-count">{d.v}</span></div>))}</div>
             </div>
           )}
         </div>
-
-        {/* Barras */}
-        <div className="card">
-          <h2>Auditorías por Estado</h2>
-          <div className="bar-chart">
-            {[{v:aprobadas,c:'#1B4F72'},{v:enProceso,c:'#17a2b8'},{v:porCerrar,c:'#E67E22'},{v:conAlerta,c:'#E74C3C'}].map((b,i)=>(
-              <div className="bar-col" key={i}>
-                <span className="bar-val">{b.v}</span>
-                <div className="bar" style={{height:Math.round((b.v/maxBar)*H)+'px',background:b.c,minHeight:3}}></div>
-              </div>
-            ))}
-          </div>
-          <div className="bar-x">
-            {['Aprobadas','No aprob.','Por vencer','Vencidas'].map(l=>(<div key={l} style={{flex:1,textAlign:'center',fontSize:'0.55rem',color:'#64748b',textTransform:'uppercase'}}>{l}</div>))}
-          </div>
+        <div className="card"><h2>Auditorías por Estado</h2>
+          <div className="bar-chart">{[{v:aprobadas,c:'#1B4F72'},{v:enProceso,c:'#17a2b8'},{v:porCerrar,c:'#E67E22'},{v:conAlerta,c:'#E74C3C'}].map((b,i)=>(<div className="bar-col" key={i}><span className="bar-val">{b.v}</span><div className="bar" style={{height:Math.round((b.v/maxBar)*H)+'px',background:b.c,minHeight:3}}></div></div>))}</div>
+          <div className="bar-x">{['Aprobadas','No aprob.','Por vencer','Vencidas'].map(l=>(<div key={l} style={{flex:1,textAlign:'center',fontSize:'0.55rem',color:'#64748b',textTransform:'uppercase'}}>{l}</div>))}</div>
         </div>
       </div>
-
       <div className="bottom-grid2">
-        {/* Actividad */}
-        <div className="card">
-          <h2>Actividad Reciente</h2>
-          {ultimasActividades.length===0&&<p style={{color:'#999',fontSize:12}}>Sin actividad registrada.</p>}
-          {ultimasActividades.map((a,i)=>{const esBuena=a.resultado==='Aprobado';const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;const alerta=getAlerta(a.fecha);
-            return(<div key={i} className="act-item" onClick={()=>onVerDetalle(a)}>
-              <div className="act-icon-s" style={{background:esBuena?'#D5F5E3':'#FADBD8'}}><Icono tipo="auditorias" size={14} stroke={esBuena?'#1E8449':'#C0392B'}/></div>
-              <div style={{flex:1}}>
-                <div className="act-name">{a.establecimiento}</div>
-                <div className="act-time">{a.fecha}{ncsCount>0&&<span style={{color:'#E67E22',marginLeft:4}}>{ncsCount} NC</span>}</div>
-              </div>
-              <span className={'act-badge badge '+(esBuena?'verde':'rojo')}>{a.resultado}</span>
-              <span style={{fontSize:14,marginLeft:4}}>{alerta.icono}</span>
-            </div>);
-          })}
-        </div>
-
-        {/* Mejoras */}
-        <div className="card">
-          <h2>Mejoras Continuas en Proceso</h2>
+        <div className="card"><h2>Actividad Reciente</h2>
+          {ultimasActividades.length===0&&<p style={{color:'#999',fontSize:12}}>Sin actividad.</p>}
+          {ultimasActividades.map((a,i)=>{const esBuena=a.resultado==='Aprobado';const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;const alerta=getAlerta(a.fecha);return(<div key={i} className="act-item" onClick={()=>onVerDetalle(a)}><div className="act-icon-s" style={{background:esBuena?'#D5F5E3':'#FADBD8'}}><Icono tipo="auditorias" size={14} stroke={esBuena?'#1E8449':'#C0392B'}/></div><div style={{flex:1}}><div className="act-name">{a.establecimiento}</div><div className="act-time">{a.fecha}{ncsCount>0&&<span style={{color:'#E67E22',marginLeft:4}}>{ncsCount} NC</span>}</div></div><span className={'badge '+(esBuena?'verde':'rojo')}>{a.resultado}</span><span style={{fontSize:14,marginLeft:4}}>{alerta.icono}</span></div>);})}</div>
+        <div className="card"><h2>Mejoras Continuas en Proceso</h2>
           {alertas.length===0&&<p style={{color:'#999',fontSize:12}}>Sin establecimientos.</p>}
-          {alertas.sort((a,b)=>b.alerta.nivel-a.alerta.nivel).slice(0,4).map((a,i)=>(
-            <div key={i} className="mejora-item">
-              <div className="mejora-row">
-                <Icono tipo="mejoras" size={14} stroke="#17a2b8"/>
-                <span className="mejora-name">{a.establecimiento}</span>
-                <span className="mejora-pct">{a.puntaje||0}%</span>
-              </div>
-              <div className="progress-bar"><div className="progress-fill" style={{width:(a.puntaje||0)+'%',background:a.alerta.nivel===1?'linear-gradient(90deg,#1B4F72,#1E8449)':a.alerta.nivel===2?'linear-gradient(90deg,#D4AC0D,#E67E22)':'linear-gradient(90deg,#C0392B,#E74C3C)'}}></div></div>
-            </div>
-          ))}
-          <div className="ver-todas" onClick={()=>onNavegar('mejoras')}>
-            Ver todas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1B4F72" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
+          {alertas.sort((a,b)=>b.alerta.nivel-a.alerta.nivel).slice(0,4).map((a,i)=>(<div key={i} className="mejora-item"><div className="mejora-row"><Icono tipo="mejoras" size={14} stroke="#17a2b8"/><span className="mejora-name">{a.establecimiento}</span><span className="mejora-pct">{a.puntaje||0}%</span></div><div className="progress-bar"><div className="progress-fill" style={{width:(a.puntaje||0)+'%',background:a.alerta.nivel===1?'linear-gradient(90deg,#1B4F72,#1E8449)':a.alerta.nivel===2?'linear-gradient(90deg,#D4AC0D,#E67E22)':'linear-gradient(90deg,#C0392B,#E74C3C)'}}></div></div></div>))}
+          <div className="ver-todas" onClick={()=>onNavegar('mejoras')}>Ver todas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1B4F72" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg></div>
         </div>
       </div>
-
-      {/* Tabla */}
-      <div className="card">
-        <h2>Todas las auditorías</h2>
+      <div className="card"><h2>Todas las auditorías</h2>
         {cargando&&<p style={{color:'#999',fontSize:13}}>Cargando...</p>}
         {!cargando&&auditorias.length===0&&<p style={{color:'#999',fontSize:13}}>No hay auditorias registradas.</p>}
         {!cargando&&auditorias.length>0&&(<div style={{overflowX:'auto'}}><table><thead><tr><th>Establecimiento</th><th>Fecha</th><th>Puntaje</th><th>Resultado</th><th>NCs</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>{auditorias.map((a,i)=>{const ncsCount=(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.accion_correctiva).length;const totalNC=a.modulos?.resumen?.noCumple||0;const alerta=getAlerta(a.fecha);return(<tr key={i}><td><strong>{a.establecimiento}</strong>{a.cliente_id&&<span style={{marginLeft:4,fontSize:9,background:'#D5F5E3',color:'#1E8449',borderRadius:3,padding:'1px 4px'}}>vinc.</span>}</td><td style={{fontSize:12}}>{a.fecha}</td><td><strong style={{color:a.puntaje>=80?'#1E8449':a.puntaje>=60?'#E67E22':'#C0392B'}}>{a.puntaje}%</strong></td><td><span className={'badge '+(a.resultado==='Aprobado'?'verde':'rojo')}>{a.resultado}</span></td><td>{totalNC>0?<span><span className="badge rojo">{totalNC}</span>{ncsCount>0&&<span className="badge azul" style={{marginLeft:3}}>{ncsCount}g</span>}</span>:<span style={{color:'#aaa',fontSize:11}}>—</span>}</td><td><span title={alerta.label} style={{fontSize:14}}>{alerta.icono}</span></td><td><div style={{display:'flex',gap:4}}><button className="btn btn-primary btn-sm" onClick={()=>onVerDetalle(a)}>Ver</button><button className="btn btn-pdf btn-sm" onClick={()=>generarPDF(a)}>PDF</button><button className="btn btn-danger btn-sm" onClick={()=>onEliminar(a)}>🗑</button></div></td></tr>);})}</tbody></table></div>)}
       </div>
     </>)}
-
     {tabDash==='alertas'&&(<div className="card"><h2>🔔 Estado de vencimientos</h2><div style={{marginBottom:10,fontSize:11,color:'#64748b',display:'flex',gap:14,flexWrap:'wrap'}}><span>🟢 Al dia</span><span>🟡 Revisar (1-6m)</span><span>🟠 Urgente (6-12m)</span><span>🚨 Vencido</span></div>{alertas.length===0&&<p style={{color:'#999',fontSize:13}}>No hay establecimientos.</p>}<table><thead><tr><th>Establecimiento</th><th>Ultima auditoria</th><th>Puntaje</th><th>Estado</th></tr></thead><tbody>{alertas.sort((a,b)=>b.alerta.nivel-a.alerta.nivel).map((a,i)=>(<tr key={i}><td><strong>{a.establecimiento}</strong></td><td style={{fontSize:12}}>{a.fecha||'—'}</td><td>{a.puntaje?a.puntaje+'%':'—'}</td><td><span style={{background:a.alerta.bg,color:a.alerta.color,padding:'3px 9px',borderRadius:10,fontSize:11,fontWeight:'bold'}}>{a.alerta.icono} {a.alerta.label}</span></td></tr>))}</tbody></table></div>)}
     {tabDash==='historial'&&<HistorialComparativo auditorias={auditorias}/>}
-
     <div className="dash-footer">© 2024 <strong>INOCUA°tec</strong> Servicios — Todos los derechos reservados</div>
   </div>);
 }
@@ -722,7 +786,10 @@ function DashboardHome({auditorias,cargando,onEliminar,onVerDetalle,onNavegar}){
 /* ── APP PRINCIPAL ── */
 function App(){
   const [session,setSession]=useState(null);const [tab,setTab]=useState('dashboard');const [auditorias,setAuditorias]=useState([]);const [cargando,setCargando]=useState(true);const [auditoriaDetalle,setAuditoriaDetalle]=useState(null);const [modulos,setModulos]=useState(()=>cargarModulos());const [themeOpen,setThemeOpen]=useState(false);
-  useEffect(()=>{cargarTemaGuardado();supabase.auth.getSession().then(async({data})=>{if(data.session){const u=data.session.user;const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',u.id).maybeSingle();if(cliente)setSession({tipo:'cliente',user:u,cliente});else{setSession({tipo:'auditor',user:u});cargarAuditorias();}}else setCargando(false);});},[]);
+  useEffect(()=>{
+    cargarTemaGuardado();
+    supabase.auth.getSession().then(async({data})=>{if(data.session){const u=data.session.user;const {data:cliente}=await supabase.from('clientes').select('*').eq('user_id',u.id).maybeSingle();if(cliente)setSession({tipo:'cliente',user:u,cliente});else{setSession({tipo:'auditor',user:u});cargarAuditorias();}}else setCargando(false);});
+  },[]);
   const cargarAuditorias=async()=>{setCargando(true);const {data}=await supabase.from('auditorias').select('*').order('created_at',{ascending:false});if(data)setAuditorias(data);setCargando(false);};
   const eliminarAuditoria=async(a)=>{if(!confirm('Eliminar auditoria de "'+a.establecimiento+'" del '+a.fecha+'?'))return;await supabase.from('auditorias').delete().eq('id',a.id);setAuditorias(prev=>prev.filter(x=>x.id!==a.id));};
   const logout=async()=>{await supabase.auth.signOut();setSession(null);setAuditorias([]);setTab('dashboard');setAuditoriaDetalle(null);setCargando(false);};
@@ -730,43 +797,36 @@ function App(){
   if(!session)return <Login onLogin={async(s)=>{setSession(s);if(s.tipo==='auditor')cargarAuditorias();else setCargando(false);}}/>;
   if(session.tipo==='cliente')return <VistaCliente session={session} onLogout={logout}/>;
   const ncPendientes=auditorias.reduce((s,a)=>s+(a.modulos?.no_conformidades||[]).filter(nc=>nc&&nc.estado==='Pendiente').length,0);
-
   const tituloTab={dashboard:'¡Bienvenido!',nueva:'Nueva Auditoría',checklist:'Check List',noconformidades:'No Conformidades',clientes:'Gestión de Clientes',mejoras:'Mejoras Continuas',editor:'Medidas Correctivas'};
-  const subTituloTab={dashboard:'Dashboard INOCUA°tec Servicios',nueva:'Completá el formulario de relevamiento BPM',checklist:'Listas de verificación BPM',noconformidades:'Registro y seguimiento de no conformidades',clientes:'Administrá el acceso de tus clientes',mejoras:'Iniciativas de mejora continua por establecimiento',editor:'Editor de módulos y criterios del checklist'};
-
+  const subTituloTab={dashboard:'Dashboard INOCUA°tec Servicios',nueva:'Completá el formulario de relevamiento BPM',checklist:'Checklists de auditorías realizadas',noconformidades:'Registro y seguimiento de no conformidades',clientes:'Administrá el acceso de tus clientes',mejoras:'Seguimiento automático de mejoras por establecimiento',editor:'Acciones correctivas registradas'};
   return(<div className="app-wrap">
-    {/* ── SIDEBAR con 7 ítems ── */}
+    {/* SIDEBAR */}
     <aside className="sidebar">
-      <div className="logo-area">
-        <div className="logo-name">INOCUA<sup>°</sup><span>tec</span></div>
-        <div className="logo-sub">Servicios</div>
-      </div>
+      <div className="logo-area"><div className="logo-name">INOCUA<sup>°</sup><span>tec</span></div><div className="logo-sub">Servicios</div></div>
       <nav className="nav">
         {NAV_ITEMS.map(n=>(
           <div key={n.key} className={'nav-item'+(!auditoriaDetalle&&tab===n.key?' active':'')} onClick={()=>navegar(n.key)}>
             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              {(n.tipo==='inicio')?<><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>
-              :(n.tipo==='auditorias')?<><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>
-              :(n.tipo==='checklist')?<><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></>
-              :(n.tipo==='nc')?<><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>
-              :(n.tipo==='clientes')?<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>
-              :(n.tipo==='mejoras')?<><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></>
-              :<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>}
+              {n.tipo==='inicio'&&<><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>}
+              {n.tipo==='auditorias'&&<><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></>}
+              {n.tipo==='checklist'&&<><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></>}
+              {n.tipo==='nc'&&<><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>}
+              {n.tipo==='clientes'&&<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
+              {n.tipo==='mejoras'&&<><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></>}
+              {n.tipo==='correctivas'&&<><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>}
             </svg>
             {n.label}
             {n.key==='noconformidades'&&ncPendientes>0&&<span className="nav-badge">{ncPendientes}</span>}
           </div>
         ))}
       </nav>
-      {/* SIN FOOTER — eliminado según pedido */}
     </aside>
-
-    {/* ── MAIN ── */}
+    {/* MAIN */}
     <main className="main">
       <div className="topbar">
         <div className="topbar-left">
           <h1>{auditoriaDetalle?'Detalle de auditoría':(tituloTab[tab]||'Panel')}</h1>
-          <p>{auditoriaDetalle?('Dashboard INOCUA°tec Servicios'):(subTituloTab[tab]||'')}</p>
+          <p>{auditoriaDetalle?'Dashboard INOCUA°tec Servicios':(subTituloTab[tab]||'')}</p>
         </div>
         <div className="topbar-right">
           {ncPendientes>0&&<div className="icon-btn" title={ncPendientes+' NCs pendientes'}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E67E22" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span className="dot"></span></div>}
@@ -778,23 +838,21 @@ function App(){
           <button className="btn btn-danger btn-sm" onClick={logout}>Salir</button>
         </div>
       </div>
-
       <div className="content">
         {auditoriaDetalle
           ?<DetalleAuditoria auditoria={auditoriaDetalle} onVolver={()=>setAuditoriaDetalle(null)} esCliente={false}/>
           :<>
             {tab==='dashboard'&&<DashboardHome auditorias={auditorias} cargando={cargando} onEliminar={eliminarAuditoria} onVerDetalle={a=>setAuditoriaDetalle(a)} onNavegar={navegar}/>}
             {tab==='nueva'&&<NuevaAuditoria onGuardar={a=>{setAuditorias(p=>[a,...p]);setTab('dashboard');}} modulos={modulos}/>}
-            {tab==='checklist'&&<VistaChecklist/>}
+            {tab==='checklist'&&<VistaCheckList auditorias={auditorias} onVerDetalle={a=>setAuditoriaDetalle(a)}/>}
             {tab==='noconformidades'&&<VistaNoConformidades auditorias={auditorias} onVerDetalle={a=>setAuditoriaDetalle(a)}/>}
             {tab==='clientes'&&<GestionClientes/>}
             {tab==='mejoras'&&<VistaMejoras auditorias={auditorias}/>}
-            {tab==='editor'&&<div className="card"><h2>✏️ Editor de módulos y criterios</h2><EditorModulos modulos={modulos} onGuardar={mods=>setModulos(mods)}/></div>}
+            {tab==='editor'&&<VistaMedidasCorrectivas auditorias={auditorias} onVerDetalle={a=>setAuditoriaDetalle(a)}/>}
           </>
         }
       </div>
     </main>
-
     <Personalizador open={themeOpen} onClose={()=>setThemeOpen(false)}/>
   </div>);
 }
